@@ -1,7 +1,5 @@
 # qwen-api
 
-[![PyPI version](https://badge.fury.io/py/qwen-api.svg)](https://pypi.org/project/qwen-api/)
-
 Node Js ported of Unofficial Python SDK for accessing [Qwen AI](https://chat.qwen.ai) API.
 
 ---
@@ -32,195 +30,133 @@ Node Js ported of Unofficial Python SDK for accessing [Qwen AI](https://chat.qwe
 
 To install the package, use:
 
-```bash
-pip install qwen-api
-```
-
 ## 🚀 Usage
 
 ### Basic Usage
 
-```python
-from qwen_api.client import Qwen
-from qwen_api.types.chat import ChatMessage
+```typescript
+import * as dotenv from "dotenv"
 
-# Create a client instance
-client = Qwen()
+// Load .env file from the current working directory
+dotenv.config()
 
-# Create a chat message
-messages = [
-   ChatMessage(
-      role="user",
-      content="what is LLM?",
-      web_search=True,
-      thinking=False,
-   )
-]
+import { QwenAPI } from "./packages/qwen-api" // Importing from src to run directly with ts-node
+import { ChatMessage } from "./packages/qwen-api/core/types/chat"
 
-# Get a response from the API
-response = client.chat.create(
-   messages=messages,
-   model="qwen-max-latest",
-)
+async function main() {
+  const authToken = process.env.QWEN_AUTH_TOKEN
+  const cookie = process.env.QWEN_COOKIE
 
-# Print the response
-print(response)
+  if (!authToken || !cookie) {
+    console.error(
+      "Error: QWEN_AUTH_TOKEN and QWEN_COOKIE must be set in your .env file."
+    )
+    process.exit(1)
+  }
+
+  const client = new QwenAPI(authToken, cookie)
+
+  const messages: ChatMessage[] = [
+    {
+      role: "user",
+      content: "What is the capital Of Paris?",
+    },
+  ]
+
+  console.log("Sending request to Qwen Chat API...")
+
+  try {
+    const response = await client.create({
+      model: "qwen-max-latest", // Use the model name from the Python client
+      messages: messages,
+    })
+
+    console.log("API Response:")
+    console.log(JSON.stringify(response, null, 2))
+
+    const content = response.choices[0]?.message?.content
+    console.log("\nAssistant's Message:", content)
+  } catch (error) {
+    console.error("\nAn error occurred:", error)
+  }
+}
+
+main()
 ```
 
 ### File Upload Example
 
 Here's how to upload a file and include it in a chat request:
 
-```python
-from qwen_api import Qwen
-from qwen_api.core.exceptions import QwenAPIError
-from qwen_api.core.types.chat import ChatMessage, TextBlock, ImageBlock
+```typescript
+import * as dotenv from "dotenv"
+import * as path from "path"
 
+// Load .env file from the root of the project
+dotenv.config({ path: path.resolve(__dirname, "./env") })
 
-def main():
-    client = Qwen(logging_level="DEBUG")
+import { QwenAPI } from "./packages/qwen-api"
+import {
+  ChatMessage,
+  TextBlock,
+  ImageBlock,
+} from "./packages/qwen-api/core/types/chat"
 
-    try:
-        # Upload an image file
-        getdataImage  = client.chat.upload_file(
-            file_path="tes_image.png"
-        )
+async function main() {
+  const authToken = process.env.QWEN_AUTH_TOKEN
+  const cookie = process.env.QWEN_COOKIE
 
-        # Create a chat message with both text and image content
-        messages = [ChatMessage(
-            role="user",
-            web_search=False,
-            thinking=False,
-            blocks=[
-                TextBlock(
-                    block_type="text",
-                    text="What's in this image?"
-                ),
-                ImageBlock(
-                    block_type="image",
-                    url=getdataImage   .file_url,
-                    image_mimetype=getdataImage.image_mimetype
-                )
-            ]
-        )]
+  if (!authToken || !cookie) {
+    console.error(
+      "Error: QWEN_AUTH_TOKEN and QWEN_COOKIE must be set in your .env file."
+    )
+    process.exit(1)
+  }
 
-        # Get a streaming response
-        response = client.chat.create(
-            messages=messages,
-            model="qwen-max-latest",
-            stream=True,
-        )
+  const client = new QwenAPI(authToken, cookie)
 
-        # Process the stream
-        for chunk in response:
-            delta = chunk.choices[0].delta
-            if 'extra' in delta and 'web_search_info' in delta.extra:
-                print("\nSearch results:", delta.extra.web_search_info)
-                print()
+  // IMPORTANT: Replace this with the actual path to your image file.
+  const imagePath = path.resolve(__dirname, "./tes_image.png")
 
-            print(delta.content, end="", flush=True)
+  try {
+    console.log(`Uploading image: ${imagePath}...`)
+    const { file_url } = await client.uploadFile(imagePath)
+    console.log(`Image uploaded successfully. URL: ${file_url}`)
 
-    except QwenAPIError as e:
-        print(f"Error: {str(e)}")
-
-
-if __name__ == "__main__":
-    main()
-```
-
-### Async Usage
-
-```python
-import asyncio
-from qwen_api.client import Qwen
-from qwen_api.types.chat import ChatMessage
-
-async def main():
-    # Create a client instance
-    client = Qwen()
-
-    # Create a chat message
-    messages = [
-        ChatMessage(
-            role="user",
-            content="what is LLM?",
-            web_search=True,
-            thinking=False,
-        )
+    const messages: ChatMessage[] = [
+      {
+        role: "user",
+        content: [
+          {
+            block_type: "image",
+            url: file_url,
+          } as ImageBlock,
+          {
+            block_type: "text",
+            text: "ini gambar apa?",
+          } as TextBlock,
+        ],
+      },
     ]
 
-    # Get a response from the API
-    response = await client.chat.acreate(
-        messages=messages,
-        model="qwen-max-latest",
-    )
+    console.log("\nSending multimodal request to Qwen Chat API...")
 
-    # Print the response
-    print(response)
+    const response = await client.create({
+      model: "qwen-max-latest",
+      messages: messages,
+    })
 
-asyncio.run(main())
-```
+    console.log("\nAPI Response:")
+    console.log(JSON.stringify(response, null, 2))
 
-### Asynchronous File Upload Example
+    const content = response.choices[0]?.message?.content
+    console.log("\nAssistant's Message:", content)
+  } catch (error) {
+    console.error("\nAn error occurred:", error)
+  }
+}
 
-Here's how to perform file upload asynchronously:
-
-```python
-import asyncio
-from qwen_api import Qwen
-from qwen_api.core.exceptions import QwenAPIError
-from qwen_api.core.types.chat import ChatMessage, TextBlock, ImageBlock
-
-
-async def main():
-    client = Qwen()
-
-    try:
-        # Upload an image file asynchronously
-        getdataImage  = await client.chat.async_upload_file(
-            file_path="tes_image.png"
-        )
-
-        # Create a chat message with both text and image content
-        messages = [ChatMessage(
-            role="user",
-            web_search=False,
-            thinking=False,
-            blocks=[
-                TextBlock(
-                    block_type="text",
-                    text="What's in this image?"
-                ),
-                ImageBlock(
-                    block_type="image",
-                    url=getdataImage   .file_url,
-                    image_mimetype=getdataImage
-                )
-            ]
-        )]
-
-        # Get a streaming response
-        response = await client.chat.acreate(
-            messages=messages,
-            model="qwen-max-latest",
-            stream=True,
-        )
-
-        # Process the stream
-        async for chunk in response:
-            delta = chunk.choices[0].delta
-            if 'extra' in delta and 'web_search_info' in delta.extra:
-                print("\nSearch results:", delta.extra.web_search_info)
-                print()
-
-            print(delta.content, end="", flush=True)
-
-    except QwenAPIError as e:
-        print(f"Error: {str(e)}")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
+main()
 ```
 
 **Output:**
@@ -231,30 +167,19 @@ choices=Choice(message=Message(role='assistant', content='A Large Language Model
 
 ### Streaming
 
-```python
-# Create a client instance
-client = Qwen()
+```typescript
+onsole.log("\n--- Streaming Response ---")
 
-# Create a chat message
-messages = [
-   ChatMessage(
-      role="user",
-      content="what is LLM?",
-      web_search=True,
-      thinking=False,
-   )
-]
+const stream = client.stream({
+  model: "qwen-max-latest",
+  messages: messages,
+})
 
-# Get a streaming response from the API
-response = client.chat.create(
-   messages=messages,
-   model="qwen-max-latest",
-   stream=True,
-)
-
-# Process the stream
-for chunk in response:
-   print(chunk.model_dump())
+for await (const chunk of stream) {
+  const content = chunk.choices[0]?.delta?.content || ""
+  process.stdout.write(content)
+}
+console.log("\n--- End of Stream ---")
 ```
 
 **Output:**
@@ -268,9 +193,7 @@ for chunk in response:
 
 ## 📂 Documentation
 
-For complete documentation, visit the [documentation file](docs/documentation.md).
-
----
+## in progress
 
 ## ⚙️ Environment Setup
 
@@ -333,7 +256,6 @@ Check the `examples/` folder for more advanced usage, including:
 - **Basic Usage**: Simple synchronous and asynchronous examples for getting started
 - **Streaming**: Examples demonstrating real-time response processing
 - **File Upload**: Demonstrations of file upload capabilities, including image processing
-- **LlamaIndex Integration**: Advanced examples using LlamaIndex framework
 
 ---
 
