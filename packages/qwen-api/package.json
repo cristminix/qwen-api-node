@@ -1,0 +1,28 @@
+{
+  "name": "@qwen-api/client",
+  "version": "0.1.0",
+  "description": "A Node.js client for the Qwen API.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "qwen",
+    "api",
+    "ai",
+    "llm"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/ali-oss": "^6.16.11",
+    "dotenv": "^17.0.1",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "ali-oss": "^6.23.0",
+    "axios": "^1.7.2"
+  }
+}
