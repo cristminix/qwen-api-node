@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "start": "ts-node src/index.ts"
   },
   "keywords": [
     "qwen",
@@ -22,7 +23,11 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@hono/node-server": "^1.16.0",
     "ali-oss": "^6.23.0",
-    "axios": "^1.7.2"
+    "axios": "^1.7.2",
+    "hono": "^4.8.5",
+    "ts-node": "^10.9.2",
+    "vite-node": "^3.2.4"
   }
 }

@@ -12,6 +12,21 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// ModelAliases maps human-friendly aliases to their model IDs.
+var ModelAliases = map[string]string{
+	"Jennie":      "qwen3-235b-a22b",
+	"Lisa":        "qwen3-30b-a3b",
+	"Rosseane":    "qwen3-32b",
+	"Cichu":       "qwen-max-latest",
+	"Chaelisa":    "qwq-32b",
+	"Blinque":     "qwen2.5-omni-7b",
+	"Blackpink":   "qvq-72b-preview-0310",
+	"Jarvis":      "qwen2.5-vl-32b-instruct",
+	"Black Mamba": "qwen2.5-14b-instruct-1m",
+	"Milea":       "qwen2.5-coder-32b-instruct",
+	"Dilan":       "qwen2.5-72b-instruct",
+}
+
 func main() {
 	// Load environment variables from .env file
 	err := godotenv.Load()
@@ -221,8 +236,14 @@ func runOpenAIServer(client *qwen.QwenAPI) {
 				Content: content,
 			})
 		}
+		// Before creating qwenReq, resolve alias to model ID if needed
+		modelID := req.Model
+		if aliasID, ok := ModelAliases[req.Model]; ok {
+			modelID = aliasID
+		}
+
 		qwenReq := qwen.ChatCompletionRequest{
-			Model:    req.Model,
+			Model:    modelID,
 			Messages: qwenMessages,
 			Stream:   req.Stream,
 		}
@@ -316,7 +337,7 @@ func runOpenAIServer(client *qwen.QwenAPI) {
 			}
 			result := map[string]interface{}{
 				"object":  "chat.completion",
-				"model":   req.Model,
+				"model":   modelID,
 				"choices": choices,
 			}
 			w.Header().Set("Content-Type", "application/json")
@@ -330,27 +351,14 @@ func runOpenAIServer(client *qwen.QwenAPI) {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		// Return a static list of available models
-		modelIDs := []string{
-			"qwen3-235b-a22b",
-			"qwen3-30b-a3b",
-			"qwen3-32b",
-			"qwen-max-latest",
-			"qwq-32b",
-			"qwen2.5-omni-7b",
-			"qvq-72b-preview-0310",
-			"qwen2.5-vl-32b-instruct",
-			"qwen2.5-14b-instruct-1m",
-			"qwen2.5-coder-32b-instruct",
-			"qwen2.5-72b-instruct",
-		}
 		var modelsData []map[string]interface{}
-		for _, id := range modelIDs {
+		for id, alias := range ModelAliases {
 			modelsData = append(modelsData, map[string]interface{}{
 				"id":       id,
 				"object":   "model",
 				"created":  0,
 				"owned_by": "qwen",
+				"alias":    alias, // Add alias to response
 			})
 		}
 		models := map[string]interface{}{
