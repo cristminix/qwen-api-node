@@ -1,9 +1,9 @@
-import app from "./routes/openai";
-import { serve } from '@hono/node-server'
+import v1 from "./providers/qwen-api/routes/v1"
+import { serve } from "@hono/node-server"
 
 const port = 3000
 
 serve({
-  fetch: app.fetch,
-  port
+  fetch: v1.fetch,
+  port,
 })
