@@ -1,0 +1,161 @@
+import axios from 'axios';
+// import { Conversation, Messages, MediaListType, AsyncResult } from './types'; // Import types
+import { toDataUri } from './toDataUri';
+import { mergeMedia } from './mergeMedia';
+import fetchValidated from './fetchValidated';
+import generateId from './generateId';
+import { ChatMessage, ChatResponseStream } from 'src/core/types/chat';
+
+// Main async generator function
+async function* createAsyncGenerator(
+    model: string,
+    messages: ChatMessage[],
+    prompt?: string,
+    proxy?: string,
+    media?: any,
+    top_p?: number,
+    temperature?: number,
+    conversation?: any,
+    return_conversation: boolean = true,
+    ...kwargs: any
+): AsyncGenerator<ChatResponseStream>  {
+    // Assume cls.get_model(model) is handled elsewhere
+    const headers = {
+        'accept': '*/*',
+        'accept-language': 'en-US,en;q=0.9',
+        'content-type': 'application/json',
+        'origin': 'https://www.blackbox.ai',
+        'referer': 'https://www.blackbox.ai/',
+        'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+    };
+
+    // Simulate ClientSession (using axios)
+    try {
+        if (!conversation || !('chat_id' in conversation)) {
+            conversation = {
+                model,
+                validated_value: await fetchValidated(), // You need to implement fetchValidated
+                chat_id: generateId(),
+                message_history: []
+            };
+        }
+
+        const current_messages: any[] = [];
+
+        for (let i = 0; i < messages.length; i++) {
+            const msg = messages[i];
+            const msg_id = i > 0 && msg.role === 'user' ? conversation.chat_id : generateId();
+            current_messages.push({
+                id: msg_id,
+                content: msg.content,
+                role: msg.role
+            });
+        }
+
+        const mergedMedia = mergeMedia(media || [], messages);
+        /*
+        if (mergedMedia.length > 0) {
+            current_messages[current_messages.length - 1]['data'] = {
+                imagesData: [
+                    {
+                        //@ts-ignore
+                        filePath: `/${image.name}`,
+                        contents: toDataUri(image.file)
+                    }
+                        //@ts-ignore
+                    for (const [image] of mergedMedia)
+                ],
+                fileText: ''
+            };
+        }
+        */
+        const data = {
+            messages: current_messages,
+            agentMode: {},
+            id: conversation.chat_id,
+            previewToken: null,
+            userId: null,
+            codeModelMode: true,
+            //@ts-ignore
+            trendingAgentMode: cls.trendingAgentMode?.[model] || {},
+            isMicMode: false,
+            userSystemPrompt: null,
+            //@ts-ignore
+            maxTokens: max_tokens,
+            playgroundTopP: top_p,
+            playgroundTemperature: temperature,
+            isChromeExt: false,
+            githubToken: '',
+            clickedAnswer2: false,
+            clickedAnswer3: false,
+            clickedForceWebSearch: false,
+            visitFromDelta: false,
+            isMemoryEnabled: false,
+            mobileClient: false,
+            userSelectedModel: null,
+            validated: conversation.validated_value,
+            imageGenerationMode: false,
+            webSearchModePrompt: false,
+            deepSearchMode: false,
+            designerMode: false,
+            domains: null,
+            vscodeClient: false,
+            codeInterpreterMode: false,
+            customProfile: {
+                additionalInfo: '',
+                enableNewChats: false,
+                name: '',
+                occupation: '',
+                traits: []
+            },
+            webSearchModeOption: {
+                autoMode: false,
+                webMode: false,
+                offlineMode: false
+            },
+            session: null,
+            isPremium: true,
+            subscriptionCache: null,
+            beastMode: false,
+            reasoningMode: false,
+            workspaceId: '',
+            asyncMode: false,
+            webSearchMode: false
+        };
+
+        // Simulate session.post
+        //@ts-ignore
+        const response = await axios.post(cls.api_endpoint, data, {
+            headers,
+        });
+
+        if (response.status !== 200) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const fullResponse: string[] = [];
+        const reader = response.data.getReader();
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            const chunkText = new TextDecoder().decode(value);
+            //@ts-ignore
+            fullResponse.push(chunkText);
+            yield chunkText;
+        }
+            //@ts-ignore
+
+        const fullResponseText = fullResponse.join('');
+
+        if (return_conversation) {
+            conversation.message_history.push({ role: "assistant", content: fullResponseText });
+            yield conversation;
+        }
+
+        return fullResponseText;
+    } catch (e) {
+        console.log(`Blackbox: Error in create_async_generator: ${e}`);
+        throw e;
+    }
+}

@@ -3,6 +3,7 @@ import getChatRequestMessages from "./getChatRequestMessages"
 import { getModelByAlias } from "../../../fn/getModelByAlias"
 import QwenAPI from "../../../"
 import ChatQwenAi from "../../../api/classes/ChatQwenAi"
+import BlackboxAi from "../../../../blackbox/api/classes/BlackboxAi"
 
 async function createCompletions(chatRequest: ChatCompletionRequest) {
   const authToken = process.env.QWEN_AUTH_TOKEN as string
@@ -10,6 +11,8 @@ async function createCompletions(chatRequest: ChatCompletionRequest) {
   //@ts-ignore
 
   const qwenApi = new ChatQwenAi(authToken, cookie)
+  const blackboxApi = new BlackboxAi()
+  //@ts-ignore
   const messages = await getChatRequestMessages(chatRequest, qwenApi)
   const streaming = chatRequest.stream || false
   //   console.log(chatRequest)

@@ -4,20 +4,10 @@ import * as dotenv from "dotenv"
 dotenv.config()
 
 import { ChatMessage } from "../src/core/types/chat"
-import QwenAPI from "../src/providers/qwen-api"
+import BlackboxAi from "../src/providers/blackbox/api/classes/BlackboxAi"
 
 async function main() {
-  const authToken = process.env.QWEN_AUTH_TOKEN
-  const cookie = process.env.QWEN_COOKIE
-
-  if (!authToken || !cookie) {
-    console.error(
-      "Error: QWEN_AUTH_TOKEN and QWEN_COOKIE must be set in your .env file."
-    )
-    process.exit(1)
-  }
-
-  const client = new QwenAPI(authToken, cookie)
+  const client = new BlackboxAi()
 
   const messages: ChatMessage[] = [
     {
@@ -26,11 +16,11 @@ async function main() {
     },
   ]
 
-  console.log("Sending request to Qwen Chat API...")
+  console.log("Sending request to Blackbox Chat API...")
 
   try {
     const response = await client.create({
-      model: "gpt-4", // Use the model name from the Python client
+      model: "qwen-max-latest", // Use the model name from the Python client
       messages: messages,
     })
 
