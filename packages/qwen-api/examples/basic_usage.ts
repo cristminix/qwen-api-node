@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv"
 
 // Load .env file from the current working directory
-dotenv.config()
+// dotenv.config({ quiet: false, debug: false })
 
 import { ChatMessage } from "../src/core/types/chat"
 import QwenAPI from "../src/providers/qwen-api"

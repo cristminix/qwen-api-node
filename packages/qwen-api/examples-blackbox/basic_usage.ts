@@ -12,7 +12,7 @@ async function main() {
   const messages: ChatMessage[] = [
     {
       role: "user",
-      content: "What is the capital Of Paris?",
+      content: process.argv[2] || "What is the capital Of Paris?",
     },
   ]
 
@@ -24,8 +24,8 @@ async function main() {
       messages: messages,
     })
 
-    console.log("API Response:")
-    console.log(JSON.stringify(response, null, 2))
+    // console.log("API Response:")
+    // console.log(JSON.stringify(response, null, 2))
 
     const content = response.choices[0]?.message?.content
     console.log("\nAssistant's Message:", content)

@@ -12,7 +12,7 @@ async function main() {
   const messages: ChatMessage[] = [
     {
       role: "user",
-      content: "What is the capital Of Paris?",
+      content: process.argv[2] || "What is the capital Of Paris?",
     },
   ]
 
