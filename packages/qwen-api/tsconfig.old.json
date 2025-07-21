@@ -10,8 +10,11 @@
     "skipLibCheck": true,
     "declaration": true,
     "noImplicitAny": false,
-    "baseUrl": "."
-    
+    "strictNullChecks":false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*":["src/*"]
+    },
   },
   "include": ["src/**/*"]
 }

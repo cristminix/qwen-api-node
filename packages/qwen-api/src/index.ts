@@ -1,9 +1,10 @@
-import v1 from "./providers/qwen-api/routes/v1"
+import app from "./routes"
 import { serve } from "@hono/node-server"
-
+import * as dotenv from "dotenv"
+dotenv.config()
 const port = 3000
 
 serve({
-  fetch: v1.fetch,
+  fetch: app.fetch,
   port,
 })

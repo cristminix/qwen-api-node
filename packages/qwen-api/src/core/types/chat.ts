@@ -38,10 +38,12 @@ export interface ChatMessage {
   role: MessageRole
   content?: string | ContentBlock[]
   tool_calls?: ToolCall[]
+  type?: string
 }
 
 export interface ChatCompletionRequest {
-  messages: ChatMessage[]
+  messages?: ChatMessage[]
+  prompt?: string[]
   model: string
   temperature?: number
   max_tokens?: number

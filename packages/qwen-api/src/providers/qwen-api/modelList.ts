@@ -1,4 +1,4 @@
-export const models = {
+const modelList = {
   data: [
     {
       alias: "qvq-72b-preview-0310",
@@ -80,3 +80,4 @@ export const models = {
   ],
   object: "list",
 }
+export default modelList

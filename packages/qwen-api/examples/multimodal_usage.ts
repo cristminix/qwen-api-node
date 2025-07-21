@@ -10,8 +10,8 @@ import * as path from "path"
 // Load .env file from the root of the project
 dotenv.config({ path: path.resolve(__dirname, "../../../.env") })
 
-import { QwenAPI } from "../src/client"
 import { ChatMessage, TextBlock, ImageBlock } from "../src/core/types/chat"
+import QwenAPI from "../src/providers/qwen-api"
 
 async function main() {
   const authToken = process.env.QWEN_AUTH_TOKEN

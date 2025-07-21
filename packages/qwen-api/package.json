@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "start": "ts-node src/index.ts"
+    "dev": "ts-node src/index.ts"
   },
   "keywords": [
     "qwen",

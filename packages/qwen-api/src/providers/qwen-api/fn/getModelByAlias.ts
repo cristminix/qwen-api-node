@@ -1,7 +1,7 @@
-import { models } from "../models"
+import modelList from "../modelList"
 
 export function getModelByAlias(modelAlias: string) {
-  const filtered = models.data.filter((model) => {
+  const filtered = modelList.data.filter((model) => {
     return model.id === modelAlias
   })
   if (filtered.length > 0) {

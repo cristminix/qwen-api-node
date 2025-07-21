@@ -3,8 +3,8 @@ import * as dotenv from "dotenv"
 // Load .env file from the current working directory
 dotenv.config()
 
-import { QwenAPI } from "../src/client" // Importing from src to run directly with ts-node
 import { ChatMessage } from "../src/core/types/chat"
+import QwenAPI from "../src/providers/qwen-api"
 
 async function main() {
   const authToken = process.env.QWEN_AUTH_TOKEN
