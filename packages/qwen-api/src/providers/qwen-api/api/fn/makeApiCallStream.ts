@@ -35,10 +35,12 @@ async function* makeApiCallStream(
           role: msg.role,
           content: finalContent,
           chat_type: "t2t",
+          // chat_type: "search",
           feature_config: {
             thinking_enabled: false,
             thinking_budget: 0,
             output_schema: null,
+            search_version: "v1",
           },
           extra: {},
         } as InternalPayloadMessage
@@ -55,18 +57,23 @@ async function* makeApiCallStream(
     })
 
     for await (const chunk of response.data) {
+      yield chunk as ChatResponseStream
+      /*
       const text = chunk.toString("utf-8")
       const events = text.split("\n\n")
       for (const event of events) {
-        if (event.startsWith("data:")) {
+        // if (event.startsWith("data:")) {
+          // console.log("Received event from stream:", event.substring(5))
           try {
             const jsonData = JSON.parse(event.substring(5))
+            // console.log("Parsed JSON from stream:", jsonData.choices[0].delta)
             yield jsonData as ChatResponseStream
           } catch (e) {
             // Ignore parsing errors
+            console.error("Error parsing JSON from stream:", e)
           }
         }
-      }
+      }*/
     }
   } catch (error) {
     if (axios.isAxiosError(error)) {

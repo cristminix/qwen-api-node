@@ -1,22 +1,24 @@
-import { ChatCompletionRequest } from "../../../../../core/types/chat"
+import { ChatCompletionRequest } from "../../../core/types/chat"
 import getChatRequestMessages from "./getChatRequestMessages"
-import { getModelByAlias } from "../../../fn/getModelByAlias"
-import QwenAPI from "../../../"
-import ChatQwenAi from "../../../api/classes/ChatQwenAi"
-import BlackboxAi from "../../../../blackbox/api/classes/BlackboxAi"
+import ChatQwenAi from "../../../providers/qwen-api/api/classes/ChatQwenAi"
+import BlackboxAi from "../../../providers/blackbox/api/classes/BlackboxAi"
+import { getModelByAlias } from "./getModelByAlias"
 
 async function createCompletions(chatRequest: ChatCompletionRequest) {
   const authToken = process.env.QWEN_AUTH_TOKEN as string
   const cookie = process.env.QWEN_COOKIE as string
   //@ts-ignore
-
-  const qwenApi = new ChatQwenAi(authToken, cookie)
-  const blackboxApi = new BlackboxAi()
+  const provider = process.env.DEFAULT_PROVIDER
+  let providerApi
+  if (provider === "qwenchatai") providerApi = new ChatQwenAi(authToken, cookie)
+  else if (provider === "blackbox") providerApi = new BlackboxAi()
   //@ts-ignore
-  const messages = await getChatRequestMessages(chatRequest, qwenApi)
+  const messages = await getChatRequestMessages(chatRequest, providerApi)
   const streaming = chatRequest.stream || false
   //   console.log(chatRequest)
-  const realModel = getModelByAlias(chatRequest.model)
+  //@ts-ignore
+  const realModel = getModelByAlias(provider, chatRequest.model)
+  // console.log("realModel", realModel)
   const qwenRequest: ChatCompletionRequest = {
     model: realModel,
     //@ts-ignore
@@ -33,7 +35,9 @@ async function createCompletions(chatRequest: ChatCompletionRequest) {
 
     top_p: chatRequest.top_p,
   }
-  return streaming ? qwenApi.stream(qwenRequest) : qwenApi.create(qwenRequest)
+  return streaming
+    ? providerApi.stream(qwenRequest)
+    : providerApi.create(qwenRequest)
 }
 
 export default createCompletions

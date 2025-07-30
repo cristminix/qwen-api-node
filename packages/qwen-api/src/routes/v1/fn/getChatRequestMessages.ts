@@ -3,15 +3,11 @@ import {
   ChatMessage,
   ImageBlock,
   TextBlock,
-} from "../../../../../core/types/chat"
+} from "../../../core/types/chat"
 import isPromptMode from "./isPromptMode"
-import { writeFileFromBase64Url } from "../../../../../fn/writeFileFromBase64Url"
-import QwenAPI from "../../../"
-import ChatQwenAi from "../../../api/classes/ChatQwenAi"
-async function getMessages(
-  inputMessages: ChatMessage[],
-  qwenApi: QwenAPI | ChatQwenAi
-) {
+import { writeFileFromBase64Url } from "../../..//fn/writeFileFromBase64Url"
+
+async function getMessages(inputMessages: ChatMessage[], providerApi: any) {
   const messages: ChatMessage[] = []
   for (const msg of inputMessages) {
     if (msg.role === "user" && Array.isArray(msg.content)) {
@@ -26,7 +22,7 @@ async function getMessages(
             //@ts-ignore
             const imagePath = await writeFileFromBase64Url(item.image_url.url)
             console.log(imagePath)
-            const { file_url } = await qwenApi.uploadFile(imagePath)
+            const { file_url } = await providerApi.uploadFile(imagePath)
             const image: ImageBlock = {
               block_type: "image",
               url: file_url,
@@ -58,11 +54,12 @@ async function getMessages(
       })
     }
   }
+  // console.log(messages)
   return messages
 }
 async function getChatRequestMessages(
   chatRequest: ChatCompletionRequest,
-  qwenApi: QwenAPI | ChatQwenAi
+  providerApi: any
 ) {
   const promptMode = isPromptMode(chatRequest)
   if (promptMode) {
@@ -74,7 +71,7 @@ async function getChatRequestMessages(
       : []
   }
   return Array.isArray(chatRequest.messages)
-    ? await getMessages(chatRequest.messages, qwenApi)
+    ? await getMessages(chatRequest.messages, providerApi)
     : []
 }
 

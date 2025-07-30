@@ -1,4 +1,4 @@
-import { ChatCompletionRequest } from "../../../../../core/types/chat"
+import { ChatCompletionRequest } from "../../../core/types/chat"
 function isPromptMode(chatRequest: ChatCompletionRequest) {
   return Array.isArray(chatRequest.prompt)
 }

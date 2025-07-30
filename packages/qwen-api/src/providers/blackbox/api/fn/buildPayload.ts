@@ -1,3 +1,4 @@
+import { trendingAgentMode } from "../../modelList"
 import fetchValidated from "./fetchValidated"
 import generateId from "./generateId"
 import { mergeMedia } from "./mergeMedia"
@@ -32,6 +33,7 @@ async function buildPayload(
       content: msg.content,
       role: msg.role,
     })
+    console.log(current_messages)
   }
 
   const mergedMedia = mergeMedia(media || [], messages)
@@ -51,15 +53,18 @@ async function buildPayload(
             };
         }
         */
+  let trendingAgentModeSet = trendingAgentMode?.[model] || {} //, //cls.trendingAgentMode?.[model] || {},
+  // console.log("trendingAgentModeSet", trendingAgentModeSet)
+  let agentModeSet = trendingAgentMode?.[model] || {}
   const data = {
     messages: current_messages,
-    agentMode: {},
+    agentMode: agentModeSet,
     id: conversation.chat_id,
     previewToken: null,
     userId: null,
     codeModelMode: true,
     //@ts-ignore
-    trendingAgentMode: {}, //cls.trendingAgentMode?.[model] || {},
+    trendingAgentMode: trendingAgentModeSet,
     isMicMode: false,
     userSystemPrompt: null,
     //@ts-ignore
@@ -91,18 +96,18 @@ async function buildPayload(
       traits: [],
     },
     webSearchModeOption: {
-      autoMode: false,
+      autoMode: true,
       webMode: false,
       offlineMode: false,
     },
     session: null,
     isPremium: true,
     subscriptionCache: null,
-    beastMode: false,
+    beastMode: true,
     reasoningMode: false,
     workspaceId: "",
     asyncMode: false,
-    webSearchMode: false,
+    webSearchMode: true,
   }
   return data
 }

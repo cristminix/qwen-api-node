@@ -1,6 +1,6 @@
 import applyHonoCors from "../fn/applyHonoCors"
 import createHono from "../fn/createHono"
-import v1 from "../providers/qwen-api/routes/v1"
+import v1 from "./v1"
 
 const app = createHono()
 

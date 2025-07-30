@@ -1,6 +1,14 @@
 const modelList = {
   data: [
     {
+      alias: "qwen3-coder-plus",
+      id: "Qwen3-Coder",
+      object: "model",
+      owned_by: "qwen",
+      created: 0,
+    },
+
+    {
       alias: "qvq-72b-preview-0310",
       created: 0,
       id: "Blackpink",

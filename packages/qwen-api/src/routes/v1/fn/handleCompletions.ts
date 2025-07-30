@@ -1,5 +1,5 @@
 import { Context } from "hono"
-import { ChatCompletionRequest } from "../../../../../core/types/chat"
+import { ChatCompletionRequest } from "../../../core/types/chat"
 import createCompletions from "./createCompletions"
 import isPromptMode from "./isPromptMode"
 import { streamSSE } from "hono/streaming"
@@ -17,27 +17,8 @@ async function sendStreamResult(
     if (response) {
       let id = 1
       for await (const chunk of response) {
-        const token = chunk.choices[0].delta.content
-        const data: any = {
-          model: modelName,
-          object: "chat.completion.chunk",
-          id,
-          created: Date.now(),
-        }
-        if (promptMode) {
-          data.choices = [{ delta: { text: token } }]
-        } else {
-          data.choices = [{ delta: { content: token } }]
-        }
-        await stream.writeSSE({
-          data: `${JSON.stringify(data)}\n`,
-        })
+        await stream.write(chunk)
       }
-      id += 1
-      const endEvent = `data: [DONE]]n`
-      await stream.writeSSE({
-        data: endEvent,
-      })
     }
   })
 }
