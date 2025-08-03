@@ -52,9 +52,27 @@ async function* makeApiCallStream(
     }
     // console.log("Payload for streaming request:", JSON.stringify(payload, null, 2));
     // return; // End the generator if no messages are provided
-    const response = await client.post("/api/chat/completions", payload, {
-      responseType: "stream",
-    })
+    let response
+    try {
+      response = await client.post("/api/chat/completions", payload, {
+        responseType: "stream",
+      })
+    } catch (error: any) {
+      if (axios.isAxiosError(error) && error.response?.status === 429) {
+        // Tunggu selama 1 detik sebelum mencoba lagi
+        await new Promise((resolve) => setTimeout(resolve, 5000))
+        try {
+          response = await client.post("/api/chat/completions", payload, {
+            responseType: "stream",
+          })
+        } catch (retryError) {
+          // Jika permintaan ulang juga gagal, lempar error asli
+          throw error
+        }
+      } else {
+        throw error
+      }
+    }
 
     for await (const chunk of response.data) {
       yield chunk as ChatResponseStream
@@ -75,7 +93,7 @@ async function* makeApiCallStream(
         }
       }*/
     }
-  } catch (error) {
+  } catch (error: any) {
     if (axios.isAxiosError(error)) {
       //@ts-ignore
       console.error("Axios error in makeApiCallStream:", error.response?.data)

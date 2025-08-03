@@ -49,7 +49,24 @@ async function makeApiCallNonStream(
       max_tokens: request.max_tokens || 2048,
     }
 
-    const response = await client.post("/api/chat/completions", payload)
+    let response
+    try {
+      response = await client.post("/api/chat/completions", payload)
+    } catch (error: any) {
+      if (axios.isAxiosError(error) && error.response?.status === 429) {
+        // Tunggu selama 1 detik sebelum mencoba lagi
+        await new Promise((resolve) => setTimeout(resolve, 5000))
+        try {
+          response = await client.post("/api/chat/completions", payload)
+        } catch (retryError) {
+          // Jika permintaan ulang juga gagal, lempar error asli
+          throw error
+        }
+      } else {
+        throw error
+      }
+    }
+
     // Assuming the non-streaming response directly contains the final message
     return {
       choices: [
@@ -61,7 +78,7 @@ async function makeApiCallNonStream(
         },
       ],
     }
-  } catch (error) {
+  } catch (error: any) {
     if (axios.isAxiosError(error)) {
       console.error(
         "Axios error in _makeApiCallNonStream:",
