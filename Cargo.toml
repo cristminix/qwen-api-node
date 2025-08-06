@@ -1,0 +1,55 @@
+[package]
+name = "qwen-cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Async runtime
+tokio = { version = "1.0", features = ["full"] }
+
+# HTTP client and server
+reqwest = { version = "0.11", features = ["json", "stream", "rustls-tls"] }
+axum = { version = "0.7", features = ["json"] }
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors"] }
+
+# JSON serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# CLI argument parsing
+clap = { version = "4.0", features = ["derive"] }
+
+# Environment variables
+dotenvy = "0.15"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = "0.3"
+
+# File handling
+tokio-util = { version = "0.7", features = ["io"] }
+
+# OSS SDK equivalent for Rust (we'll use AWS S3 compatible client)
+aws-sdk-s3 = "1.0"
+aws-config = "1.0"
+
+# HTTP utilities
+futures-util = "0.3"
+bytes = "1.0"
+tokio-stream = "0.1"
+
+# Time utilities
+chrono = { version = "0.4", features = ["serde"] }
+
+[lib]
+name = "qwen_api"
+path = "src/lib.rs"
+
+[[bin]]
+name = "qwen-cli"
+path = "src/main.rs"
