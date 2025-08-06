@@ -3,11 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
 	"qwen-api/go-qwen-api"
+	"time"
 
 	"github.com/joho/godotenv"
 )
@@ -25,6 +26,7 @@ var ModelAliases = map[string]string{
 	"Black Mamba": "qwen2.5-14b-instruct-1m",
 	"Milea":       "qwen2.5-coder-32b-instruct",
 	"Dilan":       "qwen2.5-72b-instruct",
+	"Qwen3-Coder": "qwen3-coder-plus",
 }
 
 func main() {
@@ -85,7 +87,7 @@ func runChatExample(client *qwen.QwenAPI) {
 	}
 
 	request := qwen.ChatCompletionRequest{
-		Model: "qwen-max-latest", // Or any other model you want to use
+		Model: "qwen3-coder-plus", // Or any other model you want to use
 		Messages: []qwen.ChatMessage{
 			{Role: qwen.MessageRoleUser, Content: jsonContent},
 		},
@@ -206,7 +208,7 @@ func runOpenAIServer(client *qwen.QwenAPI) {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		body, err := ioutil.ReadAll(r.Body)
+		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			http.Error(w, "Failed to read request body", http.StatusBadRequest)
 			return
@@ -218,8 +220,8 @@ func runOpenAIServer(client *qwen.QwenAPI) {
 		var req struct {
 			Model    string `json:"model"`
 			Messages []struct {
-				Role    string `json:"role"`
-				Content string `json:"content"`
+				Role    string      `json:"role"`
+				Content interface{} `json:"content"`
 			} `json:"messages"`
 			Stream bool `json:"stream"`
 		}
@@ -230,7 +232,24 @@ func runOpenAIServer(client *qwen.QwenAPI) {
 		// Convert to Qwen format
 		var qwenMessages []qwen.ChatMessage
 		for _, m := range req.Messages {
-			content, _ := json.Marshal(m.Content)
+			var content json.RawMessage
+			switch v := m.Content.(type) {
+			case string:
+				// Handle string content
+				content, _ = json.Marshal(v)
+			case []interface{}:
+				// Handle array of content blocks
+				contentBlocks := make([]map[string]interface{}, len(v))
+				for i, item := range v {
+					if itemMap, ok := item.(map[string]interface{}); ok {
+						contentBlocks[i] = itemMap
+					}
+				}
+				content, _ = json.Marshal(contentBlocks)
+			default:
+				// Handle other cases by marshaling as is
+				content, _ = json.Marshal(v)
+			}
 			qwenMessages = append(qwenMessages, qwen.ChatMessage{
 				Role:    qwen.MessageRole(m.Role),
 				Content: content,
@@ -268,22 +287,31 @@ func runOpenAIServer(client *qwen.QwenAPI) {
 						break
 					}
 					if len(response.Choices) > 0 {
-						var content string
-						// Fix: Delta.Content is a string, assign directly
-						content = response.Choices[0].Delta.Content
-						data := map[string]interface{}{
-							"choices": []map[string]interface{}{
-								{
-									"delta": map[string]string{
-										"role":    "assistant",
-										"content": content,
-									},
-									"index":         0,
-									"finish_reason": nil,
-								},
-							},
+						// Minimal formatting to match OpenAI API format
+						// Add finish_reason field to each choice
+						choices := make([]map[string]interface{}, len(response.Choices))
+						for i, choice := range response.Choices {
+							choices[i] = map[string]interface{}{
+								"index":         i,
+								"delta":         choice.Delta,
+								"finish_reason": interface{}(nil), // Explicitly set as null in JSON
+							}
 						}
-						jsonData, _ := json.Marshal(data)
+
+						data := map[string]interface{}{
+							"id":      "chatcmpl-" + modelID,
+							"object":  "chat.completion.chunk",
+							"created": time.Now().Unix(),
+							"model":   modelID,
+							"choices": choices,
+						}
+						jsonData, err := json.Marshal(data)
+						if err != nil {
+							fmt.Printf("Error marshaling JSON: %v\n", err)
+							http.Error(w, "Internal server error", http.StatusInternalServerError)
+							return
+						}
+						// Send SSE formatted response
 						fmt.Fprintf(w, "data: %s\n\n", jsonData)
 						flusher.Flush()
 					}

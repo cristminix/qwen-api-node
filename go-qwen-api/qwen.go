@@ -25,8 +25,8 @@ type ToolParameter struct {
 
 // Tool defines the structure for a tool that can be called by the model.
 type Tool struct {
-	Name        string                     `json:"name"`
-	Description string                     `json:"description"`
+	Name        string                   `json:"name"`
+	Description string                   `json:"description"`
 	Parameters  map[string]ToolParameter `json:"parameters"`
 }
 
@@ -45,13 +45,13 @@ type ToolCall struct {
 
 // TextBlock represents a text content block.
 type TextBlock struct {
-	BlockType string `json:"block_type"` // Should be "text"
+	BlockType string `json:"type"` // Should be "text"
 	Text      string `json:"text"`
 }
 
 // ImageBlock represents an image content block.
 type ImageBlock struct {
-	BlockType string `json:"block_type"` // Should be "image"
+	BlockType string `json:"type"`            // Should be "image"
 	Image     string `json:"image,omitempty"` // base64 encoded image
 	Path      string `json:"path,omitempty"`
 	URL       string `json:"url,omitempty"`
@@ -61,7 +61,7 @@ type ImageBlock struct {
 
 // AudioBlock represents an audio content block.
 type AudioBlock struct {
-	BlockType string `json:"block_type"` // Should be "audio"
+	BlockType string `json:"type"`            // Should be "audio"
 	Audio     string `json:"audio,omitempty"` // base64 encoded audio
 	Path      string `json:"path,omitempty"`
 	URL       string `json:"url,omitempty"`
@@ -69,9 +69,9 @@ type AudioBlock struct {
 }
 
 // ContentBlock is a flexible type to hold different content blocks.
-// It uses json.RawMessage to defer parsing until the block_type is known.
+// It uses json.RawMessage to defer parsing until the type is known.
 type ContentBlock struct {
-	BlockType string          `json:"block_type"`
+	BlockType string          `json:"type"`
 	Raw       json.RawMessage `json:"-"` // Store raw JSON for custom unmarshaling
 }
 
@@ -79,7 +79,7 @@ type ContentBlock struct {
 func (cb *ContentBlock) UnmarshalJSON(data []byte) error {
 	// First, unmarshal to a temporary struct to get the BlockType
 	var temp struct {
-		BlockType string `json:"block_type"`
+		BlockType string `json:"type"`
 	}
 	if err := json.Unmarshal(data, &temp); err != nil {
 		return err
@@ -92,9 +92,9 @@ func (cb *ContentBlock) UnmarshalJSON(data []byte) error {
 
 // ChatMessage represents a single message in a chat conversation.
 type ChatMessage struct {
-	Role      MessageRole      `json:"role"`
-	Content   json.RawMessage  `json:"content,omitempty"` // Can be string or array of ContentBlock
-	ToolCalls []ToolCall       `json:"tool_calls,omitempty"`
+	Role      MessageRole     `json:"role"`
+	Content   json.RawMessage `json:"content,omitempty"` // Can be string or array of ContentBlock
+	ToolCalls []ToolCall      `json:"tool_calls,omitempty"`
 }
 
 // InternalPayloadContentBlock represents a content block as sent in the API payload.
@@ -107,9 +107,9 @@ type InternalPayloadContentBlock struct {
 
 // InternalPayloadMessage represents a message as sent in the API payload.
 type InternalPayloadMessage struct {
-	Role        MessageRole `json:"role"`
-	Content     interface{} `json:"content"` // Can be string or []InternalPayloadContentBlock
-	ChatType    string      `json:"chat_type"`
+	Role          MessageRole `json:"role"`
+	Content       interface{} `json:"content"` // Can be string or []InternalPayloadContentBlock
+	ChatType      string      `json:"chat_type"`
 	FeatureConfig struct {
 		ThinkingEnabled bool        `json:"thinking_enabled"`
 		ThinkingBudget  int         `json:"thinking_budget"`

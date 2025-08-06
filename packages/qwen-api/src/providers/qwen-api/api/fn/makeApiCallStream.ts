@@ -67,10 +67,30 @@ async function* makeApiCallStream(
           })
         } catch (retryError) {
           // Jika permintaan ulang juga gagal, lempar error asli
-          throw error
+          let errorMessage = "An error occurred during the API call"
+          if (axios.isAxiosError(error)) {
+            errorMessage =
+              error.response?.data?.message ||
+              error.response?.statusText ||
+              error.message ||
+              errorMessage
+          } else if (error instanceof Error) {
+            errorMessage = error.message
+          }
+          throw new Error(errorMessage)
         }
       } else {
-        throw error
+        let errorMessage = "An error occurred during the API call"
+        if (axios.isAxiosError(error)) {
+          errorMessage =
+            error.response?.data?.message ||
+            error.response?.statusText ||
+            error.message ||
+            errorMessage
+        } else if (error instanceof Error) {
+          errorMessage = error.message
+        }
+        throw new Error(errorMessage)
       }
     }
 
