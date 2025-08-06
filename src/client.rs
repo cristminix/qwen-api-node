@@ -116,7 +116,7 @@ impl QwenClient {
                                             .unwrap()
                                             .as_millis()
                                     ),
-                                    call_type: "function".to_string(),
+                                    r#type: "function".to_string(),
                                     function: tool_json,
                                 }]),
                             },
@@ -151,17 +151,22 @@ impl QwenClient {
                         let mut internal_blocks = Vec::new();
 
                         for block in content_blocks {
-                            match block.block_type.as_str() {
+                            match block.r#type.as_str() {
                                 "text" => {
+                                    let mut text_block_data = block.data.clone();
+                                    text_block_data.insert(
+                                        "type".to_string(),
+                                        serde_json::Value::String(block.r#type.clone()),
+                                    );
                                     match serde_json::from_value::<crate::types::TextBlock>(
                                         serde_json::Value::Object(
-                                            block.data.clone().into_iter().collect(),
+                                            text_block_data.into_iter().collect(),
                                         ),
                                     ) {
                                         Ok(text_block) => {
                                             internal_blocks.push(
                                                 crate::types::InternalPayloadContentBlock {
-                                                    block_type: text_block.block_type,
+                                                    r#type: text_block.r#type,
                                                     text: Some(text_block.text),
                                                     image: None,
                                                     audio: None,
@@ -175,15 +180,20 @@ impl QwenClient {
                                     }
                                 }
                                 "image" => {
+                                    let mut image_block_data = block.data.clone();
+                                    image_block_data.insert(
+                                        "type".to_string(),
+                                        serde_json::Value::String(block.r#type.clone()),
+                                    );
                                     match serde_json::from_value::<crate::types::ImageBlock>(
                                         serde_json::Value::Object(
-                                            block.data.clone().into_iter().collect(),
+                                            image_block_data.into_iter().collect(),
                                         ),
                                     ) {
                                         Ok(image_block) => {
                                             internal_blocks.push(
                                                 crate::types::InternalPayloadContentBlock {
-                                                    block_type: image_block.block_type,
+                                                    r#type: image_block.r#type,
                                                     text: None,
                                                     image: image_block.url,
                                                     audio: None,
@@ -197,15 +207,20 @@ impl QwenClient {
                                     }
                                 }
                                 "audio" => {
+                                    let mut audio_block_data = block.data.clone();
+                                    audio_block_data.insert(
+                                        "type".to_string(),
+                                        serde_json::Value::String(block.r#type.clone()),
+                                    );
                                     match serde_json::from_value::<crate::types::AudioBlock>(
                                         serde_json::Value::Object(
-                                            block.data.clone().into_iter().collect(),
+                                            audio_block_data.into_iter().collect(),
                                         ),
                                     ) {
                                         Ok(audio_block) => {
                                             internal_blocks.push(
                                                 crate::types::InternalPayloadContentBlock {
-                                                    block_type: audio_block.block_type,
+                                                    r#type: audio_block.r#type,
                                                     text: None,
                                                     image: None,
                                                     audio: audio_block.url,
@@ -221,7 +236,7 @@ impl QwenClient {
                                 _ => {
                                     internal_blocks.push(
                                         crate::types::InternalPayloadContentBlock {
-                                            block_type: block.block_type,
+                                            r#type: block.r#type,
                                             text: None,
                                             image: None,
                                             audio: None,
@@ -273,16 +288,66 @@ impl QwenClient {
             // "max_tokens": request.max_tokens, // Disabled for now
         });
 
+        // Print payload as JSON to console for debugging
+        // println!(
+        //     "Non-streaming payload: {}",
+        //     serde_json::to_string_pretty(&payload)
+        //         .unwrap_or_else(|_| "Failed to serialize payload".to_string())
+        // );
+
         let headers = self.build_headers()?;
 
         let resp = self
             .client
             .post(&url)
-            .headers(headers)
+            .headers(headers.clone())
             .json(&payload)
             .send()
-            .await?
-            .error_for_status()?;
+            .await;
+
+        let resp = match resp {
+            Ok(resp) => resp,
+            Err(e) => {
+                println!("Error sending request: {} - {}", e, e.to_string());
+                return Err(e.into());
+            }
+        };
+
+        // Clone the response before calling error_for_status so we can still access it for the text
+        let status = resp.status();
+        let resp = match resp.error_for_status() {
+            Ok(resp) => resp,
+            Err(e) => {
+                // Try to get the response text for more detailed error information
+                if status.is_client_error() || status.is_server_error() {
+                    // Create a new request to get the response text
+                    let text_resp = self
+                        .client
+                        .post(&url)
+                        .headers(headers)
+                        .json(&payload)
+                        .send()
+                        .await;
+
+                    match text_resp {
+                        Ok(text_resp) => match text_resp.text().await {
+                            Ok(text) => {
+                                println!("HTTP Error: {} - Response: {}", status, text);
+                            }
+                            Err(_) => {
+                                println!("HTTP Error: {}", status);
+                            }
+                        },
+                        Err(_) => {
+                            println!("HTTP Error: {}", status);
+                        }
+                    }
+                } else {
+                    println!("Error in response: {}", e);
+                }
+                return Err(e.into());
+            }
+        };
 
         let value: crate::types::ChatResponse = resp.json().await?;
         Ok(value)
@@ -312,10 +377,15 @@ impl QwenClient {
             Ok(content_blocks) => {
                 let mut result_content = String::new();
                 for block in content_blocks {
-                    match block.block_type.as_str() {
+                    match block.r#type.as_str() {
                         "text" => {
+                            let mut text_block_data = block.data.clone();
+                            text_block_data.insert(
+                                "type".to_string(),
+                                serde_json::Value::String(block.r#type.clone()),
+                            );
                             match serde_json::from_value::<crate::types::TextBlock>(
-                                serde_json::Value::Object(block.data.clone().into_iter().collect()),
+                                serde_json::Value::Object(text_block_data.into_iter().collect()),
                             ) {
                                 Ok(text_block) => {
                                     result_content.push_str(&text_block.text);
@@ -327,8 +397,13 @@ impl QwenClient {
                             }
                         }
                         "image" => {
+                            let mut image_block_data = block.data.clone();
+                            image_block_data.insert(
+                                "type".to_string(),
+                                serde_json::Value::String(block.r#type.clone()),
+                            );
                             match serde_json::from_value::<crate::types::ImageBlock>(
-                                serde_json::Value::Object(block.data.clone().into_iter().collect()),
+                                serde_json::Value::Object(image_block_data.into_iter().collect()),
                             ) {
                                 Ok(image_block) => {
                                     if let Some(url) = image_block.url {
@@ -342,8 +417,13 @@ impl QwenClient {
                             }
                         }
                         "audio" => {
+                            let mut audio_block_data = block.data.clone();
+                            audio_block_data.insert(
+                                "type".to_string(),
+                                serde_json::Value::String(block.r#type.clone()),
+                            );
                             match serde_json::from_value::<crate::types::AudioBlock>(
-                                serde_json::Value::Object(block.data.clone().into_iter().collect()),
+                                serde_json::Value::Object(audio_block_data.into_iter().collect()),
                             ) {
                                 Ok(audio_block) => {
                                     if let Some(url) = audio_block.url {
@@ -447,7 +527,7 @@ impl QwenClient {
                                             .unwrap()
                                             .as_millis()
                                     ),
-                                    call_type: "function".to_string(),
+                                    r#type: "function".to_string(),
                                     function: tool_json,
                                 }]),
                             },
@@ -494,17 +574,22 @@ impl QwenClient {
                         let mut internal_blocks = Vec::new();
 
                         for block in content_blocks {
-                            match block.block_type.as_str() {
+                            match block.r#type.as_str() {
                                 "text" => {
+                                    let mut text_block_data = block.data.clone();
+                                    text_block_data.insert(
+                                        "type".to_string(),
+                                        serde_json::Value::String(block.r#type.clone()),
+                                    );
                                     match serde_json::from_value::<crate::types::TextBlock>(
                                         serde_json::Value::Object(
-                                            block.data.clone().into_iter().collect(),
+                                            text_block_data.into_iter().collect(),
                                         ),
                                     ) {
                                         Ok(text_block) => {
                                             internal_blocks.push(
                                                 crate::types::InternalPayloadContentBlock {
-                                                    block_type: text_block.block_type,
+                                                    r#type: text_block.r#type,
                                                     text: Some(text_block.text),
                                                     image: None,
                                                     audio: None,
@@ -518,15 +603,20 @@ impl QwenClient {
                                     }
                                 }
                                 "image" => {
+                                    let mut image_block_data = block.data.clone();
+                                    image_block_data.insert(
+                                        "type".to_string(),
+                                        serde_json::Value::String(block.r#type.clone()),
+                                    );
                                     match serde_json::from_value::<crate::types::ImageBlock>(
                                         serde_json::Value::Object(
-                                            block.data.clone().into_iter().collect(),
+                                            image_block_data.into_iter().collect(),
                                         ),
                                     ) {
                                         Ok(image_block) => {
                                             internal_blocks.push(
                                                 crate::types::InternalPayloadContentBlock {
-                                                    block_type: image_block.block_type,
+                                                    r#type: image_block.r#type,
                                                     text: None,
                                                     image: image_block.url,
                                                     audio: None,
@@ -540,15 +630,20 @@ impl QwenClient {
                                     }
                                 }
                                 "audio" => {
+                                    let mut audio_block_data = block.data.clone();
+                                    audio_block_data.insert(
+                                        "type".to_string(),
+                                        serde_json::Value::String(block.r#type.clone()),
+                                    );
                                     match serde_json::from_value::<crate::types::AudioBlock>(
                                         serde_json::Value::Object(
-                                            block.data.clone().into_iter().collect(),
+                                            audio_block_data.into_iter().collect(),
                                         ),
                                     ) {
                                         Ok(audio_block) => {
                                             internal_blocks.push(
                                                 crate::types::InternalPayloadContentBlock {
-                                                    block_type: audio_block.block_type,
+                                                    r#type: audio_block.r#type,
                                                     text: None,
                                                     image: None,
                                                     audio: audio_block.url,
@@ -564,7 +659,7 @@ impl QwenClient {
                                 _ => {
                                     internal_blocks.push(
                                         crate::types::InternalPayloadContentBlock {
-                                            block_type: block.block_type,
+                                            r#type: block.r#type,
                                             text: None,
                                             image: None,
                                             audio: None,
@@ -616,6 +711,13 @@ impl QwenClient {
             // "max_tokens": request.max_tokens, // Disabled for now
         });
 
+        // Print payload as JSON to console for debugging
+        // println!(
+        //     "Streaming payload: {}",
+        //     serde_json::to_string_pretty(&payload)
+        //         .unwrap_or_else(|_| "Failed to serialize payload".to_string())
+        // );
+
         let headers = self.build_headers()?;
 
         let client = self.client.clone();
@@ -629,55 +731,60 @@ impl QwenClient {
 
             match resp {
                 Ok(resp) => {
-                    let resp = resp.error_for_status();
-                    match resp {
-                        Ok(resp) => {
-                            let mut stream = resp.bytes_stream();
-                            while let Some(chunk) = stream.next().await {
-                                match chunk {
-                                    Ok(chunk) => {
-                                        let chunk_str = String::from_utf8_lossy(&chunk);
-                                        let lines: Vec<&str> = chunk_str.lines().collect();
-                                        for line in lines {
-                                            if line.starts_with("data:") {
-                                                let json_str = &line[5..];
-                                                match serde_json::from_str::<
-                                                    crate::types::ChatResponseStream,
-                                                >(
-                                                    json_str
-                                                ) {
-                                                    Ok(chat_response_stream) => {
-                                                        if stream_tx
-                                                            .send(chat_response_stream)
-                                                            .await
-                                                            .is_err()
-                                                        {
-                                                            // Receiver dropped
-                                                            break;
-                                                        }
+                    let status = resp.status();
+                    if status.is_success() {
+                        let mut stream = resp.bytes_stream();
+                        while let Some(chunk) = stream.next().await {
+                            match chunk {
+                                Ok(chunk) => {
+                                    let chunk_str = String::from_utf8_lossy(&chunk);
+                                    let lines: Vec<&str> = chunk_str.lines().collect();
+                                    for line in lines {
+                                        if line.starts_with("data:") {
+                                            let json_str = &line[5..];
+                                            match serde_json::from_str::<
+                                                crate::types::ChatResponseStream,
+                                            >(
+                                                json_str
+                                            ) {
+                                                Ok(chat_response_stream) => {
+                                                    if stream_tx
+                                                        .send(chat_response_stream)
+                                                        .await
+                                                        .is_err()
+                                                    {
+                                                        // Receiver dropped
+                                                        break;
                                                     }
-                                                    Err(_e) => {
-                                                        // Ignore parsing errors, as per original TS code
-                                                        // println!("Error parsing JSON: {}", e);
-                                                    }
+                                                }
+                                                Err(_e) => {
+                                                    // Ignore parsing errors, as per original TS code
+                                                    // println!("Error parsing JSON: {}", e);
                                                 }
                                             }
                                         }
                                     }
-                                    Err(e) => {
-                                        println!("Error reading chunk: {}", e);
-                                        break;
-                                    }
+                                }
+                                Err(e) => {
+                                    println!("Error reading chunk: {}", e);
+                                    break;
                                 }
                             }
                         }
-                        Err(e) => {
-                            println!("Error in response: {}", e);
+                    } else {
+                        // Try to get the response text for more detailed error information
+                        match resp.text().await {
+                            Ok(text) => {
+                                println!("HTTP Error: {} - Response: {}", status, text);
+                            }
+                            Err(_) => {
+                                println!("HTTP Error: {}", status);
+                            }
                         }
                     }
                 }
                 Err(e) => {
-                    println!("Error sending request: {}", e);
+                    println!("Error sending request: {} - {}", e, e.to_string());
                 }
             }
 

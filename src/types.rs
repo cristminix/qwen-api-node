@@ -29,7 +29,7 @@ pub struct ChatMessage {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ToolParameter {
     #[serde(rename = "type")]
-    pub param_type: String,
+    pub r#type: String,
     pub description: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub required: Option<bool>,
@@ -55,7 +55,7 @@ pub struct FunctionCall {
 pub struct ToolCall {
     pub id: String,
     #[serde(rename = "type")]
-    pub call_type: String, // Should be "function"
+    pub r#type: String, // Should be "function"
     pub function: FunctionCall,
 }
 
@@ -63,7 +63,7 @@ pub struct ToolCall {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TextBlock {
     #[serde(rename = "type")]
-    pub block_type: String, // Should be "text"
+    pub r#type: String, // Should be "text"
     pub text: String,
 }
 
@@ -71,7 +71,7 @@ pub struct TextBlock {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ImageBlock {
     #[serde(rename = "type")]
-    pub block_type: String, // Should be "image"
+    pub r#type: String, // Should be "image"
     #[serde(skip_serializing_if = "Option::is_none")]
     pub image: Option<String>, // base64 encoded image
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -88,7 +88,7 @@ pub struct ImageBlock {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AudioBlock {
     #[serde(rename = "type")]
-    pub block_type: String, // Should be "audio"
+    pub r#type: String, // Should be "audio"
     #[serde(skip_serializing_if = "Option::is_none")]
     pub audio: Option<String>, // base64 encoded audio
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -103,7 +103,7 @@ pub struct AudioBlock {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ContentBlock {
     #[serde(rename = "type")]
-    pub block_type: String,
+    pub r#type: String,
     #[serde(flatten)]
     pub data: std::collections::HashMap<String, serde_json::Value>,
 }
@@ -112,7 +112,7 @@ pub struct ContentBlock {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InternalPayloadContentBlock {
     #[serde(rename = "type")]
-    pub block_type: String,
+    pub r#type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub text: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
