@@ -1,0 +1,91 @@
+{
+  "messages": [
+    { "content": "anthropic/claude-opus-4.1", "role": "user" },
+    {
+      "content": "\n\nClaude Opus 4.1 is Anthropic's latest AI model, enhancing performance in coding, reasoning, and agentic tasks. It achieves a 74.5% score on SWE-bench Verified, marking a significant improvement over its predecessor, Claude Opus 4. \n\n**Key Features of Claude Opus 4.1**\n\n- **Performance Improvement**: Achieves 74.5% on SWE-bench Verified, up from 72.5% in Opus 4.\n  \n- **Enhanced Coding Capabilities**: Functions as a drop-in replacement for Opus 4, providing superior performance in real-world coding tasks.\n\n- **Agentic Task Support**: Designed to excel in agentic reasoning, allowing for more complex decision-making processes.\n\n- **Research and Data Analysis**: Improved capabilities for in-depth research and data interpretation.\n\n- **Public Preview Availability**: Currently available in GitHub Copilot, making it accessible for developers and researchers.\n\n  \n**Comparison with Previous Versions**\n\n- **Incremental Leap**: Claude Opus 4.1 represents a notable upgrade over Claude Opus 4, particularly in software engineering and reasoning tasks.\n\n- **Token Context Window**: Features a 200K token context window, enhancing its ability to handle larger inputs compared to previous models.\n\n  \n**Community Reception**\n\n- **Positive Feedback**: Users on platforms like Reddit have expressed enthusiasm about the improvements in agentic tasks and coding performance.\n\n- **Comparative Analysis**: Comparisons with other models, such as OpenAI's GPT-5, highlight its competitive edge in specific areas, although GPT-5 offers a larger token context window.",
+      "role": "assistant",
+      "modelLabel": "openai/gpt-5-chat"
+    },
+    { "content": "hi", "role": "user" },
+    {
+      "content": "$~~~$[]$~~~$\n\nHello! How can I assist you today?",
+      "role": "assistant",
+      "modelLabel": "openai/gpt-5-chat"
+    },
+    { "id": "Uw9astT", "content": "hii", "role": "user" },
+    {
+      "id": "XTrOoyd",
+      "createdAt": "2025-08-13T01:19:00.163Z",
+      "content": "Hi there! How’s it going? 😊 What can I do for you today?",
+      "role": "assistant",
+      "modelLabel": "openai/gpt-5-chat"
+    },
+    { "id": "Uw9astT", "content": "help me", "role": "user" }
+  ],
+  "agentMode": { "name": "openai/gpt-5-chat", "id": "GPT-5", "mode": true },
+  "id": "Uw9astT",
+  "previewToken": null,
+  "userId": null,
+  "codeModelMode": true,
+  "trendingAgentMode": {},
+  "isMicMode": false,
+  "userSystemPrompt": null,
+  "maxTokens": 1024,
+  "playgroundTopP": null,
+  "playgroundTemperature": null,
+  "isChromeExt": false,
+  "githubToken": "",
+  "clickedAnswer2": false,
+  "clickedAnswer3": false,
+  "clickedForceWebSearch": false,
+  "visitFromDelta": false,
+  "isMemoryEnabled": false,
+  "mobileClient": false,
+  "userSelectedModel": "openai/gpt-5-chat",
+  "userSelectedAgent": "VscodeAgent",
+  "validated": "a38f5889-8fef-46d4-8ede-bf4668b6a9bb",
+  "imageGenerationMode": false,
+  "imageGenMode": "autoMode",
+  "webSearchModePrompt": false,
+  "deepSearchMode": false,
+  "domains": null,
+  "vscodeClient": false,
+  "codeInterpreterMode": false,
+  "customProfile": {
+    "name": "",
+    "occupation": "",
+    "traits": [],
+    "additionalInfo": "",
+    "enableNewChats": false
+  },
+  "webSearchModeOption": {
+    "autoMode": true,
+    "webMode": false,
+    "offlineMode": false
+  },
+  "session": {
+    "user": {
+      "name": "sutoyocutez",
+      "email": "sutoyocutez@gmail.com",
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJbfOw7_EdeQJZXFdW_kx3nyGRsTrvtIhHkP5b3f-XvPiJHj_E=s96-c",
+      "id": "101975597345717037351"
+    },
+    "expires": "2025-09-12T01:18:28.154Z",
+    "isNewUser": false
+  },
+  "isPremium": false,
+  "subscriptionCache": {
+    "status": "FREE",
+    "expiryTimestamp": null,
+    "lastChecked": 1755047907219,
+    "isTrialSubscription": false
+  },
+  "beastMode": false,
+  "reasoningMode": false,
+  "designerMode": false,
+  "workspaceId": "",
+  "asyncMode": false,
+  "integrations": {},
+  "isTaskPersistent": false,
+  "selectedElement": null
+}

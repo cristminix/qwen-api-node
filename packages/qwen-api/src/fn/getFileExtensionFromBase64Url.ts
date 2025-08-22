@@ -5,27 +5,32 @@
  * @returns {string} Ekstensi file (misalnya, 'png', 'jpg', dll.) atau string kosong jika tidak ditemukan.
  */
 export function getFileExtensionFromBase64Url(base64Url: string) {
-  // Mencari indeks karakter ';' setelah "data:"
-  const startIndex = base64Url.indexOf(";")
+  // Mencari indeks karakter ':' setelah "data"
+  const colonIndex = base64Url.indexOf(":")
 
   // Jika tidak ditemukan, kembalikan string kosong
-  if (startIndex === -1) {
+  if (colonIndex === -1) {
     return ""
   }
 
-  // Mencari indeks karakter '/' setelah ';'
-  const slashIndex = base64Url.indexOf("/", startIndex)
+  // Mencari indeks karakter '/' setelah ':'
+  const slashIndex = base64Url.indexOf("/", colonIndex)
 
   // Jika tidak ditemukan, kembalikan string kosong
   if (slashIndex === -1) {
     return ""
   }
 
-  // Mengambil substring setelah '/' hingga karakter ','
-  const extension = base64Url.substring(
-    slashIndex + 1,
-    base64Url.indexOf(",", slashIndex)
-  )
+  // Mencari indeks karakter ';' setelah '/'
+  const semicolonIndex = base64Url.indexOf(";", slashIndex)
+
+  // Jika tidak ditemukan, kembalikan string kosong
+  if (semicolonIndex === -1) {
+    return ""
+  }
+
+  // Mengambil substring antara '/' dan ';'
+  const extension = base64Url.substring(slashIndex + 1, semicolonIndex)
 
   return extension
 }

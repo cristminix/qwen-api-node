@@ -7,7 +7,9 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "dev": "ts-node src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "keywords": [
     "qwen",
@@ -19,16 +21,23 @@
   "license": "ISC",
   "devDependencies": {
     "@types/ali-oss": "^6.16.11",
+    "@types/crc32-stream": "^4.0.3",
     "@types/node": "^24.0.15",
     "dotenv": "^17.0.1",
+    "drizzle-kit": "^0.31.4",
     "esbuild": "^0.25.8",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.4",
     "typescript": "^5.0.0"
   },
   "dependencies": {
     "@hono/node-server": "^1.16.0",
     "ali-oss": "^6.23.0",
     "axios": "^1.7.2",
+    "better-sqlite3": "^12.2.0",
+    "crc32-stream": "^7.0.1",
+    "drizzle-orm": "^0.44.4",
+    "fast-crc32c": "^2.0.0",
     "hono": "^4.8.5",
     "uuid": "^11.1.0"
   }

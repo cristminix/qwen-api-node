@@ -2,7 +2,7 @@ const modelList = {
   data: [
     {
       alias: "qwen3-coder-plus",
-      id: "Qwen3-Coder",
+      id: "qwen3-coder-plus",
       object: "model",
       owned_by: "qwen",
       created: 0,

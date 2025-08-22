@@ -17,8 +17,12 @@ async function createCompletions(chatRequest: ChatCompletionRequest) {
   const streaming = chatRequest.stream || false
   //   console.log(chatRequest)
   //@ts-ignore
-  const realModel = getModelByAlias(provider, chatRequest.model)
-  // console.log("realModel", realModel)
+  let realModel = getModelByAlias(provider, chatRequest.model)
+  if (!realModel) {
+    realModel = process.env.DEFAULT_MODEL
+  }
+  console.log("realModel", realModel)
+
   const qwenRequest: ChatCompletionRequest = {
     model: realModel,
     //@ts-ignore

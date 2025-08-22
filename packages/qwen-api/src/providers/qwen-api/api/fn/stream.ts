@@ -15,6 +15,7 @@ async function* stream(
   client: any,
   axios: any
 ): AsyncGenerator<ChatResponseStream> {
+  /*
   if (request.tools && request.tools.length > 0) {
     // Handle tool logic for streaming
     //@ts-ignore
@@ -83,6 +84,7 @@ async function* stream(
       }
     }
   }
+    */
 
   // Default behavior: Regular streaming chat completion
   yield* makeApiCallStream(request, client, axios)

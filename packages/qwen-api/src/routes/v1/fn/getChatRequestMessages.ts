@@ -6,7 +6,7 @@ import {
 } from "../../../core/types/chat"
 import isPromptMode from "./isPromptMode"
 import { writeFileFromBase64Url } from "../../..//fn/writeFileFromBase64Url"
-
+import fs from "fs"
 async function getMessages(inputMessages: ChatMessage[], providerApi: any) {
   // Gabungkan pesan sistem jika ada lebih dari satu
   const systemMessages = inputMessages.filter((msg) => msg.role === "system")
@@ -14,7 +14,21 @@ async function getMessages(inputMessages: ChatMessage[], providerApi: any) {
 
   if (systemMessages.length > 1) {
     const combinedSystemContent = systemMessages
-      .map((msg) => (typeof msg.content === "string" ? msg.content : ""))
+      .map((msg) => {
+        if (typeof msg.content === "string") return msg.content
+        else {
+          let systemMsgContent = []
+          if (Array.isArray(msg.content)) {
+            for (const item of msg.content) {
+              if (item.type === "text") {
+                systemMsgContent.push(item.text)
+              }
+            }
+            return systemMsgContent.join("\n")
+          }
+        }
+        return ""
+      })
       .filter((content) => content.length > 0)
       .join("\n")
 
@@ -70,13 +84,38 @@ async function getMessages(inputMessages: ChatMessage[], providerApi: any) {
       }
       messages.push(contents)
     } else {
-      messages.push({
-        role: msg.role,
-        content: msg.content,
-      })
+      if (msg.role === "system") {
+        let systemContentStr = ""
+        let systemMsgContent = []
+        if (Array.isArray(msg.content)) {
+          for (const item of msg.content) {
+            if (item.type === "text") {
+              systemMsgContent.push(item.text)
+            }
+          }
+        } else {
+          systemContentStr = msg.content
+        }
+        if (systemMsgContent.length > 0) {
+          systemContentStr = systemMsgContent.join("\n")
+        }
+        messages.push({
+          role: msg.role,
+          content: systemContentStr,
+        })
+      } else {
+        messages.push({
+          role: msg.role,
+          content: msg.content,
+        })
+      }
     }
   }
   // console.log(messages)
+  // fs.writeFileSync(
+  //   `./messages-${Date.now()}.json`,
+  //   JSON.stringify(messages, null, 2)
+  // )
   return messages
 }
 async function getChatRequestMessages(
