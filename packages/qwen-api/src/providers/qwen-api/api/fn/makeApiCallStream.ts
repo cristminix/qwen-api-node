@@ -47,8 +47,8 @@ async function* makeApiCallStream(
       }),
       stream: true, // Ensure stream is true for this method
       incremental_output: true,
-      temperature: request.temperature || 0.7,
-      max_tokens: request.max_tokens || 2048,
+      temperature: request.temperature || 1,
+      max_tokens: request.max_tokens || 4096,
     }
     // console.log("Payload for streaming request:", JSON.stringify(payload, null, 2));
     // return; // End the generator if no messages are provided

@@ -25,6 +25,7 @@
     "dotenv": "^17.0.1",
     "drizzle-kit": "^0.31.4",
     "esbuild": "^0.25.8",
+    "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.4",
     "typescript": "^5.0.0"
