@@ -4,7 +4,7 @@ import * as dotenv from "dotenv"
 dotenv.config()
 
 import { ChatMessage } from "../src/core/types/chat"
-import { HuggingFace } from "../src/classes/cors-proxy-manager/CorsProxyManager"
+import { HuggingFace } from "../src/classes/cors-proxy-manager/providers/HuggingFace"
 
 async function main() {
   // Initialize the HuggingFace client
