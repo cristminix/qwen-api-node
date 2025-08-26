@@ -4,7 +4,7 @@ import * as dotenv from "dotenv"
 dotenv.config()
 
 import { ChatMessage } from "../src/core/types/chat"
-import { HuggingFace } from "../src/classes/cors-proxy-manager/CorsProxyManager"
+import { HuggingFace } from "../src/classes/cors-proxy-manager/providers/HuggingFace"
 
 async function main() {
   // Initialize the HuggingFace client
@@ -23,12 +23,12 @@ async function main() {
   try {
     // Get available models
     console.log("Fetching available models...")
-    const models = await client.models.list()
-    console.log("Available models:", models.slice(0, 5)) // Show first 5 models
+    // const models = await client.models.list()
+    // console.log("Available models:", models.slice(0, 5)) // Show first 5 models
 
     // Send a chat completion request
     const response = await client.chat.completions.create({
-      model: "llama-3", // Using Llama-3 model alias
+      model: "deepseek-ai/DeepSeek-V3.1", // Using Llama-3 model alias
       messages: messages,
     })
 

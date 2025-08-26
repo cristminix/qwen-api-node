@@ -3,7 +3,7 @@ import {
   ChatResponse,
   ChatResponseStream,
 } from "../../core/types/chat"
-import { PollinationsAI } from "../../classes/cors-proxy-manager/CorsProxyManager"
+import { PollinationsAI } from "../../classes/cors-proxy-manager/providers/PollinationsAI"
 
 class Pollinations {
   private client: PollinationsAI
@@ -27,6 +27,7 @@ class Pollinations {
 
   public async *stream(
     request: ChatCompletionRequest
+    //@ts-ignore
   ): Promise<AsyncGenerator<ChatResponseStream>> {
     const response = await this.client.chat.completions.create(
       {

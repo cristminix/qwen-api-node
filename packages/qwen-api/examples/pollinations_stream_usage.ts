@@ -4,7 +4,7 @@ import * as dotenv from "dotenv"
 // dotenv.config({ quiet: false, debug: false })
 
 import { ChatMessage } from "../src/core/types/chat"
-import { PollinationsAI } from "../src/classes/cors-proxy-manager/CorsProxyManager"
+import { PollinationsAI } from "../src/classes/cors-proxy-manager/providers/PollinationsAI"
 
 async function main() {
   // Initialize the PollinationsAI client

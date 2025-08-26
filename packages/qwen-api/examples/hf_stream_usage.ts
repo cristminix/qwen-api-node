@@ -1,35 +1,31 @@
 import * as dotenv from "dotenv"
+dotenv.config()
 
-/* Load .env file from the current working directory
-// dotenv.config({ quiet: false, debug: false }) */
-
-// This example demonstrates streaming responses from the Pollinations provider.
-import { ChatMessage } from "../src/core/types/chat"
-import Pollinations from "../src/providers/pollinations/Pollinations"
+// This example demonstrates streaming responses using the createCompletions function.
+import { ChatCompletionRequest, ChatMessage } from "../src/core/types/chat"
+import createCompletions from "../src/routes/v1/fn/createCompletions"
 
 async function main() {
-  // Initialize the Pollinations client
-  // Note: Pollinations doesn't require API keys, it works anonymously
-  const client = new Pollinations()
-
   const messages: ChatMessage[] = [
     {
       role: "user",
-      content:
-        "What are the power of chili if compared with crystalmeth as stimulant?",
+      content: "What is the capital of french",
     },
   ]
 
-  console.log("Sending streaming request to Pollinations...")
+  console.log("Sending streaming request via createCompletions...")
 
   try {
     console.log("\n--- Streaming Response ---")
 
-    // Send a streaming chat completion request
-    const stream = await client.stream({
-      model: "openai", // Using OpenAI model alias
+    // Create a streaming chat completion request
+    const chatRequest: ChatCompletionRequest = {
+      model: "deepseek-ai/DeepSeek-V3.1", // Using OpenAI model alias
       messages: messages,
-    })
+      stream: true,
+    }
+
+    const stream = await createCompletions(chatRequest)
 
     // Buffer to accumulate data across chunks
     let buffer = ""

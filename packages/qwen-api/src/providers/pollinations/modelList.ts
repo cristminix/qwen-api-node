@@ -8,7 +8,7 @@ const modelList = {
     return {
       alias,
       id,
-      provider: "blackboxai",
+      provider: "pollinationsai",
       vision: model.vision,
       audio: model.audio,
     }

@@ -107,7 +107,11 @@ class HuggingFace extends Client {
   get chat() {
     return {
       completions: {
-        create: async (params: any, requestOption: any = {}) => {
+        create: async (
+          params: any,
+          requestOption: any = {},
+          direct = false
+        ) => {
           let { model, ...options } = params
 
           if (!model) {
@@ -155,6 +159,7 @@ class HuggingFace extends Client {
             requestOptions
           )
           if (params.stream) {
+            if (direct) return response
             return this._streamCompletion(response)
           } else {
             return this._regularCompletion(response)

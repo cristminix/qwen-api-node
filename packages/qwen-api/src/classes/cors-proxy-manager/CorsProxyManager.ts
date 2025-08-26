@@ -1,11 +1,3 @@
-import { Client } from "./Client"
-import { PollinationsAI } from "./providers/PollinationsAI"
-import { Custom } from "./providers/Custom"
-import { DeepInfra } from "./providers/DeepInfra"
-import { Together } from "./providers/Together"
-import { Puter } from "./providers/Puter"
-import { HuggingFace } from "./providers/HuggingFace"
-
 /**
  * Manages a list of CORS proxies with failover capabilities.
  */
@@ -77,13 +69,4 @@ class CorsProxyManager {
   }
 }
 
-export {
-  Client,
-  CorsProxyManager,
-  Custom,
-  PollinationsAI,
-  DeepInfra,
-  Together,
-  Puter,
-  HuggingFace,
-}
+export { CorsProxyManager }

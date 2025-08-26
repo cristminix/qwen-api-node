@@ -4,6 +4,7 @@ import ChatQwenAi from "../../../providers/qwen-api/api/classes/ChatQwenAi"
 import BlackboxAi from "../../../providers/blackbox/api/classes/BlackboxAi"
 import { getModelByAlias } from "./getModelByAlias"
 import Pollinations from "../../../providers/pollinations/Pollinations"
+import HF from "../../../providers/HF/HF"
 
 async function createCompletions(chatRequest: ChatCompletionRequest) {
   const authToken = process.env.QWEN_AUTH_TOKEN as string
@@ -14,6 +15,7 @@ async function createCompletions(chatRequest: ChatCompletionRequest) {
   if (provider === "qwenchatai") providerApi = new ChatQwenAi(authToken, cookie)
   else if (provider === "blackbox") providerApi = new BlackboxAi()
   else if (provider === "pollinations") providerApi = new Pollinations()
+  else if (provider === "hf") providerApi = new HF()
   //@ts-ignore
   const messages = await getChatRequestMessages(chatRequest, providerApi)
   const streaming = chatRequest.stream || false
@@ -24,7 +26,7 @@ async function createCompletions(chatRequest: ChatCompletionRequest) {
     realModel = process.env.DEFAULT_MODEL
   }
   console.log("realModel", realModel)
-
+  //@ts-ignore
   const qwenRequest: ChatCompletionRequest =
     provider === "qwenchatai"
       ? {
