@@ -3,6 +3,7 @@ import { ChatCompletionRequest } from "../../../core/types/chat"
 import createCompletions from "./createCompletions"
 import isPromptMode from "./isPromptMode"
 import { streamSSE } from "hono/streaming"
+import { json } from "stream/consumers"
 
 async function sendStreamResult(
   response: any,
@@ -17,6 +18,7 @@ async function sendStreamResult(
     if (response) {
       let id = 1
       for await (const chunk of response) {
+        // console.log(JSON.stringify(chunk))
         await stream.write(chunk)
       }
     }
@@ -61,6 +63,7 @@ async function sendResult(
       })
     )
   }
+
   return c.json(jsonResponse)
 }
 

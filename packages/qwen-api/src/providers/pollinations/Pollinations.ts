@@ -25,15 +25,32 @@ class Pollinations {
     this.client = new PollinationsAI()
   }
 
-  public async stream(
+  public async *stream(
     request: ChatCompletionRequest
   ): Promise<AsyncGenerator<ChatResponseStream>> {
-    const stream = (await this.client.chat.completions.create({
-      ...request,
-      stream: true,
-    })) as AsyncGenerator<ChatResponseStream>
+    const response = await this.client.chat.completions.create(
+      {
+        ...request,
+        stream: true,
+      },
+      {},
+      true
+    )
+    // yield response
 
-    return stream
+    const reader = response.body.getReader()
+    // const decoder = new TextDecoder()
+    // let buffer = ""
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        yield value
+      }
+    } finally {
+      reader.releaseLock()
+    }
   }
 
   public async create(request: ChatCompletionRequest): Promise<ChatResponse> {

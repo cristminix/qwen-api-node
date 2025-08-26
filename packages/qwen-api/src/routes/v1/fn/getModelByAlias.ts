@@ -1,8 +1,11 @@
 import qwenModelList from "../../../providers/qwen-api/modelList"
 import blackboxModelList from "../../../providers/blackbox/modelList"
+import pollinationsModelList from "../../../providers/pollinations/modelList"
+
 const modelMaps = {
   blackbox: blackboxModelList,
   qwenchatai: qwenModelList,
+  pollinations: pollinationsModelList,
 }
 const defaultModel = process.env.DEFAULT_MODEL
 

@@ -91,7 +91,11 @@ export class Client {
   get chat() {
     return {
       completions: {
-        create: async (params: any, requestOption: any = {}) => {
+        create: async (
+          params: any,
+          requestOption: any = {},
+          direct = false
+        ) => {
           let modelId = params.model || this.defaultModel
           if (this.modelAliases[modelId]) {
             modelId = this.modelAliases[modelId]
@@ -108,6 +112,7 @@ export class Client {
           }
           const response = await fetch(this.apiEndpoint, requestOptions)
           if (params.stream) {
+            if (direct) return response
             return this._streamCompletion(response)
           } else {
             return this._regularCompletion(response)
