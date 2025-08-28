@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "declaration": true,
     "noImplicitAny": false,
+    "resolveJsonModule": true,
     "baseUrl": "."
     
   },

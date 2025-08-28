@@ -16,6 +16,11 @@ export class Client {
 
   constructor(options: any = {}) {
     if (!options.baseUrl && !options.apiEndpoint && !options.apiKey) {
+      let localStorage = {
+        getItem(key: string) {
+          return ""
+        },
+      }
       if (localStorage && localStorage.getItem("Azure-api_key")) {
         options.apiKey = localStorage.getItem("Azure-api_key")
       } else {

@@ -5,12 +5,12 @@ import * as dotenv from "dotenv"
 
 // This example demonstrates streaming responses from the Pollinations provider.
 import { ChatMessage } from "../src/core/types/chat"
-import Pollinations from "../src/providers/pollinations/Pollinations"
+import G4F from "../src/providers/G4F/G4F"
 
 async function main() {
   // Initialize the Pollinations client
   // Note: Pollinations doesn't require API keys, it works anonymously
-  const client = new Pollinations()
+  const client = new G4F()
 
   const messages: ChatMessage[] = [
     {
@@ -20,14 +20,14 @@ async function main() {
     },
   ]
 
-  console.log("Sending streaming request to Pollinations...")
+  console.log("Sending streaming request to G4F...")
 
   try {
     console.log("\n--- Streaming Response ---")
 
     // Send a streaming chat completion request
     const stream = await client.stream({
-      model: "openai", // Using OpenAI model alias
+      model: "openai:PollinationsAI", // Using OpenAI model alias
       messages: messages,
     })
 
@@ -37,13 +37,23 @@ async function main() {
     // Process the streaming response
     for await (const chunk of stream) {
       // Handle chunks that are objects with numeric keys representing ASCII characters
-      if (typeof chunk === "object" && chunk !== null) {
+      if (
+        (typeof chunk === "object" || typeof chunk === "string") &&
+        chunk !== null
+      ) {
+        // console.log(chunk)
+
         // Convert numeric object to string
         const values = Object.values(chunk)
-        if (values.every((v) => typeof v === "number")) {
-          const content = values
-            .map((code) => String.fromCharCode(code))
-            .join("")
+        let stop =
+          typeof chunk === "object"
+            ? values.every((v) => typeof v === "number")
+            : true
+        if (stop) {
+          const content =
+            typeof chunk === "object"
+              ? values.map((code) => String.fromCharCode(code)).join("")
+              : chunk
 
           // Accumulate content in buffer
           buffer += content
@@ -58,8 +68,6 @@ async function main() {
           for (const event of events) {
             // Each event might have multiple lines
             const lines = event.split("\n")
-            console.log(lines)
-
             for (const line of lines) {
               // Look for data: lines
               if (line.startsWith("data: ")) {

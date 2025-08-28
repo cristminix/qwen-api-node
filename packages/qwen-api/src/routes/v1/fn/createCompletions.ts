@@ -5,7 +5,7 @@ import BlackboxAi from "../../../providers/blackbox/api/classes/BlackboxAi"
 import { getModelByAlias } from "./getModelByAlias"
 import Pollinations from "../../../providers/pollinations/Pollinations"
 import HF from "../../../providers/HF/HF"
-
+import G4F from "../../../providers/G4F/G4F"
 async function createCompletions(chatRequest: ChatCompletionRequest) {
   const authToken = process.env.QWEN_AUTH_TOKEN as string
   const cookie = process.env.QWEN_COOKIE as string
@@ -16,14 +16,17 @@ async function createCompletions(chatRequest: ChatCompletionRequest) {
   else if (provider === "blackbox") providerApi = new BlackboxAi()
   else if (provider === "pollinations") providerApi = new Pollinations()
   else if (provider === "hf") providerApi = new HF()
+  else if (provider === "g4f") providerApi = new G4F()
   //@ts-ignore
   const messages = await getChatRequestMessages(chatRequest, providerApi)
-  const streaming = chatRequest.stream || false
+  const streaming = chatRequest.stream || true
   //   console.log(chatRequest)
   //@ts-ignore
   let realModel = getModelByAlias(provider, chatRequest.model)
-  if (!realModel) {
+  if (!realModel && provider !== "g4f") {
     realModel = process.env.DEFAULT_MODEL
+  } else {
+    realModel = chatRequest.model
   }
   console.log("realModel", realModel)
   //@ts-ignore

@@ -72,7 +72,7 @@ async function handleCompletions(
   c: Context
 ) {
   const response = await createCompletions(chatRequest)
-  const streaming = chatRequest.stream || false
+  const streaming = chatRequest.stream || true
   const promptMode = isPromptMode(chatRequest)
   const modelName = chatRequest.model
   return streaming
