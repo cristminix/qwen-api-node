@@ -1,15 +1,15 @@
 import { v1 } from "uuid"
 import { Client } from "../Client"
-
+export const availableModels = [
+  {
+    id: "gemini-2.5-pro",
+  },
+  {
+    id: "gemini-2.5-flash",
+  },
+]
 class GeminiCli extends Client {
-  availableModels = [
-    {
-      id: "gemini-2.5-pro",
-    },
-    {
-      id: "gemini-2.5-flash",
-    },
-  ]
+  availableModels = availableModels
   constructor(options: any = {}) {
     if (!options.apiKey) {
       if (typeof process !== "undefined" && process.env.GEMINI_CLI_TOKEN) {
@@ -98,8 +98,7 @@ class GeminiCli extends Client {
             requestOptions
           )
           if (params.stream) {
-            if (direct) return response
-            return this._streamCompletion(response)
+            return this._streamCompletion2(response, direct, model)
           } else {
             return this._regularCompletion(response)
           }
@@ -114,7 +113,7 @@ class GeminiCli extends Client {
     return await response.json()
   }
 
-  async *_streamCompletion(response: Response) {
+  async *_streamCompletion2(response: Response, sso = false, model: string) {
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`)
     }
@@ -124,10 +123,16 @@ class GeminiCli extends Client {
     const reader = response.body.getReader()
     const decoder = new TextDecoder()
     let buffer = ""
+    let completionId = 1
+
     try {
       while (true) {
         const { done, value } = await reader.read()
-        if (done) break
+        if (done) {
+          if (sso) yield "data: [DONE]\n"
+
+          break
+        }
         buffer += decoder.decode(value, { stream: true })
         const parts = buffer.split("\n")
         buffer = parts.pop() || ""
@@ -144,7 +149,13 @@ class GeminiCli extends Client {
                     .map((part: any) => part.text)
                     .join("")
                   // Convert to the format expected by the application
-                  const data = {
+                  let data = {
+                    id: `chatcmpl-${Date.now()}`,
+                    model: model,
+                    object: "chat.completion.chunk",
+                    index: completionId,
+                    finish_reason: null,
+                    created: Date.now(),
                     choices: [
                       {
                         delta: {
@@ -153,7 +164,11 @@ class GeminiCli extends Client {
                       },
                     ],
                   }
-                  yield data
+                  completionId += 1
+
+                  if (sso) {
+                    yield `data: ${JSON.stringify(data)}\n`
+                  } else yield data
                 }
               }
             }

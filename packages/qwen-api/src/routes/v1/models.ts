@@ -4,12 +4,14 @@ import blackboxModelList from "../../providers/blackbox/modelList"
 import pollinationsModelList from "../../providers/pollinations/modelList"
 import hfModelList from "../../providers/HF/modelList"
 import g4fModelList from "../../providers/G4F/modelList"
+import geminiModelList from "../../providers/Gemini/modelList"
 const modelMaps = {
   blackbox: blackboxModelList,
   qwenchatai: qwenModelList,
   pollinations: pollinationsModelList,
   hf: hfModelList,
   g4f: g4fModelList,
+  geminicli: geminiModelList,
 }
 const defaultModel = process.env.DEFAULT_MODEL
 const models = new Hono()

@@ -6,9 +6,31 @@ dotenv.config()
 import { ChatMessage } from "../src/core/types/chat"
 import { GeminiCli } from "../src/classes/cors-proxy-manager/providers/GeminiCli"
 
+// Parse command line arguments
+function parseArgs() {
+  const args = process.argv.slice(2)
+  let prompt = "Ceritakan tempat menarik di prancis"
+  let model = "gemini-2.5-pro"
+
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === "-p" && i + 1 < args.length) {
+      prompt = args[i + 1]
+      i++ // Skip the next argument as it's the prompt value
+    } else if (args[i] === "-m" && i + 1 < args.length) {
+      model = args[i + 1]
+      i++ // Skip the next argument as it's the model value
+    }
+  }
+
+  return { prompt, model }
+}
+
 async function main() {
   console.log("GeminiCli Streaming Example")
   console.log("==========================")
+
+  // Parse command line arguments
+  const { prompt, model } = parseArgs()
 
   // Check if API key is available
   const apiKey = process.env.GEMINI_CLI_TOKEN
@@ -29,13 +51,13 @@ async function main() {
     const messages: ChatMessage[] = [
       {
         role: "user",
-        content: "Ceritakan tempat menarik di prancis",
+        content: prompt,
       },
     ]
 
     console.log("Sending streaming request to GeminiCli...")
-    console.log("Model: gemini-2.5-pro")
-    console.log("Prompt: Ceritakan tempat menarik di prancis")
+    console.log(`Model: ${model}`)
+    console.log(`Prompt: ${prompt}`)
     console.log("-------------------")
 
     // Record start time
@@ -43,7 +65,7 @@ async function main() {
 
     // Send a streaming chat completion request
     const stream = await client.chat.completions.create({
-      model: "gemini-2.5-flash", // Using gemini-2.5-pro model
+      model: model,
       messages: messages,
       stream: true,
     })

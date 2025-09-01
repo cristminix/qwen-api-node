@@ -12,8 +12,8 @@ use dotenvy::dotenv;
 use futures_util::stream::StreamExt;
 use qwen_api::ChatMessage;
 use qwen_api::MessageRole;
-use qwen_api::{model_aliases::get_model_aliases, types::ChatCompletionRequest, QwenClient};
-use serde_json::{json, Value as JsonValue};
+use qwen_api::{types::ChatCompletionRequest, QwenClient};
+use serde_json::json;
 use std::convert::Infallible;
 use std::env;
 use std::sync::Arc;
@@ -135,14 +135,19 @@ async fn post_chat_completions(
     Json(req): Json<ChatCompletionRequest>,
 ) -> Result<impl IntoResponse, (http::StatusCode, Json<serde_json::Value>)> {
     if req.stream {
+        // Extract model name before the stream processing to avoid borrowing issues
+        let model_name = req.model.clone();
         // Streaming response
         match client.stream(req).await {
             Ok((stream_rx, _close_rx)) => {
                 // Convert the receiver to a stream
                 let stream = ReceiverStream::new(stream_rx);
 
+                // Extract model name before the stream processing to avoid borrowing issues
+                let model_name = model_name.clone();
+
                 // Map the stream to SSE events
-                let sse_stream = stream.map(|response| {
+                let sse_stream = stream.map(move |response| {
                     // Convert ChatResponseStream to OpenAI-like SSE format
                     let mut choices = Vec::new();
                     for (i, choice) in response.choices.iter().enumerate() {
@@ -195,7 +200,7 @@ async fn post_chat_completions(
                             .duration_since(std::time::UNIX_EPOCH)
                             .unwrap()
                             .as_secs(),
-                        "model": "qwen-max-latest", // Use the actual model from request if available
+                        "model": model_name, // Use cloned model name
                         "choices": choices,
                     });
 
@@ -271,26 +276,12 @@ async fn post_chat_completions(
 
 // GET /v1/models
 async fn get_models() -> impl IntoResponse {
-    let aliases = get_model_aliases();
-    let model_list: Vec<JsonValue> = aliases
-        .iter()
-        .map(|(name, id)| {
-            json!({
-                "id": *id,
-                "object": "model",
-                "created": 0,
-                "owned_by": "qwen",
-                "alias": name,
-            })
-        })
-        .collect();
+    // Membaca data dari file models.json
+    let models_json = include_str!("../models.json");
+    let models_data: serde_json::Value =
+        serde_json::from_str(models_json).expect("Failed to parse models.json");
 
-    let out = json!({
-        "object": "list",
-        "data": model_list
-    });
-
-    Json(out)
+    Json(models_data)
 }
 
 async fn run_stream_example(client: SharedClient) {
