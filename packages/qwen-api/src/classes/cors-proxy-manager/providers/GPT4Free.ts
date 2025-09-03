@@ -86,7 +86,9 @@ class GPT4Free extends Client {
   }
   constructor(
     options: any = {
-      baseUrl: "http://localhost:5173/api/backend-api/v2/conversation",
+      baseUrl:
+        process.env.GPT4FREE_BACKEND_URL ??
+        "http://localhost:5173/api/backend-api/v2/conversation",
     }
   ) {
     super(options)
