@@ -162,6 +162,7 @@ class GPT4Free extends Client {
     }
     const reader = response.body.getReader()
     const decoder = new TextDecoder()
+    const encoder = new TextEncoder()
     this.fullText = ""
     this.reasoningText = ""
     let completionId = 1
@@ -173,12 +174,12 @@ class GPT4Free extends Client {
           const { done, value } = await reader.read()
           if (done) {
             // this.finalizeMessage()
-            if (sso) yield "data: [DONE]\n"
+            if (sso) yield encoder.encode("data: [DONE]\n")
 
             break
           }
 
-          buffer += new TextDecoder().decode(value)
+          buffer += decoder.decode(value)
 
           for (const line of buffer.split("\n")) {
             if (!line) {
@@ -225,7 +226,7 @@ class GPT4Free extends Client {
                     */
                     data.choices[0].delta.content = resp.content
                     if (sso) {
-                      yield `data: ${JSON.stringify(data)}\n`
+                      yield encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
                     } else yield data
                   }
                   break
@@ -235,7 +236,7 @@ class GPT4Free extends Client {
                   //@ts-ignore
                   data.finish_reason = "stop"
                   if (sso) {
-                    yield `data: ${JSON.stringify(data)}\n`
+                    yield encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
                   } else yield data
                   break
 

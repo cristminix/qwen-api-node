@@ -18,8 +18,9 @@ async function sendStreamResult(
     if (response) {
       let id = 1
       for await (const chunk of response) {
-        // console.log(JSON.stringify(chunk))
+        // console.log(chunk.toString())
         await stream.write(chunk)
+        // await stream.write(":\n\n")
       }
     }
   })
