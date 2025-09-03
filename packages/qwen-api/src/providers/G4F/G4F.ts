@@ -5,7 +5,7 @@ import {
 } from "../../core/types/chat"
 import { GPT4Free } from "../../classes/cors-proxy-manager/providers/GPT4Free"
 
-class HF {
+class G4F {
   private client: GPT4Free
 
   constructor() {
@@ -35,8 +35,37 @@ class HF {
   }
 
   public async create(request: ChatCompletionRequest): Promise<ChatResponse> {
-    return await this.client.chat.completions.create(request)
+    const response: any = await this.client.chat.completions.create(
+      {
+        ...request,
+        stream: false,
+      },
+      {},
+      false
+    )
+
+    // const reader = response.body.getReader()
+    let content = ""
+    let chatResponse: ChatResponse = {
+      choices: [
+        {
+          message: {
+            role: "assistant",
+            content: "",
+          },
+        },
+      ],
+    }
+    for await (const chunk of response) {
+      // console.log(chunk)
+      // dataPtr = chunk
+      content += chunk.choices[0].delta.content
+    }
+    chatResponse.choices[0].message.content = content
+    // console.log(dataPtr)
+
+    return chatResponse
   }
 }
 
-export default HF
+export default G4F

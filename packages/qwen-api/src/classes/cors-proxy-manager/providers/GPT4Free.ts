@@ -140,9 +140,9 @@ class GPT4Free extends Client {
           const response = await fetch(`${this.baseUrl}`, requestOptions)
           if (params.stream) {
             // if (direct) return response
-            return this._streamCompletion2(response, direct, model)
+            return this._streamCompletion2(response, true, model)
           } else {
-            return this._regularCompletion(response)
+            return this._streamCompletion2(response, false, model)
           }
         },
       },

@@ -72,8 +72,12 @@ async function handleCompletions(
   chatRequest: ChatCompletionRequest,
   c: Context
 ) {
+  if (typeof chatRequest.stream !== "boolean") {
+    chatRequest.stream = true
+  }
+  console.log(chatRequest.stream)
   const response = await createCompletions(chatRequest)
-  const streaming = chatRequest.stream || true
+  const streaming = chatRequest.stream
   const promptMode = isPromptMode(chatRequest)
   const modelName = chatRequest.model
   return streaming

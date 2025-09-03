@@ -21,8 +21,8 @@ async function createCompletions(chatRequest: ChatCompletionRequest) {
   else if (provider === "geminicli") providerApi = new Gemini()
   //@ts-ignore
   const messages = await getChatRequestMessages(chatRequest, providerApi)
-  const streaming = chatRequest.stream || true
-  //   console.log(chatRequest)
+  const streaming = chatRequest.stream
+  console.log({ streaming })
   //@ts-ignore
   let realModel = getModelByAlias(provider, chatRequest.model)
   if (!realModel && provider !== "g4f") {
