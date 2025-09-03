@@ -1,12 +1,12 @@
 import {
   ChatCompletionRequest,
   ChatMessage,
+  ContentBlock,
   ImageBlock,
   TextBlock,
 } from "../../../core/types/chat"
 import isPromptMode from "./isPromptMode"
 import { writeFileFromBase64Url } from "../../..//fn/writeFileFromBase64Url"
-import fs from "fs"
 async function getMessages(inputMessages: ChatMessage[], providerApi: any) {
   // Gabungkan pesan sistem jika ada lebih dari satu
   const systemMessages = inputMessages.filter((msg) => msg.role === "system")
@@ -17,11 +17,11 @@ async function getMessages(inputMessages: ChatMessage[], providerApi: any) {
       .map((msg) => {
         if (typeof msg.content === "string") return msg.content
         else {
-          let systemMsgContent = []
+          let systemMsgContent: string[] = []
           if (Array.isArray(msg.content)) {
             for (const item of msg.content) {
               if (item.type === "text") {
-                systemMsgContent.push(item.text)
+                systemMsgContent.push((item as TextBlock).text)
               }
             }
             return systemMsgContent.join("\n")
@@ -49,7 +49,7 @@ async function getMessages(inputMessages: ChatMessage[], providerApi: any) {
     if (msg.role === "user" && Array.isArray(msg.content)) {
       const contents: ChatMessage = {
         role: "user",
-        content: [],
+        content: [] as ContentBlock[],
       }
       for (const item of msg.content) {
         //@ts-ignore
@@ -73,9 +73,7 @@ async function getMessages(inputMessages: ChatMessage[], providerApi: any) {
           if (item.type === "text") {
             const text: TextBlock = {
               block_type: "text",
-              //@ts-ignore
-
-              text: item.text,
+              text: (item as TextBlock).text,
             }
             //@ts-ignore
             contents.content.push(text)
@@ -86,15 +84,15 @@ async function getMessages(inputMessages: ChatMessage[], providerApi: any) {
     } else {
       if (msg.role === "system") {
         let systemContentStr = ""
-        let systemMsgContent = []
+        let systemMsgContent: string[] = []
         if (Array.isArray(msg.content)) {
           for (const item of msg.content) {
             if (item.type === "text") {
-              systemMsgContent.push(item.text)
+              systemMsgContent.push((item as TextBlock).text)
             }
           }
         } else {
-          systemContentStr = msg.content
+          systemContentStr = msg.content || ""
         }
         if (systemMsgContent.length > 0) {
           systemContentStr = systemMsgContent.join("\n")
@@ -106,7 +104,7 @@ async function getMessages(inputMessages: ChatMessage[], providerApi: any) {
       } else {
         messages.push({
           role: msg.role,
-          content: msg.content,
+          content: msg.content || "",
         })
       }
     }

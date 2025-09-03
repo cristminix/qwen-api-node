@@ -13,6 +13,7 @@ export type MessageRole =
 export interface TextBlock {
   block_type: "text"
   text: string
+  type?: string
 }
 
 export interface ImageBlock {
@@ -22,6 +23,7 @@ export interface ImageBlock {
   url?: string
   image_mimetype?: string
   detail?: string
+  type?: string
 }
 
 export interface AudioBlock {
@@ -30,6 +32,7 @@ export interface AudioBlock {
   path?: string
   url?: string
   format?: string
+  type?: string
 }
 
 export type ContentBlock = TextBlock | ImageBlock | AudioBlock
