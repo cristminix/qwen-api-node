@@ -68,6 +68,7 @@ export interface Choice {
 
 export interface ChatResponse {
   choices: Choice[]
+  usage?: any
   // Add other fields from Python ChatResponse class if needed
 }
 

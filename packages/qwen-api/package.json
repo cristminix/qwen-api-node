@@ -5,9 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "esbuild --minify --bundle src/index.ts --outdir=build --platform=node",
     "prepublishOnly": "npm run build",
     "dev": "tsx watch src/index.ts",
+    "start": "node build/index.js",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate"
   },
@@ -35,9 +36,13 @@
     "ali-oss": "^6.23.0",
     "axios": "^1.7.2",
     "better-sqlite3": "^12.2.0",
+    "cheerio": "^1.1.2",
     "drizzle-orm": "^0.44.4",
     "fast-crc32c": "^2.0.0",
     "hono": "^4.8.5",
+    "proxy-agent": "^6.5.0",
+    "tiktoken": "^1.0.22",
+    "turndown": "^7.2.1",
     "uuid": "^11.1.0"
   }
 }

@@ -1,10 +1,10 @@
 import { eq } from "drizzle-orm"
-import { db } from "./index"
+import { db } from "../index"
 import {
   uploadedFiles,
   type NewUploadedFile,
   type UploadedFile,
-} from "./schema"
+} from "../schema"
 
 /**
  * Menyimpan hasil upload file ke database

@@ -8,7 +8,7 @@ import {
   getUploadedFileByCrc,
   saveUploadedFile,
   deleteFileById,
-} from "../../../../db/functions"
+} from "../../../../db/models/attachments"
 import { UploadedFile } from "../../../../db/schema"
 
 function isFileExpired(existingFile: UploadedFile) {

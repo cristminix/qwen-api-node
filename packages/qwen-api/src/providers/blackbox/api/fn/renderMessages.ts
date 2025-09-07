@@ -1,7 +1,7 @@
-import { Messages } from "./types" // Import types
+import { ChatMessage } from "src/core/types/chat"
 
 // Helper to render messages (you'll need to implement this)
-function renderMessages(messages: Messages): any[] {
+export function renderMessages(messages: ChatMessage[]) {
   // Your implementation here
   return messages
 }

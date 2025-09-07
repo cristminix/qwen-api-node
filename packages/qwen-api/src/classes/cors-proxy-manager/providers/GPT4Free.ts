@@ -1,6 +1,13 @@
 import { v1 } from "uuid"
 import { Client } from "../Client"
 import generateId from "src/providers/blackbox/api/fn/generateId"
+import {
+  countMessagesTokens,
+  countTokens,
+  estimateMessagesTokens,
+  estimateTokens,
+} from "src/fn/llm/countTokens"
+import { fixApiUrl } from "../../../fn/llm/fixApiUrl"
 function transformMessages(messages: any[]): any[] {
   const transformedMessages: any[] = []
 
@@ -140,9 +147,14 @@ class GPT4Free extends Client {
           const response = await fetch(`${this.baseUrl}`, requestOptions)
           if (params.stream) {
             // if (direct) return response
-            return this._streamCompletion2(response, true, model)
+            return this._streamCompletion2(response, true, model, body.messages)
           } else {
-            return this._streamCompletion2(response, false, model)
+            return this._streamCompletion2(
+              response,
+              false,
+              model,
+              body.messages
+            )
           }
         },
       },
@@ -155,19 +167,26 @@ class GPT4Free extends Client {
     return await response.json()
   }
 
-  async *_streamCompletion2(response: Response, sso = false, model: string) {
+  async *_streamCompletion2(
+    response: Response,
+    sso = false,
+    model: string,
+    messages: any[]
+  ) {
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`)
     }
     if (!response.body) {
       throw new Error("Streaming not supported in this environment")
     }
+    const promptTokens = estimateMessagesTokens(messages)
     const reader = response.body.getReader()
     const decoder = new TextDecoder()
     const encoder = new TextEncoder()
     this.fullText = ""
     this.reasoningText = ""
     let completionId = 1
+    let completionTokens = 0
     try {
       while (true) {
         let buffer = ""
@@ -176,7 +195,31 @@ class GPT4Free extends Client {
           const { done, value } = await reader.read()
           if (done) {
             // this.finalizeMessage()
-            if (sso) yield encoder.encode("data: [DONE]\n")
+            if (sso) {
+              yield encoder.encode(
+                `data: ${JSON.stringify({
+                  id: `chatcmpl-${Date.now()}`,
+                  model: model,
+                  object: "chat.completion.chunk",
+                  index: completionId,
+                  finish_reason: "done",
+                  created: Date.now(),
+                  choices: [
+                    {
+                      delta: {
+                        content: "",
+                      },
+                    },
+                  ],
+                  usage: {
+                    prompt_tokens: promptTokens,
+                    completion_tokens: completionTokens,
+                    total_tokens: promptTokens + completionTokens,
+                  },
+                  done: true, // Flag akhir stream
+                })}\n\ndata: [DONE]\n\n`
+              )
+            }
 
             break
           }
@@ -226,7 +269,8 @@ class GPT4Free extends Client {
                     /*
                     data: {"choices":[{"content_filter_results":{},"delta":{},"finish_reason":"stop","index":0,"logprobs":null}],"created":1756207702,"id":"chatcmpl-C8m8cKF9A2HJuGP6G3fuVjPVmdWRf","model":"gpt-4.1-nano-2025-04-14","object":"chat.completion.chunk","system_fingerprint":"fp_368a354b49"}'
                     */
-                    data.choices[0].delta.content = resp.content
+                    completionTokens += estimateTokens(resp.content)
+                    data.choices[0].delta.content = fixApiUrl(resp.content)
                     if (sso) {
                       yield encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
                     } else yield data

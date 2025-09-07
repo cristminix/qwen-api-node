@@ -1,4 +1,40 @@
 import models from "./models.json"
-const modelList = models
+const ignoreProviders = [
+  "HarProvider",
+  "Blackbox",
+  "LegacyLMArena",
+  "DeepInfraChat",
+  "Cloudflare",
+  // "Copilot",
+  "CopilotAccount",
+  "Chatai",
+  "Cerebras",
+  "Deepseek",
+  "EasyChat",
+  "GeminiPro",
+  "GigaChat",
+  "GithubCopilot",
+  "GlhfChat",
+  "DeepseekAI_JanusPro7b",
+  "HailuoAI",
+  "Grok",
+  "Groq",
+  "HuggingFace",
+  "HuggingFaceAPI",
+  "HuggingFaceMedia",
+  "LambdaChat",
+  "PerplexityApi",
+  "PuterJS",
+  "MiniMax",
+  "MetaAI",
+  // "PerplexityLabs",
+  "ThebApi",
+  "TeachAnything",
+  "MetaAIAccount",
+]
+const modelList = {
+  object: "list",
+  data: models.data.filter((p: any) => !ignoreProviders.includes(p.provider)),
+}
 
 export default modelList

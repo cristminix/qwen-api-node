@@ -29,7 +29,7 @@ class G4F {
     // const reader = response.body.getReader()
 
     for await (const chunk of response) {
-      //   console.log(chunk)
+      console.log(chunk)
       yield chunk
     }
   }
@@ -60,6 +60,9 @@ class G4F {
       // console.log(chunk)
       // dataPtr = chunk
       content += chunk.choices[0].delta.content
+      if (chunk.usage) {
+        chatResponse.usage = chunk.usage
+      }
     }
     chatResponse.choices[0].message.content = content
     // console.log(dataPtr)
