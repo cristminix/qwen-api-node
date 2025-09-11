@@ -14,7 +14,11 @@ app.get("/", (c) => {
 
 app.get("/usages/:provider", async (c) => {
   const provider = c.req.param("provider")
-  const usageData = await getUsagesByProvider(provider)
+  const ipaddr = c.req.query("ipaddr") || "" // Mendapatkan ipaddr dari query string
+  const usageData = await getUsagesByProvider(
+    provider,
+    ipaddr.length > 0 ? ipaddr : undefined
+  )
 
   if (usageData === null) {
     return c.json({

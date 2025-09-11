@@ -23,6 +23,8 @@ export const usages = sqliteTable("usages", {
   date: text("date").notNull(), // Format: 2020-09-09
   connections: integer("connections").notNull(),
   tokens: integer("tokens").notNull(), // Big number
+  ipaddr: text("ipaddr"),
+
   updatedAt: integer("updated_at", { mode: "timestamp" })
     .notNull()
     .default(new Date()),

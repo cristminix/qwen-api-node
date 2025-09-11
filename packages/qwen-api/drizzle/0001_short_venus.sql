@@ -5,6 +5,7 @@ CREATE TABLE `usages` (
 	`date` text NOT NULL,
 	`connections` integer NOT NULL,
 	`tokens` integer NOT NULL,
+	`ipaddr` text,
 	`updated_at` integer DEFAULT '"2025-09-11T04:03:33.667Z"' NOT NULL
 );
 --> statement-breakpoint

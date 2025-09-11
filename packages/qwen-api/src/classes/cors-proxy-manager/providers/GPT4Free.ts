@@ -209,6 +209,19 @@ class GPT4Free extends Client {
             // this.finalizeMessage()
             if (sso) {
               const totalTokens = promptTokens + completionTokens
+              // Mendapatkan IP publik saat ini
+              let ipaddr = ""
+              try {
+                const response = await fetch(
+                  "https://api.ipify.org?format=json"
+                )
+                const data = await response.json()
+                ipaddr = data.ip
+              } catch (error) {
+                console.warn("Gagal mendapatkan IP publik:", error)
+                // Menggunakan IP kosong sebagai fallback
+                ipaddr = ""
+              }
 
               // Mendapatkan tanggal saat ini dalam format 2020-09-09
               const currentDate = new Date().toISOString().split("T")[0]
@@ -216,8 +229,11 @@ class GPT4Free extends Client {
               let usage = await getUsageByProviderModelDate(
                 provider,
                 model,
-                currentDate
+                currentDate,
+                ipaddr
               )
+              console.log({ provider, model, currentDate, ipaddr })
+              console.log(usage)
               if (!usage) {
                 // create initial with 0 values
                 usage = await upsertUsage(
@@ -225,7 +241,8 @@ class GPT4Free extends Client {
                   model,
                   currentDate,
                   1,
-                  totalTokens
+                  totalTokens,
+                  ipaddr
                 )
               } else {
                 // increament connections by 1
@@ -235,7 +252,8 @@ class GPT4Free extends Client {
                   model,
                   currentDate,
                   usage.connections + 1,
-                  usage.tokens + totalTokens
+                  usage.tokens + totalTokens,
+                  ipaddr
                 )
               }
               // upsert usage

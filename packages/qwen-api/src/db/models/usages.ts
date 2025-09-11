@@ -16,13 +16,15 @@ export async function upsertUsage(
   model: string,
   date: string,
   connections: number,
-  tokens: number
+  tokens: number,
+  ipaddr: string = ""
 ): Promise<Usage> {
   // Mengecek apakah sudah ada record dengan kombinasi provider, model, dan date tertentu
   const existingRecord: Usage | null = await getUsageByProviderModelDate(
     provider,
     model,
-    date
+    date,
+    ipaddr
   )
 
   if (existingRecord) {
@@ -30,7 +32,8 @@ export async function upsertUsage(
     const updatedUsage: Usage = await updateUsage(
       existingRecord.id,
       connections,
-      tokens
+      tokens,
+      ipaddr
     )
     return updatedUsage
   } else {
@@ -40,7 +43,8 @@ export async function upsertUsage(
       model,
       date,
       connections,
-      tokens
+      tokens,
+      ipaddr
     )
     return newUsage
   }
@@ -60,7 +64,8 @@ export async function insertUsage(
   model: string,
   date: string,
   connections: number,
-  tokens: number
+  tokens: number,
+  ipaddr: string = ""
 ): Promise<Usage> {
   const newUsage: NewUsage = {
     provider,
@@ -68,6 +73,7 @@ export async function insertUsage(
     date,
     connections,
     tokens,
+    ipaddr,
     updatedAt: new Date(),
   }
 
@@ -85,15 +91,21 @@ export async function insertUsage(
 export async function updateUsage(
   id: number,
   connections: number,
-  tokens: number
+  tokens: number,
+  ipaddr: string = ""
 ): Promise<Usage> {
+  // Membuat objek dengan tipe yang sesuai untuk menghindari error TypeScript
+  const up: Partial<Usage> = {
+    connections: connections,
+    tokens: tokens,
+    updatedAt: new Date(),
+  }
+
+  // Menambahkan ipaddr ke objek update jika disediakan
+  if (ipaddr.length > 0) up.ipaddr = ipaddr
   const result: Usage[] = await db
     .update(usages)
-    .set({
-      connections: connections,
-      tokens: tokens,
-      updatedAt: new Date(),
-    })
+    .set(up)
     .where(eq(usages.id, id))
     .returning()
   return result[0]
@@ -109,18 +121,25 @@ export async function updateUsage(
 export async function getUsageByProviderModelDate(
   provider: string,
   model: string,
-  date: string
+  date: string,
+  ipaddr: string = ""
 ): Promise<Usage | null> {
+  // Membangun kondisi where berdasarkan parameter yang disediakan
+  const conditions = [
+    eq(usages.provider, provider),
+    eq(usages.model, model),
+    eq(usages.date, date),
+  ]
+
+  // Menambahkan kondisi ipaddr jika disediakan
+  if (ipaddr) {
+    conditions.push(eq(usages.ipaddr, ipaddr))
+  }
+
   const result: Usage[] = await db
     .select()
     .from(usages)
-    .where(
-      and(
-        eq(usages.provider, provider),
-        eq(usages.model, model),
-        eq(usages.date, date)
-      )
-    )
+    .where(and(...conditions))
   return result.length > 0 ? result[0] : null
 }
 
@@ -136,19 +155,33 @@ export async function getAllUsages(): Promise<Usage[]> {
 /**
  * Mendapatkan record penggunaan API dari database berdasarkan provider
  * @param provider Nama provider
+ * @param ipaddr Alamat IP (opsional)
  * @returns Object dengan total connections dan tokens untuk hari ini
  */
 export async function getUsagesByProvider(
-  provider: string
+  provider: string,
+  ipaddr?: string
 ): Promise<{ connections: number; tokens: number } | null> {
   const currentDate = new Date().toISOString().split("T")[0]
+
+  // Membangun kondisi where berdasarkan parameter yang disediakan
+  const conditions = [
+    eq(usages.provider, provider),
+    eq(usages.date, currentDate),
+  ]
+
+  // Menambahkan kondisi ipaddr jika disediakan
+  if (ipaddr) {
+    conditions.push(eq(usages.ipaddr, ipaddr))
+  }
+
   const result: { connections: number; tokens: number }[] = await db
     .select({
       connections: sum(usages.connections).mapWith(Number),
       tokens: sum(usages.tokens).mapWith(Number),
     })
     .from(usages)
-    .where(and(eq(usages.provider, provider), eq(usages.date, currentDate)))
+    .where(and(...conditions))
 
   // Jika tidak ada data, kembalikan null
   if (

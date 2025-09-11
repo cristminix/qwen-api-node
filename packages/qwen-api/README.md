@@ -58,6 +58,12 @@ npx tsx examples/huggingface_basic_usage.ts
 npx tsx examples/huggingface_stream_usage.ts
 ```
 
+### G4F
+
+## Usage
+
+`http://localhost:3001/usages/DeepInfra?ipaddr=172.236.145.155`
+
 ## Lisensi
 
 MIT
