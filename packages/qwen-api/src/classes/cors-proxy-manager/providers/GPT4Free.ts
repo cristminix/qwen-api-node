@@ -1,5 +1,9 @@
 import { v1 } from "uuid"
 import { Client } from "../Client"
+import {
+  getUsageByProviderModelDate,
+  upsertUsage,
+} from "../../../db/models/usages"
 import generateId from "src/providers/blackbox/api/fn/generateId"
 import {
   countMessagesTokens,
@@ -117,7 +121,7 @@ class GPT4Free extends Client {
             model = this.defaultModel
           }
           const [realModel, realProvider] = this.getModelAndProvider(model)
-          let provider = this.defaultProvider
+          let provider = this.defaultProvider as string
           if (realModel && realProvider) {
             model = realModel
             provider = realProvider
@@ -147,12 +151,19 @@ class GPT4Free extends Client {
           const response = await fetch(`${this.baseUrl}`, requestOptions)
           if (params.stream) {
             // if (direct) return response
-            return this._streamCompletion2(response, true, model, body.messages)
+            return this._streamCompletion2(
+              response,
+              true,
+              model,
+              provider,
+              body.messages
+            )
           } else {
             return this._streamCompletion2(
               response,
               false,
               model,
+              provider,
               body.messages
             )
           }
@@ -171,6 +182,7 @@ class GPT4Free extends Client {
     response: Response,
     sso = false,
     model: string,
+    provider: string,
     messages: any[]
   ) {
     if (!response.ok) {
@@ -196,6 +208,37 @@ class GPT4Free extends Client {
           if (done) {
             // this.finalizeMessage()
             if (sso) {
+              const totalTokens = promptTokens + completionTokens
+
+              // Mendapatkan tanggal saat ini dalam format 2020-09-09
+              const currentDate = new Date().toISOString().split("T")[0]
+              // Mengambil data penggunaan berdasarkan provider dan model saat ini
+              let usage = await getUsageByProviderModelDate(
+                provider,
+                model,
+                currentDate
+              )
+              if (!usage) {
+                // create initial with 0 values
+                usage = await upsertUsage(
+                  provider,
+                  model,
+                  currentDate,
+                  1,
+                  totalTokens
+                )
+              } else {
+                // increament connections by 1
+                // increament tokens by totalTokens
+                usage = await upsertUsage(
+                  provider,
+                  model,
+                  currentDate,
+                  usage.connections + 1,
+                  usage.tokens + totalTokens
+                )
+              }
+              // upsert usage
               yield encoder.encode(
                 `data: ${JSON.stringify({
                   id: `chatcmpl-${Date.now()}`,
@@ -214,7 +257,7 @@ class GPT4Free extends Client {
                   usage: {
                     prompt_tokens: promptTokens,
                     completion_tokens: completionTokens,
-                    total_tokens: promptTokens + completionTokens,
+                    total_tokens: totalTokens,
                   },
                   done: true, // Flag akhir stream
                 })}\n\ndata: [DONE]\n\n`

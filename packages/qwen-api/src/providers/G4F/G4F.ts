@@ -29,7 +29,7 @@ class G4F {
     // const reader = response.body.getReader()
 
     for await (const chunk of response) {
-      console.log(chunk)
+      // console.log(chunk)
       yield chunk
     }
   }
