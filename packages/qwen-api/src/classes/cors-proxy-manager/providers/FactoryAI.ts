@@ -231,51 +231,149 @@ class FactoryAI extends Client {
 
     return chatResponse
   }
+  /**
+   * Processes non-streaming API completion responses and normalizes them to OpenAI format
+   * @param response - The fetch Response object from the API
+   * @param use - The API type identifier ("gpt" or "antrophic")
+   * @returns Normalized completion response in OpenAI-compatible format
+   * @throws {Error} When API request fails or response format is invalid
+   */
   async _sendCompletion(response: Response, use: string) {
+    // Validate HTTP response status
     if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`)
+      const errorText = await response.text().catch(() => "Unknown error")
+      throw new Error(
+        `API request failed with status ${response.status}: ${errorText}`
+      )
     }
-    // console.log("Here 2", response)
 
-    const data = await response.json()
-    // console.log({ data })
-    let newData = data
-    if (use === "gpt") {
-    } else {
-      /*
-    response: {
-    id: 'msg_01Dbw7zefJSsrbrNHdJACGnh',
-    type: 'message',
-    role: 'assistant',
-    model: 'claude-opus-4-1-20250805',
-    content: [ { type: 'text', text: '{ "title": "👋 Initial Greeting Exchange" }' } ],
-    stop_reason: 'end_turn',
-    stop_sequence: null,
-    usage: {
-      input_tokens: 205,
-      cache_creation_input_tokens: 0,
-      cache_read_input_tokens: 0,
-      cache_creation: [Object],
-      output_tokens: 11,
-      service_tier: 'standard'
+    // Parse JSON response with error handling
+    let data: any
+    try {
+      data = await response.json()
+    } catch (error) {
+      throw new Error(
+        `Failed to parse API response as JSON: ${error instanceof Error ? error.message : "Unknown error"}`
+      )
     }
+
+    // GPT format is already in OpenAI-compatible format, return as-is
+    if (use === "gpt") {
+      return this._validateAndNormalizeGptResponse(data)
+    }
+
+    // Transform Anthropic format to OpenAI-compatible format
+    return this._transformAnthropicResponse(data)
   }
-}
-   
-    */
-      newData = {
-        choices: [
-          {
-            message: {
-              role: "assistant",
-              content: data.content[0].text,
-            },
+
+  /**
+   * Validates and normalizes GPT response format
+   * @param data - The raw GPT API response
+   * @returns Normalized response
+   * @throws {Error} When response format is invalid
+   */
+  private _validateAndNormalizeGptResponse(data: any) {
+    if (!data || typeof data !== "object") {
+      throw new Error("Invalid GPT response: Expected an object")
+    }
+
+    // GPT responses are already in OpenAI format, but ensure required fields exist
+    if (
+      !data.choices ||
+      !Array.isArray(data.choices) ||
+      data.choices.length === 0
+    ) {
+      throw new Error("Invalid GPT response: Missing or empty choices array")
+    }
+
+    return data
+  }
+
+  /**
+   * Transforms Anthropic API response to OpenAI-compatible format
+   * @param data - The raw Anthropic API response
+   * @returns Normalized response in OpenAI format
+   * @throws {Error} When response format is invalid
+   *
+   * Anthropic response structure:
+   * {
+   *   id: string,
+   *   type: 'message',
+   *   role: 'assistant',
+   *   model: string,
+   *   content: [{ type: 'text', text: string }],
+   *   stop_reason: string,
+   *   usage: { input_tokens: number, output_tokens: number, ... }
+   * }
+   */
+  private _transformAnthropicResponse(data: any) {
+    // Validate response structure
+    if (!data || typeof data !== "object") {
+      throw new Error("Invalid Anthropic response: Expected an object")
+    }
+
+    if (
+      !data.content ||
+      !Array.isArray(data.content) ||
+      data.content.length === 0
+    ) {
+      throw new Error(
+        "Invalid Anthropic response: Missing or empty content array"
+      )
+    }
+
+    // Extract text content from the first content block
+    const firstContent = data.content[0]
+    if (!firstContent || typeof firstContent !== "object") {
+      throw new Error("Invalid Anthropic response: Invalid content block")
+    }
+
+    const contentText = firstContent.text || ""
+
+    // Build OpenAI-compatible response structure
+    const normalizedResponse: any = {
+      id: data.id || `chatcmpl-${Date.now()}`,
+      object: "chat.completion",
+      created: Math.floor(Date.now() / 1000),
+      model: data.model || "unknown",
+      choices: [
+        {
+          index: 0,
+          message: {
+            role: "assistant",
+            content: contentText,
           },
-        ],
+          finish_reason: this._mapAnthropicStopReason(data.stop_reason),
+        },
+      ],
+    }
+
+    // Include usage information if available
+    if (data.usage) {
+      normalizedResponse.usage = {
+        prompt_tokens: data.usage.input_tokens || 0,
+        completion_tokens: data.usage.output_tokens || 0,
+        total_tokens:
+          (data.usage.input_tokens || 0) + (data.usage.output_tokens || 0),
       }
     }
-    // console.log(newData.content)
-    return newData
+
+    return normalizedResponse
+  }
+
+  /**
+   * Maps Anthropic stop reasons to OpenAI finish reasons
+   * @param stopReason - The Anthropic stop_reason value
+   * @returns Corresponding OpenAI finish_reason
+   */
+  private _mapAnthropicStopReason(stopReason: string | null): string {
+    const mapping: Record<string, string> = {
+      end_turn: "stop",
+      max_tokens: "length",
+      stop_sequence: "stop",
+    }
+
+    return stopReason ? mapping[stopReason] || "stop" : "stop"
   }
 
   /**
@@ -331,12 +429,7 @@ class FactoryAI extends Client {
               total_tokens: totalTokens,
             }
             if (calculatedUsage) {
-              const {
-                input_tokens,
-                cache_creation_input_tokens,
-                cache_read_input_tokens,
-                output_tokens,
-              } = calculatedUsage
+              const { input_tokens, output_tokens } = calculatedUsage
               usage.prompt_tokens = input_tokens
               usage.completion_tokens = output_tokens
               usage.total_tokens = input_tokens + output_tokens
@@ -462,72 +555,137 @@ class FactoryAI extends Client {
     }
   }
 
+  /**
+   * Processes GPT streaming response chunks and normalizes them to OpenAI format
+   * @param jsonData - The parsed JSON data from the stream chunk
+   * @param sso - Whether to return Server-Sent Events (SSE) encoded format
+   * @param model - The model identifier
+   * @param completionId - Sequential ID for tracking chunks
+   * @param encoder - TextEncoder instance for SSE encoding
+   * @returns Encoded SSE data, normalized chunk object, or null if not processable
+   */
   streamGpt(
     jsonData: any,
     sso: boolean,
     model: string,
     completionId: number,
-    encoder: any
-  ) {
-    /*
-    {
-  type: 'response.output_text.delta',
-  sequence_number: 8,
-  item_id: 'msg_0c5909c2988128260168e34f28d64c81998aa3d7821e12f146',
-  output_index: 1,
-  content_index: 0,
-  delta: ' \n',
-  logprobs: [],
-  obfuscation: 'Zw2ZZOzsgRsJmF'
-}
-    */
-    // Handle GPT response format
-    // console.log(jsonData)
-
-    if (
-      jsonData.type &&
-      (jsonData.type === "response.output_item.added" ||
-        jsonData.type === "response.output_text.delta" ||
-        jsonData.type === "response.output_text.done")
-    ) {
-      if (jsonData.delta || jsonData.text || jsonData.item) {
-        let { text, delta, item } = jsonData
-        let itemType = "text"
-        if (item) {
-          itemType = item.type === "reasoning" ? "thinking" : "text"
-        }
-        // console.log({ text, delta, item })
-        // Convert to the format expected by the application
-        let deltaData = {
-          type: itemType,
-          content:
-            jsonData.type === "response.output_text.done"
-              ? ""
-              : jsonData.type === "response.output_text.delta"
-                ? delta
-                : "",
-        }
-        let data = {
-          id: `chatcmpl-${Date.now()}`,
-          model: model,
-          object: "chat.completion.chunk",
-          index: completionId,
-          finish_reason:
-            jsonData.type === "response.output_text.done" ? "finish" : null,
-          created: Date.now(),
-          choices: [
-            {
-              delta: deltaData,
-            },
-          ],
-        }
-
-        if (sso) {
-          return encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
-        } else return data
-      }
+    encoder: TextEncoder
+  ): Uint8Array | Record<string, any> | null {
+    // Early return for invalid or non-processable chunk types
+    if (!jsonData?.type) {
+      return null
     }
-    return null
+
+    // Define processable event types
+    const PROCESSABLE_TYPES = new Set([
+      "response.output_item.added",
+      "response.output_text.delta",
+      "response.output_text.done",
+    ])
+
+    // Check if this chunk type should be processed
+    if (!PROCESSABLE_TYPES.has(jsonData.type)) {
+      return null
+    }
+
+    // Verify chunk contains processable data
+    if (!jsonData.delta && !jsonData.text && !jsonData.item) {
+      return null
+    }
+
+    // Extract data with type safety
+    const { text, delta, item } = jsonData
+
+    // Determine item type with explicit type checking
+    const itemType = this._determineGptItemType(item)
+
+    // Build delta content based on event type
+    const deltaContent = this._buildGptDeltaContent(jsonData.type, delta)
+
+    // Create normalized chunk data structure
+    const chunkData = this._createGptChunkData(
+      model,
+      completionId,
+      itemType,
+      deltaContent,
+      jsonData.type
+    )
+
+    // Return appropriate format based on SSO flag
+    return sso
+      ? encoder.encode(`data: ${JSON.stringify(chunkData)}\n\n`)
+      : chunkData
+  }
+
+  /**
+   * Determines the item type from GPT response item
+   * @param item - The item object from GPT response
+   * @returns The item type ("thinking" for reasoning, "text" otherwise)
+   */
+  private _determineGptItemType(item: any): string {
+    if (!item) {
+      return "text"
+    }
+
+    return item.type === "reasoning" ? "thinking" : "text"
+  }
+
+  /**
+   * Builds the delta content based on GPT response type
+   * @param responseType - The type of GPT response event
+   * @param delta - The delta value from the response
+   * @returns The appropriate content string
+   */
+  private _buildGptDeltaContent(responseType: string, delta?: string): string {
+    // Done events have no content
+    if (responseType === "response.output_text.done") {
+      return ""
+    }
+
+    // Delta events use delta value
+    if (responseType === "response.output_text.delta") {
+      return delta || ""
+    }
+
+    // Default to empty string for other types
+    return ""
+  }
+
+  /**
+   * Creates a normalized GPT chunk data structure in OpenAI format
+   * @param model - The model identifier
+   * @param completionId - Sequential ID for the chunk
+   * @param itemType - Type of the item ("text" or "thinking")
+   * @param content - The content string for the delta
+   * @param responseType - The original GPT response type
+   * @returns Normalized chunk data object
+   */
+  private _createGptChunkData(
+    model: string,
+    completionId: number,
+    itemType: string,
+    content: string,
+    responseType: string
+  ): Record<string, any> {
+    const isDone = responseType === "response.output_text.done"
+    const timestamp = Date.now()
+
+    return {
+      id: `chatcmpl-${timestamp}`,
+      model,
+      object: "chat.completion.chunk",
+      index: completionId,
+      finish_reason: isDone ? "finish" : null,
+      created: timestamp,
+      choices: [
+        {
+          delta: {
+            type: itemType,
+            content,
+          },
+        },
+      ],
+    }
   }
   streamAntrophic(
     jsonData: any,
@@ -536,19 +694,6 @@ class FactoryAI extends Client {
     completionId: number,
     encoder: any
   ) {
-    /*
-    {
-  type: 'response.output_text.delta',
-  sequence_number: 8,
-  item_id: 'msg_0c5909c2988128260168e34f28d64c81998aa3d7821e12f146',
-  output_index: 1,
-  content_index: 0,
-  delta: ' \n',
-  logprobs: [],
-  obfuscation: 'Zw2ZZOzsgRsJmF'
-}
-    */
-    // Handle GPT response format
     if (
       jsonData.type &&
       (jsonData.type === "content_block_delta" ||
