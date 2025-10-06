@@ -3,13 +3,13 @@ import {
   ChatResponse,
   ChatResponseStream,
 } from "../../core/types/chat"
-import { GPT4Free } from "../../classes/cors-proxy-manager/providers/GPT4Free"
+import { FactoryAI } from "../../classes/cors-proxy-manager/providers/FactoryAI"
 
-class G4F {
-  private client: GPT4Free
+class Factory {
+  private client: FactoryAI
 
   constructor() {
-    this.client = new GPT4Free()
+    this.client = new FactoryAI()
   }
 
   public async *stream(
@@ -38,12 +38,12 @@ class G4F {
     const response: any = await this.client.chat.completions.create(
       {
         ...request,
-        stream: false,
+        stream: true,
       },
       {},
       false
     )
-
+    // console.log({ response })
     // const reader = response.body.getReader()
     let content = ""
     let chatResponse: ChatResponse = {
@@ -59,7 +59,7 @@ class G4F {
     for await (const chunk of response) {
       // dataPtr = chunk
       content += chunk.choices[0].delta.content
-      console.log(content)
+      // console.log({ content })
 
       if (chunk.usage) {
         chatResponse.usage = chunk.usage
@@ -72,4 +72,4 @@ class G4F {
   }
 }
 
-export default G4F
+export default Factory

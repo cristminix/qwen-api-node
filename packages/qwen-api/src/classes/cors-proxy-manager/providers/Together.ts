@@ -247,7 +247,7 @@ class Together extends Client {
           if (params.stream) {
             return this._streamCompletion(response)
           } else {
-            return this._regularCompletion(response)
+            return this.sendCompletionResponse(response)
           }
         },
       },

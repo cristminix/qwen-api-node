@@ -171,7 +171,7 @@ class GPT4Free extends Client {
       },
     }
   }
-  async _regularCompletion(response: Response) {
+  async sendCompletionResponse(response: Response) {
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`)
     }

@@ -1,0 +1,565 @@
+{
+  modelObj: { id: 'claude-sonnet-4-20250514', use: 'antrophic' },
+  model: 'claude-sonnet-4-20250514'
+}
+{
+  requestOptions: {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6InNzb19vaWRjX2tleV9wYWlyXzAxSE5NNzkyTTBGVjNDRVFRRjgxNkRWN1hFIn0.eyJvYmplY3QiOiJ1c2VyIiwiaWQiOiJ1c2VyXzAxSzZINEVKTVg4TVROWUZZMDNONVpEQU5QIiwiZW1haWwiOiJzdXRveW9jdXRlekBnbWFpbC5jb20iLCJmaXJzdF9uYW1lIjoic3V0b3lvY3V0ZXoiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicHJvZmlsZV9waWN0dXJlX3VybCI6Imh0dHBzOi8vd29ya29zY2RuLmNvbS9pbWFnZXMvdjEvWjl2dC1vWEN6S1M3SFIxdVJTVFUyeTVwYlhMT2hNaXdHX2cxTFN2SXUzbyIsImNyZWF0ZWRfYXQiOiIyMDI1LTEwLTAyVDAwOjE2OjQ1LjE2M1oiLCJ1cGRhdGVkX2F0IjoiMjAyNS0xMC0wNVQxMjoxMTowMS42NjJaIiwibWV0YWRhdGEiOnt9LCJleHRlcm5hbF9vcmdfaWQiOiJuTTNEZEtldFlBQjBndG9kdEZLWSIsImlzcyI6Imh0dHBzOi8vYXBpLndvcmtvcy5jb20iLCJzdWIiOiJ1c2VyXzAxSzZINEVKTVg4TVROWUZZMDNONVpEQU5QIiwic2lkIjoic2Vzc2lvbl8wMUs2SDhLN1NZSjgxOEhOMFpRVzBaQjVFRyIsImp0aSI6IjAxSzZWVEQ3RzFQSk5WOVNTNFBBV0pTWFNGIiwib3JnX2lkIjoib3JnXzAxSzZINEVNN1AyRFk2NEEzMUYyUllWWFBGIiwicm9sZSI6Im93bmVyIiwicm9sZXMiOlsib3duZXIiXSwicGVybWlzc2lvbnMiOltdLCJleHAiOjE3NTk3NTE1NzMsImlhdCI6MTc1OTcyMjc3M30.XpjhcvbZjohFTiu0GIHQCM9vWTBOc1C4r-HbNuFrAR7qirQIksO4WnJULKkVG8kjddPDVxf4a5dJSIa9F8mw9jwoda84yWNxDJehgZjmKjqO954rbO0E9iWdiqDYspv_MzGi718YVOaSEyvPTDWdmF-2reHjua24WKp_8nV32hjCbJEP9Ct2NjT2r-lnCHIoBrUb4Ej0IAu82f24FAxhq3QglqG74mrYNBGyQGD0mjD9x03FFiwzMOOVWRyC4vKN57LHgM1kdD4tKOxTEStTHOSgTCZWTCOwxPPNVHlP9ynagq5fnAwOEYoiOIq3-kgrIDrEHJ41FBVqL-VSfEf_2A'
+    },
+    body: '{"model":"claude-sonnet-4-20250514","input":[{"role":"user","content":[{"type":"text","text":"tell me 7 jokes ?."}]}],"stream":true,"max_tokens":4000,"system":"Answer in indonesia."}'
+  },
+  endpoint: 'https://app.factory.ai/api/llm/a/v1/messages'
+}
+
+An error occurred: Error: API request failed with status 400 and message: {"type":"error","error":{"type":"invalid_request_error","message":"messages: Field required"},"request_id":"req_011CTqTHGiSotnoza4nfFKWJ"}
+    at FactoryAI.makeStreamCompletion (/home/cristminix/projects/qwen-api/packages/qwen-api/src/classes/cors-proxy-manager/providers/FactoryAI.ts:201:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async main (/home/cristminix/projects/qwen-api/packages/qwen-api/examples/factoryai_stream_usage.ts:37:22)
+cristminix@WAHWEI:~/projects/qwen-api/packages/qwen-api$ npx tsx examples/factoryai_stream_usage.ts 
+[dotenv@17.2.0] injecting env (9) from .env (tip: ⚙️  override existing env vars with { override: true })
+Sending streaming request to FactoryAI...
+{
+  modelObj: { id: 'claude-sonnet-4-20250514', use: 'antrophic' },
+  model: 'claude-sonnet-4-20250514'
+}
+{
+  requestOptions: {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6InNzb19vaWRjX2tleV9wYWlyXzAxSE5NNzkyTTBGVjNDRVFRRjgxNkRWN1hFIn0.eyJvYmplY3QiOiJ1c2VyIiwiaWQiOiJ1c2VyXzAxSzZINEVKTVg4TVROWUZZMDNONVpEQU5QIiwiZW1haWwiOiJzdXRveW9jdXRlekBnbWFpbC5jb20iLCJmaXJzdF9uYW1lIjoic3V0b3lvY3V0ZXoiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicHJvZmlsZV9waWN0dXJlX3VybCI6Imh0dHBzOi8vd29ya29zY2RuLmNvbS9pbWFnZXMvdjEvWjl2dC1vWEN6S1M3SFIxdVJTVFUyeTVwYlhMT2hNaXdHX2cxTFN2SXUzbyIsImNyZWF0ZWRfYXQiOiIyMDI1LTEwLTAyVDAwOjE2OjQ1LjE2M1oiLCJ1cGRhdGVkX2F0IjoiMjAyNS0xMC0wNVQxMjoxMTowMS42NjJaIiwibWV0YWRhdGEiOnt9LCJleHRlcm5hbF9vcmdfaWQiOiJuTTNEZEtldFlBQjBndG9kdEZLWSIsImlzcyI6Imh0dHBzOi8vYXBpLndvcmtvcy5jb20iLCJzdWIiOiJ1c2VyXzAxSzZINEVKTVg4TVROWUZZMDNONVpEQU5QIiwic2lkIjoic2Vzc2lvbl8wMUs2SDhLN1NZSjgxOEhOMFpRVzBaQjVFRyIsImp0aSI6IjAxSzZWVEQ3RzFQSk5WOVNTNFBBV0pTWFNGIiwib3JnX2lkIjoib3JnXzAxSzZINEVNN1AyRFk2NEEzMUYyUllWWFBGIiwicm9sZSI6Im93bmVyIiwicm9sZXMiOlsib3duZXIiXSwicGVybWlzc2lvbnMiOltdLCJleHAiOjE3NTk3NTE1NzMsImlhdCI6MTc1OTcyMjc3M30.XpjhcvbZjohFTiu0GIHQCM9vWTBOc1C4r-HbNuFrAR7qirQIksO4WnJULKkVG8kjddPDVxf4a5dJSIa9F8mw9jwoda84yWNxDJehgZjmKjqO954rbO0E9iWdiqDYspv_MzGi718YVOaSEyvPTDWdmF-2reHjua24WKp_8nV32hjCbJEP9Ct2NjT2r-lnCHIoBrUb4Ej0IAu82f24FAxhq3QglqG74mrYNBGyQGD0mjD9x03FFiwzMOOVWRyC4vKN57LHgM1kdD4tKOxTEStTHOSgTCZWTCOwxPPNVHlP9ynagq5fnAwOEYoiOIq3-kgrIDrEHJ41FBVqL-VSfEf_2A'
+    },
+    body: '{"model":"claude-sonnet-4-20250514","messages":[{"role":"user","content":[{"type":"text","text":"tell me 7 jokes ?."}]}],"stream":true,"max_tokens":4000,"system":"Answer in indonesia."}'
+  },
+  endpoint: 'https://app.factory.ai/api/llm/a/v1/messages'
+}
+{
+  jsonData: {
+    type: 'message_start',
+    message: {
+      id: 'msg_019LKv8u9AHupym4b6zzFvFC',
+      type: 'message',
+      role: 'assistant',
+      model: 'claude-sonnet-4-20250514',
+      content: [],
+      stop_reason: null,
+      stop_sequence: null,
+      usage: [Object]
+    }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_start',
+    index: 0,
+    content_block: { type: 'text', text: '' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'Berikut 7 le' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'lucon untuk' }
+  }
+}
+{ jsonData: { type: 'ping' } }
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' Anda:\n\n**1.' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' Kenapa ay' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'am nyeb' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'rang j' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'alan?**\nKarena m' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'au ke warung sebelah, kat' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'anya ada promo makan gr' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'atis!\n\n**2. Apa be' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'danya gajah sama tikus' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: '?**\nGajah n' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'ggak bisa main pe' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'tak umpet di dalam' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' kulkas.' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: '\n\n**3. Ken' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'apa ikan' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' nggak pernah bay' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'ar paj' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'ak?**\nSo' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'alnya dia' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' tinggal di air' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ', bukan di darat yang' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' ada kantor' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'nya!\n\n**4. Dok' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'ter: "Saya p' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'unya kabar ba' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'ik dan ka' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'bar buruk."**\nPas' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'ien: "Ka' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'bar buruk' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'nya dulu dok' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: '."' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: '\nDokter: "Anda' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' cuma punya 24' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' jam l' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'agi."' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: '\nPasien: "L' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'alu kabar baiknya?"\nDokter:' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' "Kem' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'arin saya l' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'upa bilang ke' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' Anda."\n\n**5.' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' Kenapa cic' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'ak bisa j' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'alan di tembok?**\nKarena dia' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' punya spi' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'dol perm' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'anen di' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' kakinya!\n\n**6.' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' Apa bah' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'asa' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' Inggris' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'nya "m' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'uka' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' tebal"?**\nFacebook' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: '! ' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: '😄' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: '\n\n**7. Kenapa han' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'tu suka ban' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'get' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' sama lift' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: '?**\nKarena dia b' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'isa na' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'ik turun tan' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'pa capek' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' kaki!' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: '\n\nSemoga bisa' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: ' bikin s' }
+  }
+}
+{
+  jsonData: {
+    type: 'content_block_delta',
+    index: 0,
+    delta: { type: 'text_delta', text: 'enyum! 😊' }
+  }
+}
+{ jsonData: { type: 'content_block_stop', index: 0 } }
+{
+  jsonData: {
+    type: 'message_delta',
+    delta: { stop_reason: 'end_turn', stop_sequence: null },
+    usage: {
+      input_tokens: 19,
+      cache_creation_input_tokens: 0,
+      cache_read_input_tokens: 0,
+      output_tokens: 348
+    }
+  }
+}
+{ jsonData: { type: 'message_stop' } }

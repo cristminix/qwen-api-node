@@ -162,7 +162,7 @@ class HuggingFace extends Client {
             if (direct) return response
             return this._streamCompletion(response)
           } else {
-            return this._regularCompletion(response)
+            return this.sendCompletionResponse(response)
           }
         },
       },

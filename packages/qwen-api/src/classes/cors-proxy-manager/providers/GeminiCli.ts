@@ -100,13 +100,13 @@ class GeminiCli extends Client {
           if (params.stream) {
             return this._streamCompletion2(response, direct, model)
           } else {
-            return this._regularCompletion(response)
+            return this.sendCompletionResponse(response)
           }
         },
       },
     }
   }
-  async _regularCompletion(response: Response) {
+  async sendCompletionResponse(response: Response) {
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`)
     }

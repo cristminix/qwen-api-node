@@ -3,7 +3,6 @@ import { ChatCompletionRequest } from "../../../core/types/chat"
 import createCompletions from "./createCompletions"
 import isPromptMode from "./isPromptMode"
 import { streamSSE } from "hono/streaming"
-import { json } from "stream/consumers"
 
 async function sendStreamResult(
   response: any,

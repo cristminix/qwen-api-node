@@ -120,7 +120,7 @@ export class Client {
             if (direct) return response
             return this._streamCompletion(response)
           } else {
-            return this._regularCompletion(response)
+            return this.sendCompletionResponse(response)
           }
         },
       },
@@ -179,7 +179,7 @@ export class Client {
     }
   }
 
-  async _regularCompletion(response: Response) {
+  async sendCompletionResponse(response: Response) {
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`)
     }
