@@ -38,37 +38,13 @@ class Factory {
     const response: any = await this.client.chat.completions.create(
       {
         ...request,
-        stream: true,
+        stream: false,
       },
       {},
       false
     )
     // console.log({ response })
-    // const reader = response.body.getReader()
-    let content = ""
-    let chatResponse: ChatResponse = {
-      choices: [
-        {
-          message: {
-            role: "assistant",
-            content: "",
-          },
-        },
-      ],
-    }
-    for await (const chunk of response) {
-      // dataPtr = chunk
-      content += chunk.choices[0].delta.content
-      // console.log({ content })
-
-      if (chunk.usage) {
-        chatResponse.usage = chunk.usage
-      }
-    }
-    chatResponse.choices[0].message.content = content
-    // console.log(dataPtr)
-
-    return chatResponse
+    return response
   }
 }
 

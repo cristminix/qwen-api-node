@@ -159,6 +159,10 @@ class FactoryAI extends Client {
             useEndpoint === "gpt"
               ? this.buildGptRequest(model, options)
               : this.buildAntrophicRequest(model, options)
+
+          if (useEndpoint === "gpt") {
+            body.stream = true
+          }
           const requestOptions = {
             method: "POST",
             headers: this.extraHeaders,
@@ -169,6 +173,8 @@ class FactoryAI extends Client {
           let endpoint = `${this.baseUrl}/${useEndpoint === "gpt" ? this.gptEndpoint : this.antrophicEndpoint}`
 
           // console.log({ requestOptions, endpoint })
+          // console.log({ body })
+          const messages = useEndpoint === "gpt" ? body.input : body.messages
           // return
           const response = await fetch(endpoint, requestOptions)
           if (params.stream) {
@@ -177,21 +183,62 @@ class FactoryAI extends Client {
               direct,
               model,
               useEndpoint,
-              body.messages
+              messages
             )
           } else {
-            return this._sendCompletionResponse(response, useEndpoint)
+            if (useEndpoint === "gpt") {
+              return this._sendResponseFromStream(
+                this.makeStreamCompletion(
+                  response,
+                  false,
+                  model,
+                  useEndpoint,
+                  messages
+                )
+              )
+            }
+            return await this._sendCompletion(response, useEndpoint)
           }
         },
       },
     }
   }
-  async _sendCompletionResponse(response: Response, use: string) {
+  async _sendResponseFromStream(input: any) {
+    // const reader = response.body.getReader()
+    let content = ""
+    let chatResponse: any = {
+      choices: [
+        {
+          message: {
+            role: "assistant",
+            content: "",
+          },
+        },
+      ],
+    }
+    for await (const chunk of input) {
+      // console.log(chunk.toString())
+      // dataPtr = chunk
+      content += chunk.choices[0].delta.content
+      // console.log({ content })
+
+      if (chunk.usage) {
+        chatResponse.usage = chunk.usage
+      }
+    }
+    chatResponse.choices[0].message.content = content
+    // console.log(dataPtr)
+
+    return chatResponse
+  }
+  async _sendCompletion(response: Response, use: string) {
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`)
     }
-    const data = await response.json()
+    // console.log("Here 2", response)
 
+    const data = await response.json()
+    // console.log({ data })
     let newData = data
     if (use === "gpt") {
     } else {
@@ -364,7 +411,7 @@ class FactoryAI extends Client {
               if (use === "gpt") {
                 const result = this.streamGpt(
                   jsonData,
-                  true,
+                  sso,
                   model,
                   completionId,
                   encoder
@@ -382,7 +429,7 @@ class FactoryAI extends Client {
                 // console.log({ jsonData })
                 const result = this.streamAntrophic(
                   jsonData,
-                  true,
+                  sso,
                   model,
                   completionId,
                   encoder
