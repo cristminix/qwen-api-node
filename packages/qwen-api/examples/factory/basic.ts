@@ -3,8 +3,8 @@ import * as dotenv from "dotenv"
 // Load .env file from the current working directory
 dotenv.config({ quiet: false, debug: false })
 
-import { ChatMessage } from "../src/core/types/chat"
-import Factory from "../src/providers/factory/Factory"
+import { ChatMessage } from "../../src/core/types/chat"
+import Factory from "../../src/providers/factory/Factory"
 
 async function main() {
   // Initialize the Pollinations client
@@ -18,7 +18,7 @@ async function main() {
     },
   ]
 
-  console.log("Sending request to HF...")
+  console.log("Sending request to Factory...")
 
   try {
     // Send a chat completion request

@@ -3,8 +3,8 @@ import * as dotenv from "dotenv"
 // Load .env file from the current working directory
 dotenv.config()
 
-import { ChatMessage } from "../src/core/types/chat"
-import { FactoryAI } from "../src/classes/cors-proxy-manager/providers/FactoryAI"
+import { ChatMessage } from "../../src/core/types/chat"
+import { FactoryAI } from "../../src/classes/cors-proxy-manager/providers/FactoryAI"
 
 async function main() {
   const client = new FactoryAI()
@@ -27,7 +27,7 @@ async function main() {
 
     // Send a streaming chat completion request
     const stream = await client.chat.completions.create({
-      model: "gpt-5",
+      model: "claude-sonnet-4.5",
       messages: messages,
       stream: true,
       // thinking: { type: "disabled" },
