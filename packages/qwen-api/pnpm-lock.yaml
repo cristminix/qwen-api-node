@@ -32,6 +32,9 @@ importers:
       hono:
         specifier: ^4.8.5
         version: 4.8.5
+      js-sha256:
+        specifier: ^0.11.1
+        version: 0.11.1
       openai:
         specifier: ^6.1.0
         version: 6.1.0
@@ -1053,6 +1056,9 @@ packages:
 
   js-base64@2.6.4:
     resolution: {integrity: sha512-pZe//GGmwJndub7ZghVHz7vjb2LgC1m8B07Au3eYqeqv9emhESByMXxaEgkUkEqJe87oBbSniGYoQNIBklc7IQ==}
+
+  js-sha256@0.11.1:
+    resolution: {integrity: sha512-o6WSo/LUvY2uC4j7mO50a2ms7E/EAdbP0swigLV+nzHKTTaYnaLIWJ02VdXrsJX0vGedDESQnLsOekr94ryfjg==}
 
   jstoxml@2.2.9:
     resolution: {integrity: sha512-OYWlK0j+roh+eyaMROlNbS5cd5R25Y+IUpdl7cNdB8HNrkgwQzIS7L9MegxOiWNBj9dQhA/yAxiMwCC5mwNoBw==}
@@ -2435,6 +2441,8 @@ snapshots:
   isstream@0.1.2: {}
 
   js-base64@2.6.4: {}
+
+  js-sha256@0.11.1: {}
 
   jstoxml@2.2.9: {}
 

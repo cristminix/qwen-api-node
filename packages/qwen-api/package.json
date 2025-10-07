@@ -40,6 +40,7 @@
     "drizzle-orm": "^0.44.4",
     "fast-crc32c": "^2.0.0",
     "hono": "^4.8.5",
+    "js-sha256": "^0.11.1",
     "openai": "^6.1.0",
     "proxy-agent": "^6.5.0",
     "tiktoken": "^1.0.22",
