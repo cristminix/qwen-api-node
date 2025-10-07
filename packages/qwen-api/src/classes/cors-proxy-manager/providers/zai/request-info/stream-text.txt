@@ -1,0 +1,1132 @@
+data: {"type": "chat:completion", "data": {"delta_content": "<details type=\"reasoning\" done=\"false\" view=\"\" last_tool_call_name=\"\">\n<summary>Thinking…</summary>\n> 1.  **分析", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "用户输入：**", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "用户", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "只说了", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "“hi", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "”。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "这是一个非常常见", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "、简单且友", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "好的问候。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "它很", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "随意", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，没有", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "提出", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "具体问题。\n> \n> 2", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": ".  **确定", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "核心任务", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "：**我的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "主要任务是做出", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "恰当的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回应。在这种情况下", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，“", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "恰当”意味着：", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "\n>     *   **", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回复", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "问候", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "：**我", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "需要", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回以", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "问候。\n>     *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   **友好且", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "热情：**语气", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "应", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "与用户", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "相", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "匹配。\n>     *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   **乐于", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "助", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "人且", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "积极主动：**既然", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "用户", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "只是打个", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "招呼", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，我应该借此", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "机会", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "开启", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "对话，并引导", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "他们提出", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "真正的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "请求", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。我", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "需要表明", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "我", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "已准备好", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "提供", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "帮助。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "\n>     *   **", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "清晰简洁", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "：**一个", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "冗", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "长、漫", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "无", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "边际", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "的回应会显得", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "小", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "题", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "大做", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回应", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "应", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "简短且", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "切中", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "要点。\n> \n> 3.", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "  **构思可能的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回复（", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "先用", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "英文，", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "然后翻译", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "/调整为", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "中文）：**\n> \n>", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "     *   **简单", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回复：**“", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "Hi", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "!”或", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "“Hello!”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "\n>         *   *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "优点：*", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "直接，", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回答", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "了", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "问题。\n>         *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   *缺点：", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "*有点被动。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "没有引导进一步的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "互动", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。感觉", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "不太", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "“", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "乐于", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "助", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "人”。\n>", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " \n>     *   **", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回复 +", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " 提问", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "：**“", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "Hi! How", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " can I help", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " you today", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "?”或“Hello", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "! What", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " can I do", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " for you?”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "\n>         *   *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "优点：*友好", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，主动，", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "清晰地", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "说明", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "了我的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "目的。这是AI", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "助手", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "一个非常", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "标准", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "且有效的开场白", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。\n>         *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   *缺点：*", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "基本没有", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。这是一个可靠", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "的选择", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。\n> \n>     *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   **更热情/", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "更详", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "尽的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回复：**“", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "Hello there! It", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "'s great", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " to hear", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " from you", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": ". I'm here", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " to help with", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " any questions or", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " tasks you", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " might", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " have. What's", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " on your mind", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "?”\n>         *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   *优点：", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "*非常友好", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "和热情。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "\n>         *   *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "缺点：*对于一个", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "简单的“hi”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "来说可能有点长", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。可能会感觉", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "有点*", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "过于", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "*热情，甚至", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "略显", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "不", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "自然", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，但这", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "取决于所", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "追求", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "的人", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "设", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。\n> \n>", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "     *   **增加", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "一点", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "个性/", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "特色", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "：**“", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "Hi! I", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "'m GLM-", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "4.6.", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " Ready", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " to assist", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "! What are", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " we", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " working on", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " today?”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "\n>         *   *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "优点：*介绍了", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "我的名字", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "/", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "身份，这", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "可以", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "建立", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "信任和", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "背景", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "信息", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "\n>         *   *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "缺点：*可能", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "比", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "必要的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "更", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "正式一些。对于一个", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "简单的问候，用户", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "可能不", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "关心我的名字", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。\n> \n> 4.", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "  **选择最佳方法", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "并翻译成", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "中文：**\n>", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " \n>     *   “", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回复 +", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " 提问”的方法", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "（“Hi", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "! How can I", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " help you today", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "?”）是", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "通用", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "性", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "最强", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "、", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "最有效的。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "它礼貌", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "、直接", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "且以", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "行动", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "为导向。\n> \n>", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "     *   让我们", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "把它翻译成", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "中文", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，同时", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "考虑细微", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "差别", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "和常用", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "短语", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。\n>", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " \n>", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "         *   “", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "Hi!”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " -> “你好", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "！”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "  - 这是标准的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "、最直接的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "翻译。它", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "很", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "友好", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "并且", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "适用于任何场合。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "\n>         *   “", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "Hello!” -> “", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "你好！”或", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "“哈", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "喽", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "！”  - “", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "哈喽", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "”是", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "“hello", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "”的音", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "译，更随意", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "和", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "现代一些", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。“", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "你好”更", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "稳妥、", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "更通用。\n>", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "         *   “How", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " can I help you", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " today?” -> “", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "今天我能", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "为你", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "做", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "些什么？”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "  - 这是一个非常好", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "、", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "礼貌", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "且直接的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "翻译。\n>         *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   “", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "What", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " can I do", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " for you?” ->", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " “有什么可以帮", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "你的吗", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "？”  - 这", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "在", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "中文服务", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "语境", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "中也非常常见和", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "自然。它比", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "“我能为你", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "做些什么", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "？”稍微更", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "间接和礼貌", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "一些。\n>         *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   “", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "How may", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " I assist", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " you", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "?” -> “请问", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "有什么可以帮您", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "？”  - 使用", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "“您”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "  使其", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "更加正式和", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "尊敬。对于一个", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "随", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "意的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "“hi”来说", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "这可能有点过于正式", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "了。\n> \n> 5.", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "  **组合", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "并完善", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "最终的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "中文回复：**\n>", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " \n>     *   **", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "选项1", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "（直接且友好", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "）：**“", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "你好！有什么", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "可以帮你的吗", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "？”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "  - 这非常棒", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。它友好、", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "自然", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，并", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "直接询问我能", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "如何提供", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "帮助。使用", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "“你”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "  与随", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "意的“hi”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "相匹配。\n> \n>", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "     *   **选项", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "2（稍微更", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "正式/结构", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "化）：**“", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "你好！我是", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "GLM-", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "4.6，", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "很高兴为你", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "服务。请问", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "有什么可以帮你的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "吗", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "？”  - 这", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "介绍了", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "我的名字", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "和目的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。它", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "更", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "全面一些", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，但", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "作为", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "初次互动", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "也非常", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "好", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。\n> \n>     *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   **选项3（", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "简单", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "且开放", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "）：**“你好", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "！我在", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "这里，随时", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "准备好", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回答", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "你的问题或", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "提供", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "帮助。有什么想", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "聊的吗？”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "  - 这个", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回应", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "更口语", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "化，邀请", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "对方", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "进行更广泛的对话", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，而不仅仅是", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "任务导向", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "对话。\n> \n> 6.", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "  **最终决定", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "：**\n>", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " \n>     *   我", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "会选择", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "一个", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "组合方案", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，既友好", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "、", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "主动，又清晰地", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "说明", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "我的目的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "最好的方法是先", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回应问候，然后立", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "即提供帮助。\n> \n>     *   让", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "我们采用选项1的一个变", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "体，但使其更热情", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "一些。我会将一个简单的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "问候与一个明确提供帮助的声明", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "结合起来。\n> \n>     *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   “", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "你好！”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " -", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " 必", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "不可少的问候。\n>     *   “很高兴见到", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "你。” -", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " 增添了一", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "丝温暖。\n>     *   “", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "我是GLM-", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "4.6，", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "一个由Z", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": ".ai", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "研发的大语言模型", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。” -", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " 简要", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "介绍我自己", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "这提供了", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "背景信息", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "\n>     *   “", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "有什么我可以帮忙", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "的吗？” -", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " 核", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "心的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "、", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "以", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "行动为导向", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "的问题。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "使用", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "“我", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "  和“你", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "”  保持", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "了一种", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "友好、", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "平等的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "语气。\n> \n>     *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   让", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "我们将", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "这些元素", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "组合成一个", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "流畅、听起来", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "自然的回应。\n> \n>", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "     *   “", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "你好！很高兴见到", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "你。我是", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "GLM-4", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": ".6，一个", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "由Z", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": ".ai研发的大语言", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "模型。有什么我可以", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "帮忙", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "的吗？无论是", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回答", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "问题、提供", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "信息，还是进行", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "日常对话", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，我都在", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "这里。”\n> \n>     *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   这", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "感觉", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "有点长", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。让我们在", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "保留", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "核心元素", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "的同时将其", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "缩短", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。\n> \n>     *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   “", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "你好！我是", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "GLM-4", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": ".6，很高兴", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "为你", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "服务。有什么可以", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "帮", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "你的吗？” -", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " 这很好。它", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "简洁而", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "专业。\n> \n>     *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   让我们尝试", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "一个更随意", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "、更直接的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "版本，以匹配", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "用户的“", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "hi”。\n> \n>     *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   “你好！", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "有什么可以帮", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "你的吗？” -", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " 这是最", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "直接", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "、最自然的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "回应。它", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "完美", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "地", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "匹配了", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "用户的语气和", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "意图。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "它", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "不过", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "于", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "正式，也不", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "太", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "长", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。它为", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "用户", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "继续", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "对话", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "打开了", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "大门", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。\n> \n>     *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   让我们", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "再增加一点内容", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，使其更有", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "帮助", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，而又", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "不会", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "显得冗长。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "我可以列出", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "我能", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "做的事情", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。\n> \n>     *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   “你好！有什么", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "可以帮你的吗", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "？无论是回答", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "问题、提供", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "信息，还是进行", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "日常对话", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，我都在这里", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。”", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": " - 这是一个", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "很好的平衡", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。它以", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "一个简单", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "友", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "好的问候开始，", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "提出了", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "一个直接", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "的问题，然后给出", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "了一些", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "我能做什么", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "的例子。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "这非常方便", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "用户", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。\n> \n>     *", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "   好的", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，我将采用", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "这个最终", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "结构", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。它友好", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "、信息", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "丰富", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "且主动", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。它涵盖了", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "所有要点", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "。", "phase": "thinking"}}
+
+data: {"type": "chat:completion", "data": {"edit_index": 32, "edit_content": "true\" duration=\"24\" view=\"\" last_tool_call_name=\"\">\n<summary>Thought for 24 seconds</summary>\n> 1.  **分析用户输入：**用户只说了“hi”。这是一个非常常见、简单且友好的问候。它很随意，没有提出具体问题。\n> \n> 2.  **确定核心任务：**我的主要任务是做出恰当的回应。在这种情况下，“恰当”意味着：\n>     *   **回复问候：**我需要回以问候。\n>     *   **友好且热情：**语气应与用户相匹配。\n>     *   **乐于助人且积极主动：**既然用户只是打个招呼，我应该借此机会开启对话，并引导他们提出真正的请求。我需要表明我已准备好提供帮助。\n>     *   **清晰简洁：**一个冗长、漫无边际的回应会显得小题大做。回应应简短且切中要点。\n> \n> 3.  **构思可能的回复（先用英文，然后翻译/调整为中文）：**\n> \n>     *   **简单回复：**“Hi!”或“Hello!”\n>         *   *优点：*直接，回答了问题。\n>         *   *缺点：*有点被动。没有引导进一步的互动。感觉不太“乐于助人”。\n> \n>     *   **回复 + 提问：**“Hi! How can I help you today?”或“Hello! What can I do for you?”\n>         *   *优点：*友好，主动，清晰地说明了我的目的。这是AI助手一个非常标准且有效的开场白。\n>         *   *缺点：*基本没有。这是一个可靠的选择。\n> \n>     *   **更热情/更详尽的回复：**“Hello there! It's great to hear from you. I'm here to help with any questions or tasks you might have. What's on your mind?”\n>         *   *优点：*非常友好和热情。\n>         *   *缺点：*对于一个简单的“hi”来说可能有点长。可能会感觉有点*过于*热情，甚至略显不自然，但这取决于所追求的人设。\n> \n>     *   **增加一点个性/特色：**“Hi! I'm GLM-4.6. Ready to assist! What are we working on today?”\n>         *   *优点：*介绍了我的名字/身份，这可以建立信任和背景信息。\n>         *   *缺点：*可能比必要的更正式一些。对于一个简单的问候，用户可能不关心我的名字。\n> \n> 4.  **选择最佳方法并翻译成中文：**\n> \n>     *   “回复 + 提问”的方法（“Hi! How can I help you today?”）是通用性最强、最有效的。它礼貌、直接且以行动为导向。\n> \n>     *   让我们把它翻译成中文，同时考虑细微差别和常用短语。\n> \n>         *   “Hi!” -> “你好！”  - 这是标准的、最直接的翻译。它很友好，并且适用于任何场合。\n>         *   “Hello!” -> “你好！”或“哈喽！”  - “哈喽”是“hello”的音译，更随意和现代一些。“你好”更稳妥、更通用。\n>         *   “How can I help you today?” -> “今天我能为你做些什么？”  - 这是一个非常好、礼貌且直接的翻译。\n>         *   “What can I do for you?” -> “有什么可以帮你的吗？”  - 这在中文服务语境中也非常常见和自然。它比“我能为你做些什么？”稍微更间接和礼貌一些。\n>         *   “How may I assist you?” -> “请问有什么可以帮您？”  - 使用“您”  使其更加正式和尊敬。对于一个随意的“hi”来说，这可能有点过于正式了。\n> \n> 5.  **组合并完善最终的中文回复：**\n> \n>     *   **选项1（直接且友好）：**“你好！有什么可以帮你的吗？”  - 这非常棒。它友好、自然，并直接询问我能如何提供帮助。使用“你”  与随意的“hi”相匹配。\n> \n>     *   **选项2（稍微更正式/结构化）：**“你好！我是GLM-4.6，很高兴为你服务。请问有什么可以帮你的吗？”  - 这介绍了我的名字和目的。它更全面一些，但作为初次互动也非常好。\n> \n>     *   **选项3（简单且开放）：**“你好！我在这里，随时准备好回答你的问题或提供帮助。有什么想聊的吗？”  - 这个回应更口语化，邀请对方进行更广泛的对话，而不仅仅是任务导向的对话。\n> \n> 6.  **最终决定：**\n> \n>     *   我会选择一个组合方案，既友好、主动，又清晰地说明我的目的。最好的方法是先回应问候，然后立即提供帮助。\n> \n>     *   让我们采用选项1的一个变体，但使其更热情一些。我会将一个简单的问候与一个明确提供帮助的声明结合起来。\n> \n>     *   “你好！” - 必不可少的问候。\n>     *   “很高兴见到你。” - 增添了一丝温暖。\n>     *   “我是GLM-4.6，一个由Z.ai研发的大语言模型。” - 简要介绍我自己。这提供了背景信息。\n>     *   “有什么我可以帮忙的吗？” - 核心的、以行动为导向的问题。使用“我”  和“你”  保持了一种友好、平等的语气。\n> \n>     *   让我们将这些元素组合成一个流畅、听起来自然的回应。\n> \n>     *   “你好！很高兴见到你。我是GLM-4.6，一个由Z.ai研发的大语言模型。有什么我可以帮忙的吗？无论是回答问题、提供信息，还是进行日常对话，我都在这里。”\n> \n>     *   这感觉有点长。让我们在保留核心元素的同时将其缩短。\n> \n>     *   “你好！我是GLM-4.6，很高兴为你服务。有什么可以帮你的吗？” - 这很好。它简洁而专业。\n> \n>     *   让我们尝试一个更随意、更直接的版本，以匹配用户的“hi”。\n> \n>     *   “你好！有什么可以帮你的吗？” - 这是最直接、最自然的回应。它完美地匹配了用户的语气和意图。它不过于正式，也不太长。它为用户继续对话打开了大门。\n> \n>     *   让我们再增加一点内容，使其更有帮助，而又不会显得冗长。我可以列出我能做的事情。\n> \n>     *   “你好！有什么可以帮你的吗？无论是回答问题、提供信息，还是进行日常对话，我都在这里。” - 这是一个很好的平衡。它以一个简单友好的问候开始，提出了一个直接的问题，然后给出了一些我能做什么的例子。这非常方便用户。\n> \n>     *   好的，我将采用这个最终结构。它友好、信息丰富且主动。它涵盖了所有要点。\n</details>\n你好！很高兴见到", "phase": "answer"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "你。我是GL", "phase": "answer"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "M-4.", "phase": "answer"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "6，一个", "phase": "answer"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "由Z", "phase": "answer"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": ".ai研发的大语言", "phase": "answer"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "模型。\n\n有什么我可以", "phase": "answer"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "帮忙", "phase": "answer"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "的吗？无论是回答", "phase": "answer"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "问题、提供信息", "phase": "answer"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "，还是进行日常", "phase": "answer"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "对话，我都在", "phase": "answer"}}
+
+data: {"type": "chat:completion", "data": {"delta_content": "这里。", "phase": "answer"}}
+
+data: {"type": "chat:completion", "data": {"usage": {"prompt_tokens": 27, "completion_tokens": 1432, "total_tokens": 1459, "prompt_tokens_details": {"cached_tokens": 0}, "words": 2838}, "phase": "other"}}
+
+data: {"type": "chat:completion", "data": {"id": "chatcmpl-vs466ndbpsm", "object": "chat.completion.chunk", "created": 1759865334, "model": "GLM-4-6-API-V1", "choices": [{"index": 0, "delta": {"role": "assistant"}, "finish_reason": "stop"}], "usage": {"prompt_tokens": 27, "completion_tokens": 1432, "total_tokens": 1459, "prompt_tokens_details": {"cached_tokens": 0}, "words": 2838}, "phase": "answer"}}
+
+data: {"type": "chat:completion", "data": {"done": true, "delta_content": "", "phase": "done"}}
+
+data: {"type": "chat:completion", "data": {"role": "assistant", "usage": {"prompt_tokens": 27, "completion_tokens": 1432, "total_tokens": 1459, "prompt_tokens_details": {"cached_tokens": 0}, "words": 2838}, "message_id": "e965e943-57bb-4dfe-ab57-f096bba7cd42", "done": true, "edit_index": 3107, "edit_content": "", "phase": "other"}}
+

@@ -1,47 +1,13 @@
 import { v1 } from "uuid"
 import { Client } from "../Client"
 import { estimateMessagesTokens, estimateTokens } from "src/fn/llm/countTokens"
-export const availableModels = [
-  {
-    "id": "GLM-4-6-API-V1",
-            "alias": "GLM-4.6",
-    use: "glm",
-  },
-  {
-    id: "gpt-5-2025-08-07",
-    alias: "gpt-5",
-    use: "gpt",
-  },
-  {
-    id: "gpt-5-codex",
-    alias: "gpt-5-codex",
-    use: "gpt",
-  },
-  {
-    id: "claude-opus-4-1-20250805",
-    alias: "claude-opus-4",
-    use: "antrophic",
-  },
-  {
-    id: "claude-sonnet-4-20250514",
-    alias: "claude-sonnet-4",
-    use: "antrophic",
-  },
-  {
-    id: "claude-sonnet-4-5-20250929",
-    alias: "claude-sonnet-4.5",
-    use: "antrophic",
-  },
-]
-class FactoryAI extends Client {
-  availableModels = availableModels
-  gptEndpoint = "o/v1/responses"
-  antrophicEndpoint = "a/v1/messages"
-  glmEndpoint = "o/v1/chat/completions"
+import { availableModels } from "./zai/availableModels"
+class ZAI extends Client {
+  availableModels = availableModels 
   constructor(options: any = {}) {
     if (!options.apiKey) {
-      if (typeof process !== "undefined" && process.env.FACTORY_AI_TOKEN) {
-        options.apiKey = process.env.FACTORY_AI_TOKEN
+      if (typeof process !== "undefined" && process.env.ZAI_TOKEN) {
+        options.apiKey = process.env.ZAI_TOKEN
       } else {
         throw new Error(
           "Factory API key is required. Set it in the options or as an environment variable FACTORY_AI_TOKEN."
@@ -49,59 +15,24 @@ class FactoryAI extends Client {
       }
     }
     super({
-      baseUrl: "https://app.factory.ai/api/llm",
-      defaultModel: "gpt-5",
+      baseUrl: "https://chat.z.ai",
+      defaultModel: "glm-4.6",
       modelAliases: {
         // Chat //
-        "gpt-5": "gpt-5-2025-08-07",
-        "gpt-5-codex": "gpt-5-codex",
-        "claude-opus-4": "claude-opus-4-1-20250805",
-        "claude-sonnet-4.5": "claude-sonnet-4-5-20250929",
-        "claude-sonnet-4": "claude-sonnet-4-20250514",
-        "glm-4.6": "glm-4.6",
+     
       },
       ...options,
     })
   }
-  buildRequestHeaders(use: string) {
+  buildRequestHeaders(signature:string) {
     const headers = {
-      "user-agent": "pB/JS 5.23.2",
-      // "x-api-provider": "fireworks",
-      // "x-assistant-message-id": "de2bbbca-a668-45f7-9213-c6210d69336b",
-      "x-factory-client": "cli",
-      // "x-session-id": "a57af53a-8ac3-4502-a509-072d41866366",
-      // "x-stainless-arch": "x64",
-      // "x-stainless-lang": "js",
-      // "x-stainless-os": "Linux",
-      // "x-stainless-package-version": "5.23.2",
-      // "x-stainless-retry-count": 0,
-      // "x-stainless-runtime": "node",
-      // "x-stainless-runtime-version": "v24.3.0",
-      // // Connection: "keep-alive",
-      // Host: "app.factory.ai",
+      "x-fe-version": "prod-fe-1.0.95",
+      "x-signature": signature,
     }
-    if (use === "glm") {
-      headers["x-api-provider"] = "fireworks"
-    } else if (use === "antrophic") {
-      headers["x-api-provider"] = "anthropic"
-    } else {
-      headers["x-api-provider"] = "azure_openai"
-    }
-    /*
-    
-    */
+   
     return headers
   }
-  getEndpoint(model: string) {
-    // const realModel = this.modelAliases[model]
 
-    const modelObj = this.availableModels.find((m) => m.id === model)
-    // console.log({ modelObj, model })
-    if (modelObj) {
-      return modelObj.use
-    }
-    return "gpt"
-  }
   checkMessageContentPart(content: any) {
     if (Array.isArray(content)) {
       let combinedContent = content.map((c) => c.text).join("\n")
@@ -109,7 +40,7 @@ class FactoryAI extends Client {
     }
     return content
   }
-  transformGptMessagesContents(messages: any[]) {
+  transformMessagesContents(messages: any[]) {
     const input = messages
       .filter((m) => m.role !== "system")
       .map((message) => {
@@ -127,69 +58,16 @@ class FactoryAI extends Client {
 
     return [input, instructions]
   }
-  transformAntrophicMessagesContents(messages: any[]) {
-    const input = messages
-      .filter((m) => m.role !== "system")
-      .map((message) => {
-        return {
-          role: message.role,
-          content: this.checkMessageContentPart(message.content),
-        }
-      })
-    let instructions =
-      "You are Droid, an AI software engineering agent built by Factory.\n"
-    const systemMessages = messages.filter((m) => m.role === "system")
-    for (const sysMsg of systemMessages) {
-      instructions += `${sysMsg.content}\n`
-    }
-    // console.log({ input, instructions })
-    return [input, instructions]
-  }
-  buildGptRequest(model: string, options: any) {
-    const [input, instructions] = this.transformGptMessagesContents(
-      options.messages
-    )
-    const body: any = {
-      model,
-      store: false,
-      input,
-      stream: options.stream,
-    }
-    if (instructions.length > 0) {
-      body.instructions = instructions
-    }
-    return body
-  }
-  buildAntrophicRequest(model: string, options: any) {
-    const [messages, instructions] = this.transformAntrophicMessagesContents(
-      options.messages
-    )
-    const body: any = {
-      model,
-      messages,
-      stream: options.stream,
-      max_tokens: options.max_tokens || 32000,
-      temperature: options.temperature || 1,
-    }
-    if (instructions.length > 0) {
-      body.system = instructions
-    }
-    return body
-  }
-  buildGlmRequest(model: string, options: any) {
-    // const [messages, instructions] = this.transformGptMessagesContents(
-    //   options.messages
-    // )
+ 
+  buildRequestBody(model: string, options: any) {
+   
     const body: any = {
       model,
       messages: options.messages,
       stream: options.stream,
       max_tokens: options.max_tokens || 32000,
       temperature: options.temperature || 1,
-    }
-    // if (instructions.length > 0) {
-    //   body.system = instructions
-    // }
+    } 
     return body
   }
   get chat() {
@@ -205,37 +83,23 @@ class FactoryAI extends Client {
           if (!model) {
             model = this.defaultModel
           }
-          if (model && this.modelAliases[model]) {
-            model = this.modelAliases[model] as string
-          }
-          const useEndpoint = this.getEndpoint(model)
-          let body =
-            useEndpoint === "gpt"
-              ? this.buildGptRequest(model, options)
-              : this.buildAntrophicRequest(model, options)
-
-          if (useEndpoint === "glm") {
-            body = this.buildGlmRequest(model, options)
-          }
-
-          if (useEndpoint === "gpt") {
-            body.stream = true
-          }
-          const addedHeaders = this.buildRequestHeaders(useEndpoint)
+          let body =  this.buildRequestBody(model, options)
+       
+const signature=""
+         
+          const addedHeaders = this.buildRequestHeaders(signature)
           const requestOptions = {
             method: "POST",
             headers: { ...this.extraHeaders, ...addedHeaders },
             body: JSON.stringify(body),
             ...requestOption,
           }
-
-          let endpoint = `${this.baseUrl}/${useEndpoint === "gpt" ? this.gptEndpoint : this.antrophicEndpoint}`
-          if (useEndpoint === "glm") {
-            endpoint = `${this.baseUrl}/${this.glmEndpoint}`
-          }
+const endpointQs=""
+          let endpoint = `${this.baseUrl}/api/chat/completions?${endpointQs}`
+        
           // console.log({ requestOptions, endpoint, useEndpoint })
           // console.log({ body })
-          const messages = useEndpoint === "gpt" ? body.input : body.messages
+          const messages =  body.messages
           // return
           const response = await fetch(endpoint, requestOptions)
           if (params.stream) {
@@ -243,23 +107,12 @@ class FactoryAI extends Client {
               response,
               direct,
               model,
-              useEndpoint,
+              "",
               messages
             )
-          } else {
-            if (useEndpoint === "gpt") {
-              return this._sendResponseFromStream(
-                this.makeStreamCompletion(
-                  response,
-                  false,
-                  model,
-                  useEndpoint,
-                  messages
-                )
-              )
-            }
-            return await this._sendCompletion(response, useEndpoint)
-          }
+          }  
+            return await this._sendCompletion(response, "")
+          
         },
       },
     }
@@ -318,124 +171,13 @@ class FactoryAI extends Client {
       )
     }
 
-    // GPT format is already in OpenAI-compatible format, return as-is
-    if (use === "gpt") {
-      return this._validateAndNormalizeGptResponse(data)
-    }
+    
 
     // Transform Anthropic format to OpenAI-compatible format
-    return this._transformAnthropicResponse(data)
+    return (data)
   }
 
-  /**
-   * Validates and normalizes GPT response format
-   * @param data - The raw GPT API response
-   * @returns Normalized response
-   * @throws {Error} When response format is invalid
-   */
-  private _validateAndNormalizeGptResponse(data: any) {
-    if (!data || typeof data !== "object") {
-      throw new Error("Invalid GPT response: Expected an object")
-    }
 
-    // GPT responses are already in OpenAI format, but ensure required fields exist
-    if (
-      !data.choices ||
-      !Array.isArray(data.choices) ||
-      data.choices.length === 0
-    ) {
-      throw new Error("Invalid GPT response: Missing or empty choices array")
-    }
-
-    return data
-  }
-
-  /**
-   * Transforms Anthropic API response to OpenAI-compatible format
-   * @param data - The raw Anthropic API response
-   * @returns Normalized response in OpenAI format
-   * @throws {Error} When response format is invalid
-   *
-   * Anthropic response structure:
-   * {
-   *   id: string,
-   *   type: 'message',
-   *   role: 'assistant',
-   *   model: string,
-   *   content: [{ type: 'text', text: string }],
-   *   stop_reason: string,
-   *   usage: { input_tokens: number, output_tokens: number, ... }
-   * }
-   */
-  private _transformAnthropicResponse(data: any) {
-    // Validate response structure
-    if (!data || typeof data !== "object") {
-      throw new Error("Invalid Anthropic response: Expected an object")
-    }
-
-    if (
-      !data.content ||
-      !Array.isArray(data.content) ||
-      data.content.length === 0
-    ) {
-      throw new Error(
-        "Invalid Anthropic response: Missing or empty content array"
-      )
-    }
-
-    // Extract text content from the first content block
-    const firstContent = data.content[0]
-    if (!firstContent || typeof firstContent !== "object") {
-      throw new Error("Invalid Anthropic response: Invalid content block")
-    }
-
-    const contentText = firstContent.text || ""
-
-    // Build OpenAI-compatible response structure
-    const normalizedResponse: any = {
-      id: data.id || `chatcmpl-${Date.now()}`,
-      object: "chat.completion",
-      created: Math.floor(Date.now() / 1000),
-      model: data.model || "unknown",
-      choices: [
-        {
-          index: 0,
-          message: {
-            role: "assistant",
-            content: contentText,
-          },
-          finish_reason: this._mapAnthropicStopReason(data.stop_reason),
-        },
-      ],
-    }
-
-    // Include usage information if available
-    if (data.usage) {
-      normalizedResponse.usage = {
-        prompt_tokens: data.usage.input_tokens || 0,
-        completion_tokens: data.usage.output_tokens || 0,
-        total_tokens:
-          (data.usage.input_tokens || 0) + (data.usage.output_tokens || 0),
-      }
-    }
-
-    return normalizedResponse
-  }
-
-  /**
-   * Maps Anthropic stop reasons to OpenAI finish reasons
-   * @param stopReason - The Anthropic stop_reason value
-   * @returns Corresponding OpenAI finish_reason
-   */
-  private _mapAnthropicStopReason(stopReason: string | null): string {
-    const mapping: Record<string, string> = {
-      end_turn: "stop",
-      max_tokens: "length",
-      stop_sequence: "stop",
-    }
-
-    return stopReason ? mapping[stopReason] || "stop" : "stop"
-  }
 
   /**
    * Creates an async generator to handle streaming completions from the API
@@ -562,7 +304,7 @@ class FactoryAI extends Client {
                 }
               }
               // Handle GPT responses specifically
-              if (use === "gpt") {
+            
                 const result = this.streamGpt(
                   jsonData,
                   sso,
@@ -579,28 +321,7 @@ class FactoryAI extends Client {
                     completionId++
                   }
                 }
-              } else if (use === "antrophic") {
-                // console.log({ jsonData })
-                const result = this.streamAntrophic(
-                  jsonData,
-                  sso,
-                  model,
-                  completionId,
-                  encoder
-                )
-
-                if (result) {
-                  yield result
-
-                  // Only increment completion ID if not a completion end event
-                  if (jsonData.type !== "response.output_text.done") {
-                    completionId++
-                  }
-                }
-              } else {
-                // glm
-                yield encoder.encode(`data: ${JSON.stringify(jsonData)}\n\n`)
-              }
+             
             }
           } catch (err) {
             // Log parsing errors but continue processing
@@ -793,5 +514,5 @@ class FactoryAI extends Client {
   }
 }
 
-export { FactoryAI }
-export default FactoryAI
+export { ZAI as FactoryAI }
+export default ZAI
