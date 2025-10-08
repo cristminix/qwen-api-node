@@ -3,8 +3,8 @@ import { availableModels } from "src/classes/cors-proxy-manager/providers/zai/av
 const modelList = {
   type: "list",
   data: availableModels.map((model) => {
-    const alias = model.alias
-    const id = model.id
+    const alias = model.id
+    const id = model.alias
     return {
       alias,
       id,
