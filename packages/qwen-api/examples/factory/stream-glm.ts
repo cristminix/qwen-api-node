@@ -14,11 +14,6 @@ async function main() {
       role: "user",
       content: "how many r in strawberry ?.",
     },
-    {
-      role: "system",
-      content:
-        "You are Droid, an AI software engineering agent built by Factory.\nAnswer in indonesia.",
-    },
   ]
 
   console.log("Sending streaming request to FactoryAI...")
@@ -27,12 +22,16 @@ async function main() {
     // Get available models
 
     // Send a streaming chat completion request
-    const stream = await client.chat.completions.create({
-      model: "glm-4.6",
-      messages: messages,
-      stream: true,
-      // thinking: { type: "disabled" },
-    })
+    const stream = await client.chat.completions.create(
+      {
+        model: "glm-4.6",
+        messages: messages,
+        stream: true,
+        // thinking: { type: "disabled" },
+      },
+      {},
+      false
+    )
 
     // Process the streaming response
     for await (const chunk of stream) {

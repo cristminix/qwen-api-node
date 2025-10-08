@@ -14,10 +14,6 @@ async function main() {
       role: "user",
       content: "how many r in strawberry ?.",
     },
-    {
-      role: "system",
-      content: "Answer in indonesia.",
-    },
   ]
 
   console.log("Sending streaming request to FactoryAI...")

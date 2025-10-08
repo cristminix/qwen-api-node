@@ -1,10 +1,11 @@
 import { v1 } from "uuid"
 import { Client } from "../Client"
 import { estimateMessagesTokens, estimateTokens } from "src/fn/llm/countTokens"
+import { buildStreamChunk } from "./zai/buildStreamChunk"
 export const availableModels = [
   {
-    "id": "GLM-4-6-API-V1",
-            "alias": "GLM-4.6",
+    id: "glm-4.6",
+    alias: "glm-4.6",
     use: "glm",
   },
   {
@@ -96,7 +97,7 @@ class FactoryAI extends Client {
     // const realModel = this.modelAliases[model]
 
     const modelObj = this.availableModels.find((m) => m.id === model)
-    // console.log({ modelObj, model })
+    console.log({ modelObj, model })
     if (modelObj) {
       return modelObj.use
     }
@@ -118,7 +119,8 @@ class FactoryAI extends Client {
           content: this.checkMessageContentPart(message.content),
         }
       })
-    let instructions = ""
+    let instructions =
+      "You are Droid, an AI software engineering agent built by Factory.\n"
     const systemMessages = messages.filter((m) => m.role === "system")
     for (const sysMsg of systemMessages) {
       instructions += `${sysMsg.content}`
@@ -177,19 +179,21 @@ class FactoryAI extends Client {
     return body
   }
   buildGlmRequest(model: string, options: any) {
-    // const [messages, instructions] = this.transformGptMessagesContents(
-    //   options.messages
-    // )
+    const [messages, instructions] = this.transformGptMessagesContents(
+      options.messages
+    )
+    let finalMessages: any = messages
+    if (instructions.length > 0) {
+      finalMessages = [{ role: "system", content: instructions }, ...messages]
+    }
     const body: any = {
       model,
-      messages: options.messages,
+      messages: finalMessages,
       stream: options.stream,
       max_tokens: options.max_tokens || 32000,
       temperature: options.temperature || 1,
     }
-    // if (instructions.length > 0) {
-    //   body.system = instructions
-    // }
+
     return body
   }
   get chat() {
@@ -218,9 +222,11 @@ class FactoryAI extends Client {
             body = this.buildGlmRequest(model, options)
           }
 
-          if (useEndpoint === "gpt") {
+          if (useEndpoint === "gpt" || useEndpoint === "glm") {
             body.stream = true
           }
+          console.log({ direct, useEndpoint, model })
+
           const addedHeaders = this.buildRequestHeaders(useEndpoint)
           const requestOptions = {
             method: "POST",
@@ -247,7 +253,7 @@ class FactoryAI extends Client {
               messages
             )
           } else {
-            if (useEndpoint === "gpt") {
+            if (useEndpoint === "gpt" || useEndpoint === "glm") {
               return this._sendResponseFromStream(
                 this.makeStreamCompletion(
                   response,
@@ -300,6 +306,7 @@ class FactoryAI extends Client {
    * @throws {Error} When API request fails or response format is invalid
    */
   async _sendCompletion(response: Response, use: string) {
+    // console.log(response)
     // Validate HTTP response status
     if (!response.ok) {
       const errorText = await response.text().catch(() => "Unknown error")
@@ -317,7 +324,7 @@ class FactoryAI extends Client {
         `Failed to parse API response as JSON: ${error instanceof Error ? error.message : "Unknown error"}`
       )
     }
-
+    // console.log(data)
     // GPT format is already in OpenAI-compatible format, return as-is
     if (use === "gpt") {
       return this._validateAndNormalizeGptResponse(data)
@@ -463,6 +470,7 @@ class FactoryAI extends Client {
     if (!response.body) {
       throw new Error("Streaming not supported in this environment")
     }
+    // console.log(response)
 
     const reader = response.body.getReader()
     const decoder = new TextDecoder()
@@ -478,7 +486,7 @@ class FactoryAI extends Client {
       // Process the stream until completion
       while (true) {
         const { done, value } = await reader.read()
-
+        // console.log(value)
         // Handle stream completion
         if (done) {
           // Send final event if in SSO mode
@@ -495,25 +503,23 @@ class FactoryAI extends Client {
               usage.completion_tokens = output_tokens
               usage.total_tokens = input_tokens + output_tokens
             }
-            yield encoder.encode(
-              `data: ${JSON.stringify({
-                id: `chatcmpl-${Date.now()}`,
-                model: model,
-                object: "chat.completion.chunk",
-                index: completionId,
-                finish_reason: "done",
-                created: Date.now(),
-                choices: [
-                  {
-                    delta: {
-                      content: "",
-                    },
+            yield `data: ${JSON.stringify({
+              id: `chatcmpl-${Date.now()}`,
+              model: model,
+              object: "chat.completion.chunk",
+              index: completionId,
+              finish_reason: "done",
+              created: Date.now(),
+              choices: [
+                {
+                  delta: {
+                    content: "",
                   },
-                ],
-                usage,
-                done: true, // Flag akhir stream
-              })}\n\ndata: [DONE]\n\n`
-            )
+                },
+              ],
+              usage,
+              done: true, // Flag akhir stream
+            })}\n\ndata: [DONE]\n\n`
           }
           break
         }
@@ -563,16 +569,12 @@ class FactoryAI extends Client {
               }
               // Handle GPT responses specifically
               if (use === "gpt") {
-                const result = this.streamGpt(
-                  jsonData,
-                  sso,
-                  model,
-                  completionId,
-                  encoder
-                )
+                const result = this.streamGpt(jsonData, model, completionId)
 
                 if (result) {
-                  yield result
+                  if (sso) {
+                    yield encoder.encode(`data: ${JSON.stringify(result)}\n\n`)
+                  } else yield result
 
                   // Only increment completion ID if not a completion end event
                   if (jsonData.type !== "response.output_text.done") {
@@ -583,14 +585,14 @@ class FactoryAI extends Client {
                 // console.log({ jsonData })
                 const result = this.streamAntrophic(
                   jsonData,
-                  sso,
                   model,
-                  completionId,
-                  encoder
+                  completionId
                 )
 
                 if (result) {
-                  yield result
+                  yield encoder.encode(`data: ${JSON.stringify(result)}\n\n`)
+                  if (sso) {
+                  } else yield result
 
                   // Only increment completion ID if not a completion end event
                   if (jsonData.type !== "response.output_text.done") {
@@ -599,7 +601,10 @@ class FactoryAI extends Client {
                 }
               } else {
                 // glm
-                yield encoder.encode(`data: ${JSON.stringify(jsonData)}\n\n`)
+                // console.log(`data: ${JSON.stringify(jsonData)}\n\n`)
+                if (sso)
+                  yield encoder.encode(`data: ${JSON.stringify(jsonData)}\n\n`)
+                else yield jsonData
               }
             }
           } catch (err) {
@@ -608,7 +613,7 @@ class FactoryAI extends Client {
 
             // For robustness, we could also emit an error event in SSO mode
             if (sso) {
-              yield `data: ${JSON.stringify({ error: "Failed to parse stream chunk", chunk: line, details: err instanceof Error ? err.message : "Unknown error" })}\n`
+              // yield `data: ${JSON.stringify({ error: "Failed to parse stream chunk", chunk: line, details: err instanceof Error ? err.message : "Unknown error" })}\n`
             }
           }
         }
@@ -630,10 +635,8 @@ class FactoryAI extends Client {
    */
   streamGpt(
     jsonData: any,
-    sso: boolean,
     model: string,
-    completionId: number,
-    encoder: TextEncoder
+    completionId: number
   ): Uint8Array | Record<string, any> | null {
     // Early return for invalid or non-processable chunk types
     if (!jsonData?.type) {
@@ -676,9 +679,7 @@ class FactoryAI extends Client {
     )
 
     // Return appropriate format based on SSO flag
-    return sso
-      ? encoder.encode(`data: ${JSON.stringify(chunkData)}\n\n`)
-      : chunkData
+    return chunkData
   }
 
   /**
@@ -733,31 +734,30 @@ class FactoryAI extends Client {
   ): Record<string, any> {
     const isDone = responseType === "response.output_text.done"
     const timestamp = Date.now()
-
-    return {
-      id: `chatcmpl-${timestamp}`,
+    return buildStreamChunk({
       model,
-      object: "chat.completion.chunk",
       index: completionId,
-      finish_reason: isDone ? "finish" : null,
-      created: timestamp,
-      choices: [
-        {
-          delta: {
-            type: itemType,
-            content,
-          },
-        },
-      ],
-    }
+      finishReason: isDone ? "finish" : null,
+      content,
+    })
+    // return {
+    //   id: `chatcmpl-${timestamp}`,
+    //   model,
+    //   object: "chat.completion.chunk",
+    //   index: completionId,
+    //   finish_reason: isDone ? "finish" : null,
+    //   created: timestamp,
+    //   choices: [
+    //     {
+    //       delta: {
+    //         type: itemType,
+    //         content,
+    //       },
+    //     },
+    //   ],
+    // }
   }
-  streamAntrophic(
-    jsonData: any,
-    sso: boolean,
-    model: string,
-    completionId: number,
-    encoder: any
-  ) {
+  streamAntrophic(jsonData: any, model: string, completionId: number) {
     if (
       jsonData.type &&
       (jsonData.type === "content_block_delta" ||
@@ -765,28 +765,33 @@ class FactoryAI extends Client {
     ) {
       if (jsonData.delta) {
         const { text, type } = jsonData.delta
+
+        return buildStreamChunk({
+          model,
+          index: completionId,
+          finishReason: type === "content_block_stop" ? "finish" : null,
+          content: type === "content_block_stop" ? "" : text,
+        })
         // console.log({ text, delta })
         // Convert to the format expected by the application
-        let data = {
-          id: `chatcmpl-${Date.now()}`,
-          model: model,
-          object: "chat.completion.chunk",
-          index: completionId,
-          finish_reason:
-            jsonData.type === "content_block_stop" ? "finish" : null,
-          created: Date.now(),
-          choices: [
-            {
-              delta: {
-                content: jsonData.type === "content_block_stop" ? "" : text,
-              },
-            },
-          ],
-        }
+        // let data = {
+        //   id: `chatcmpl-${Date.now()}`,
+        //   model: model,
+        //   object: "chat.completion.chunk",
+        //   index: completionId,
+        //   finish_reason:
+        //     jsonData.type === "content_block_stop" ? "finish" : null,
+        //   created: Date.now(),
+        //   choices: [
+        //     {
+        //       delta: {
+        //         content: jsonData.type === "content_block_stop" ? "" : text,
+        //       },
+        //     },
+        //   ],
+        // }
 
-        if (sso) {
-          return encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
-        } else return data
+        // return data
       }
     }
     return null

@@ -26,18 +26,22 @@ async function main() {
     // Get available models
 
     // Send a streaming chat completion request
-    const stream = await client.chat.completions.create({
-      model: "claude-sonnet-4.5",
-      messages: messages,
-      stream: true,
-      // thinking: { type: "disabled" },
-    })
+    const stream = await client.chat.completions.create(
+      {
+        model: "claude-sonnet-4.5",
+        messages: messages,
+        stream: true,
+        // thinking: { type: "disabled" },
+      },
+      {},
+      true
+    )
 
     // Process the streaming response
     for await (const chunk of stream) {
-      // console.log(chunk)
-      const content = chunk.choices[0]?.delta?.content || ""
-      process.stdout.write(content)
+      console.log(chunk)
+      // const content = chunk.choices[0]?.delta?.content || ""
+      // process.stdout.write(content)
     }
 
     console.log("\n--- End of Stream ---")

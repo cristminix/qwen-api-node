@@ -27,7 +27,7 @@ async function main() {
 
     // Send a streaming chat completion request
     const stream = await client.chat.completions.create({
-      model: "GLM-4.6",
+      model: "glm-4.6",
       messages: messages,
       stream: true,
       // thinking: { type: "disabled" },

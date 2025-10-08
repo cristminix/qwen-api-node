@@ -23,7 +23,9 @@ async function main() {
   try {
     // Send a chat completion request
     const response = await client.create({
-      model: "gpt-5", // Using OpenAI model alias
+      model: "glm-4.6", // Using OpenAI model alias
+      // model: "claude-opus-4", // Using OpenAI model alias
+      // model: "claude-opus-4", // Using OpenAI model alias
       messages: messages,
       stream: false,
     })
