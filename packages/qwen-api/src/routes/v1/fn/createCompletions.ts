@@ -8,6 +8,7 @@ import HF from "../../../providers/HF/HF"
 import G4F from "../../../providers/G4F/G4F"
 import Gemini from "src/providers/Gemini/Gemini"
 import Factory from "src/providers/factory/Factory"
+import Zai from "src/providers/zai/Zai"
 async function createCompletions(chatRequest: ChatCompletionRequest) {
   const authToken = process.env.QWEN_AUTH_TOKEN as string
   const cookie = process.env.QWEN_COOKIE as string
@@ -21,6 +22,7 @@ async function createCompletions(chatRequest: ChatCompletionRequest) {
   else if (provider === "g4f") providerApi = new G4F()
   else if (provider === "geminicli") providerApi = new Gemini()
   else if (provider === "factory") providerApi = new Factory()
+  else if (provider === "zai") providerApi = new Zai()
   //@ts-ignore
   const messages = await getChatRequestMessages(chatRequest, providerApi)
   const streaming = chatRequest.stream

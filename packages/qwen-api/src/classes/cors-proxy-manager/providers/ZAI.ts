@@ -2,74 +2,27 @@ import { v1 } from "uuid"
 import { Client } from "../Client"
 import { estimateMessagesTokens, estimateTokens } from "src/fn/llm/countTokens"
 import { availableModels } from "./zai/availableModels"
+import { transformMessages } from "./zai/transformRequestMessages"
+import { getLastUserMessageContent } from "./zai/getLastUserMessageContent"
+import { getAuthAndModels } from "./zai/getAuthAndModels"
+import { getEndpointSignature } from "./zai/getEndpointSignature"
+import { getModel } from "./zai/getModel"
+import { buildRequestBody } from "./zai/buildRequestBody"
+import { buildRequestHeaders } from "./zai/buildRequestHeaders"
+import { buildStreamChunk } from "./zai/buildStreamChunk"
 class ZAI extends Client {
-  availableModels = availableModels 
+  availableModels = availableModels
   constructor(options: any = {}) {
-    if (!options.apiKey) {
-      if (typeof process !== "undefined" && process.env.ZAI_TOKEN) {
-        options.apiKey = process.env.ZAI_TOKEN
-      } else {
-        throw new Error(
-          "Factory API key is required. Set it in the options or as an environment variable FACTORY_AI_TOKEN."
-        )
-      }
-    }
     super({
       baseUrl: "https://chat.z.ai",
-      defaultModel: "glm-4.6",
+      defaultModel: "GLM-4.6-API-V1",
       modelAliases: {
         // Chat //
-     
       },
       ...options,
     })
   }
-  buildRequestHeaders(signature:string) {
-    const headers = {
-      "x-fe-version": "prod-fe-1.0.95",
-      "x-signature": signature,
-    }
-   
-    return headers
-  }
 
-  checkMessageContentPart(content: any) {
-    if (Array.isArray(content)) {
-      let combinedContent = content.map((c) => c.text).join("\n")
-      return combinedContent
-    }
-    return content
-  }
-  transformMessagesContents(messages: any[]) {
-    const input = messages
-      .filter((m) => m.role !== "system")
-      .map((message) => {
-        return {
-          role: message.role,
-          content: this.checkMessageContentPart(message.content),
-        }
-      })
-    let instructions = ""
-    const systemMessages = messages.filter((m) => m.role === "system")
-    for (const sysMsg of systemMessages) {
-      instructions += `${sysMsg.content}`
-    }
-    // console.log({ input, instructions })
-
-    return [input, instructions]
-  }
- 
-  buildRequestBody(model: string, options: any) {
-   
-    const body: any = {
-      model,
-      messages: options.messages,
-      stream: options.stream,
-      max_tokens: options.max_tokens || 32000,
-      temperature: options.temperature || 1,
-    } 
-    return body
-  }
   get chat() {
     return {
       completions: {
@@ -78,41 +31,49 @@ class ZAI extends Client {
           requestOption: any = {},
           direct = false
         ) => {
-          let { model, ...options } = params
+          let { model: requstModel, ...options } = params
 
-          if (!model) {
-            model = this.defaultModel
-          }
-          let body =  this.buildRequestBody(model, options)
-       
-const signature=""
-         
-          const addedHeaders = this.buildRequestHeaders(signature)
-          const requestOptions = {
-            method: "POST",
-            headers: { ...this.extraHeaders, ...addedHeaders },
-            body: JSON.stringify(body),
-            ...requestOption,
-          }
-const endpointQs=""
-          let endpoint = `${this.baseUrl}/api/chat/completions?${endpointQs}`
-        
-          // console.log({ requestOptions, endpoint, useEndpoint })
-          // console.log({ body })
-          const messages =  body.messages
-          // return
-          const response = await fetch(endpoint, requestOptions)
-          if (params.stream) {
-            return this.makeStreamCompletion(
-              response,
-              direct,
-              model,
-              "",
-              messages
+          const defaultModel = this.defaultModel as string
+
+          const [models, apiKey, authUserId, modelAliases] =
+            await getAuthAndModels()
+
+          const transformedMessages = transformMessages(options.messages)
+          const userPrompt = getLastUserMessageContent(transformedMessages)
+          if (userPrompt && apiKey && authUserId) {
+            const [endpoint, signature, timestamp] = getEndpointSignature(
+              this.baseUrl,
+              apiKey,
+              authUserId,
+              userPrompt
             )
-          }  
-            return await this._sendCompletion(response, "")
-          
+
+            const realModel = getModel(requstModel, modelAliases, defaultModel)
+            // console.log({ realModel, endpoint, signature })
+            // return
+            const thinking = false
+            const body = buildRequestBody(
+              realModel,
+              transformedMessages,
+              thinking
+            )
+            // console.log({ body })
+            const response = await fetch(endpoint, {
+              headers: buildRequestHeaders(apiKey, signature),
+              body: JSON.stringify(body),
+              method: "POST",
+            })
+            // await makeStreamCompletion(response, true, realModel, "", [])
+
+            if (params.stream) {
+              return this.makeStreamCompletion(response, direct, realModel)
+            }
+            return this._sendResponseFromStream(
+              this.makeStreamCompletion(response, false, realModel)
+            )
+          } else {
+            console.error(`Failed to construct request payloads`)
+          }
         },
       },
     }
@@ -145,55 +106,7 @@ const endpointQs=""
 
     return chatResponse
   }
-  /**
-   * Processes non-streaming API completion responses and normalizes them to OpenAI format
-   * @param response - The fetch Response object from the API
-   * @param use - The API type identifier ("gpt" or "antrophic")
-   * @returns Normalized completion response in OpenAI-compatible format
-   * @throws {Error} When API request fails or response format is invalid
-   */
-  async _sendCompletion(response: Response, use: string) {
-    // Validate HTTP response status
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => "Unknown error")
-      throw new Error(
-        `API request failed with status ${response.status}: ${errorText}`
-      )
-    }
-
-    // Parse JSON response with error handling
-    let data: any
-    try {
-      data = await response.json()
-    } catch (error) {
-      throw new Error(
-        `Failed to parse API response as JSON: ${error instanceof Error ? error.message : "Unknown error"}`
-      )
-    }
-
-    
-
-    // Transform Anthropic format to OpenAI-compatible format
-    return (data)
-  }
-
-
-
-  /**
-   * Creates an async generator to handle streaming completions from the API
-   * @param response - The Response object from fetch call
-   * @param sso - Whether to return Server-Sent Events format
-   * @param model - The model identifier
-   * @param use - The API type (e.g., "gpt", "antrophic")
-   * @yields The parsed stream data in appropriate format
-   */
-  async *makeStreamCompletion(
-    response: Response,
-    sso = false,
-    model: string,
-    use: string,
-    messages: any
-  ): AsyncGenerator<any, void, undefined> {
+  async *makeStreamCompletion(response: Response, sso = false, model: string) {
     // Validate response with more detailed error message
     if (!response.ok) {
       throw new Error(
@@ -209,7 +122,7 @@ const endpointQs=""
     const reader = response.body.getReader()
     const decoder = new TextDecoder()
     const encoder = new TextEncoder()
-    const promptTokens = estimateMessagesTokens(messages)
+    const promptTokens = 0
     let completionTokens = 0
     let calculatedUsage: any = null
 
@@ -232,29 +145,18 @@ const endpointQs=""
               total_tokens: totalTokens,
             }
             if (calculatedUsage) {
-              const { input_tokens, output_tokens } = calculatedUsage
-              usage.prompt_tokens = input_tokens
-              usage.completion_tokens = output_tokens
-              usage.total_tokens = input_tokens + output_tokens
+              usage = calculatedUsage
             }
+            const finalChunk = buildStreamChunk({
+              model,
+              index: completionId,
+              finishReason: "done",
+              content: "",
+              usage,
+              done: true,
+            })
             yield encoder.encode(
-              `data: ${JSON.stringify({
-                id: `chatcmpl-${Date.now()}`,
-                model: model,
-                object: "chat.completion.chunk",
-                index: completionId,
-                finish_reason: "done",
-                created: Date.now(),
-                choices: [
-                  {
-                    delta: {
-                      content: "",
-                    },
-                  },
-                ],
-                usage,
-                done: true, // Flag akhir stream
-              })}\n\ndata: [DONE]\n\n`
+              `data: ${JSON.stringify(finalChunk)}\n\ndata: [DONE]\n\n`
             )
           }
           break
@@ -288,48 +190,41 @@ const endpointQs=""
               }
 
               const jsonData = JSON.parse(jsonString)
-              completionTokens += estimateTokens(jsonString)
-              if (jsonData.usage) {
-                const {
-                  input_tokens,
-                  cache_creation_input_tokens,
-                  cache_read_input_tokens,
-                  output_tokens,
-                } = jsonData.usage
-                calculatedUsage = {
-                  input_tokens,
-                  cache_creation_input_tokens,
-                  cache_read_input_tokens,
-                  output_tokens,
+
+              if (jsonData.type === "chat:completion") {
+                const { data } = jsonData
+                const { done, delta_content, usage } = data
+                if (usage) {
+                  calculatedUsage = usage
                 }
-              }
-              // Handle GPT responses specifically
-            
-                const result = this.streamGpt(
+                // console.log(jsonData)
+                const result = this.convertToOpenaiTextStream(
                   jsonData,
-                  sso,
                   model,
-                  completionId,
-                  encoder
+                  completionId
                 )
 
                 if (result) {
-                  yield result
+                  if (sso) {
+                    yield encoder.encode(`data: ${JSON.stringify(result)}\n\n`)
+                  } else {
+                    yield result
+                  }
+                  // console.log(`data: ${JSON.stringify(result)}\n\n`)
 
                   // Only increment completion ID if not a completion end event
-                  if (jsonData.type !== "response.output_text.done") {
+                  if (done) {
                     completionId++
                   }
                 }
-             
+              }
             }
           } catch (err) {
             // Log parsing errors but continue processing
-            console.error("Error parsing chunk:", line, err)
+            // console.error("Error parsing chunk:", line, err)
 
             // For robustness, we could also emit an error event in SSO mode
             if (sso) {
-              yield `data: ${JSON.stringify({ error: "Failed to parse stream chunk", chunk: line, details: err instanceof Error ? err.message : "Unknown error" })}\n`
             }
           }
         }
@@ -340,179 +235,26 @@ const endpointQs=""
     }
   }
 
-  /**
-   * Processes GPT streaming response chunks and normalizes them to OpenAI format
-   * @param jsonData - The parsed JSON data from the stream chunk
-   * @param sso - Whether to return Server-Sent Events (SSE) encoded format
-   * @param model - The model identifier
-   * @param completionId - Sequential ID for tracking chunks
-   * @param encoder - TextEncoder instance for SSE encoding
-   * @returns Encoded SSE data, normalized chunk object, or null if not processable
-   */
-  streamGpt(
+  convertToOpenaiTextStream(
     jsonData: any,
-    sso: boolean,
     model: string,
-    completionId: number,
-    encoder: TextEncoder
-  ): Uint8Array | Record<string, any> | null {
-    // Early return for invalid or non-processable chunk types
-    if (!jsonData?.type) {
-      return null
-    }
-
-    // Define processable event types
-    const PROCESSABLE_TYPES = new Set([
-      "response.output_item.added",
-      "response.output_text.delta",
-      "response.output_text.done",
-    ])
-
-    // Check if this chunk type should be processed
-    if (!PROCESSABLE_TYPES.has(jsonData.type)) {
-      return null
-    }
-
-    // Verify chunk contains processable data
-    if (!jsonData.delta && !jsonData.text && !jsonData.item) {
-      return null
-    }
-
-    // Extract data with type safety
-    const { text, delta, item } = jsonData
-
-    // Determine item type with explicit type checking
-    const itemType = this._determineGptItemType(item)
-
-    // Build delta content based on event type
-    const deltaContent = this._buildGptDeltaContent(jsonData.type, delta)
-
-    // Create normalized chunk data structure
-    const chunkData = this._createGptChunkData(
-      model,
-      completionId,
-      itemType,
-      deltaContent,
-      jsonData.type
-    )
-
-    // Return appropriate format based on SSO flag
-    return sso
-      ? encoder.encode(`data: ${JSON.stringify(chunkData)}\n\n`)
-      : chunkData
-  }
-
-  /**
-   * Determines the item type from GPT response item
-   * @param item - The item object from GPT response
-   * @returns The item type ("thinking" for reasoning, "text" otherwise)
-   */
-  private _determineGptItemType(item: any): string {
-    if (!item) {
-      return "text"
-    }
-
-    return item.type === "reasoning" ? "thinking" : "text"
-  }
-
-  /**
-   * Builds the delta content based on GPT response type
-   * @param responseType - The type of GPT response event
-   * @param delta - The delta value from the response
-   * @returns The appropriate content string
-   */
-  private _buildGptDeltaContent(responseType: string, delta?: string): string {
-    // Done events have no content
-    if (responseType === "response.output_text.done") {
-      return ""
-    }
-
-    // Delta events use delta value
-    if (responseType === "response.output_text.delta") {
-      return delta || ""
-    }
-
-    // Default to empty string for other types
-    return ""
-  }
-
-  /**
-   * Creates a normalized GPT chunk data structure in OpenAI format
-   * @param model - The model identifier
-   * @param completionId - Sequential ID for the chunk
-   * @param itemType - Type of the item ("text" or "thinking")
-   * @param content - The content string for the delta
-   * @param responseType - The original GPT response type
-   * @returns Normalized chunk data object
-   */
-  private _createGptChunkData(
-    model: string,
-    completionId: number,
-    itemType: string,
-    content: string,
-    responseType: string
-  ): Record<string, any> {
-    const isDone = responseType === "response.output_text.done"
-    const timestamp = Date.now()
-
-    return {
-      id: `chatcmpl-${timestamp}`,
-      model,
-      object: "chat.completion.chunk",
-      index: completionId,
-      finish_reason: isDone ? "finish" : null,
-      created: timestamp,
-      choices: [
-        {
-          delta: {
-            type: itemType,
-            content,
-          },
-        },
-      ],
-    }
-  }
-  streamAntrophic(
-    jsonData: any,
-    sso: boolean,
-    model: string,
-    completionId: number,
-    encoder: any
+    completionId: number
   ) {
-    if (
-      jsonData.type &&
-      (jsonData.type === "content_block_delta" ||
-        jsonData.type === "content_block_stop")
-    ) {
-      if (jsonData.delta) {
-        const { text, type } = jsonData.delta
-        // console.log({ text, delta })
-        // Convert to the format expected by the application
-        let data = {
-          id: `chatcmpl-${Date.now()}`,
-          model: model,
-          object: "chat.completion.chunk",
-          index: completionId,
-          finish_reason:
-            jsonData.type === "content_block_stop" ? "finish" : null,
-          created: Date.now(),
-          choices: [
-            {
-              delta: {
-                content: jsonData.type === "content_block_stop" ? "" : text,
-              },
-            },
-          ],
-        }
+    const { data: inputData } = jsonData
+    const { done, delta_content: text } = inputData
 
-        if (sso) {
-          return encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
-        } else return data
-      }
+    if (inputData.delta_content) {
+      return buildStreamChunk({
+        model,
+        index: completionId,
+        finishReason: done ? "finish" : null,
+        content: text,
+      })
     }
+
     return null
   }
 }
 
-export { ZAI as FactoryAI }
+export { ZAI }
 export default ZAI

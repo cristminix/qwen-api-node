@@ -13,7 +13,7 @@ const main = async () => {
   const userId = v1() // "438a7d70-66fd-4bc2-b889-b23456a59035" //((l = de(pe)) == null ? void 0 : l.id) || "",
 
   const { sortedPayload, urlParams } = prepareAuthParams(token, userId)
-  const userPrompt = "mengapa bumi datar?"
+  const userPrompt = "Mengapa sekarang banyak pengangguran setelah ada AI?"
   console.log(`Prompt:${userPrompt}`)
   let lastUserPrompt = userPrompt.trim()
   const { signature, timestamp } = createSignatureWithTimestamp(

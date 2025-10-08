@@ -1,9 +1,9 @@
+import { buildStreamChunk } from "./buildStreamChunk"
+
 export async function makeStreamCompletion(
   response: Response,
   sso = false,
-  model: string,
-  use: string,
-  messages: any
+  model: string
 ) {
   // Validate response with more detailed error message
   if (!response.ok) {
@@ -43,30 +43,18 @@ export async function makeStreamCompletion(
             total_tokens: totalTokens,
           }
           if (calculatedUsage) {
-            const { input_tokens, output_tokens } = calculatedUsage
-            usage.prompt_tokens = input_tokens
-            usage.completion_tokens = output_tokens
-            usage.total_tokens = input_tokens + output_tokens
+            usage = calculatedUsage
           }
-          // console.log(
-          //   `data: ${JSON.stringify({
-          //     id: `chatcmpl-${Date.now()}`,
-          //     model: model,
-          //     object: "chat.completion.chunk",
-          //     index: completionId,
-          //     finish_reason: "done",
-          //     created: Date.now(),
-          //     choices: [
-          //       {
-          //         delta: {
-          //           content: "",
-          //         },
-          //       },
-          //     ],
-          //     usage,
-          //     done: true, // Flag akhir stream
-          //   })}\n\ndata: [DONE]\n\n`
-          // )
+          const finalChunk = buildStreamChunk({
+            model,
+            index: completionId,
+            finishReason: "done",
+            content: "",
+            usage,
+            done: true,
+          })
+
+          console.log(`data: ${JSON.stringify(finalChunk)}\n\ndata: [DONE]\n\n`)
         }
         break
       }
@@ -99,65 +87,29 @@ export async function makeStreamCompletion(
             }
 
             const jsonData = JSON.parse(jsonString)
-            completionTokens += 0
-            if (jsonData.usage) {
-              const {
-                input_tokens,
-                cache_creation_input_tokens,
-                cache_read_input_tokens,
-                output_tokens,
-              } = jsonData.usage
-              calculatedUsage = {
-                input_tokens,
-                cache_creation_input_tokens,
-                cache_read_input_tokens,
-                output_tokens,
+
+            if (jsonData.type === "chat:completion") {
+              const { data } = jsonData
+              const { done, delta_content, usage } = data
+              if (usage) {
+                calculatedUsage = usage
+              }
+              // console.log(jsonData)
+              const result = convertToOpenaiTextStream(
+                jsonData,
+                model,
+                completionId
+              )
+
+              if (result) {
+                console.log(`data: ${JSON.stringify(result)}\n\n`)
+
+                // Only increment completion ID if not a completion end event
+                if (done) {
+                  completionId++
+                }
               }
             }
-            // console.log({  })
-            if (jsonData.type === "chat:completion")
-              process.stdout.write(jsonData.data.delta_content)
-
-            // console.log(`data: ${JSON.stringify(jsonData)}\n\n`)
-            // Handle GPT responses specifically
-            /*
-              if (use === "gpt") {
-                const result = this.streamGpt(
-                  jsonData,
-                  sso,
-                  model,
-                  completionId,
-                  encoder
-                )
- 
-                if (result) {
-                  yield result
- 
-                  // Only increment completion ID if not a completion end event
-                  if (jsonData.type !== "response.output_text.done") {
-                    completionId++
-                  }
-                }
-              } else {
-                // console.log({ jsonData })
-                const result = this.streamAntrophic(
-                  jsonData,
-                  sso,
-                  model,
-                  completionId,
-                  encoder
-                )
- 
-                if (result) {
-                  yield result
- 
-                  // Only increment completion ID if not a completion end event
-                  if (jsonData.type !== "response.output_text.done") {
-                    completionId++
-                  }
-                }
-              }
-                */
           }
         } catch (err) {
           // Log parsing errors but continue processing
@@ -165,9 +117,6 @@ export async function makeStreamCompletion(
 
           // For robustness, we could also emit an error event in SSO mode
           if (sso) {
-            // console.log(
-            //   `data: ${JSON.stringify({ error: "Failed to parse stream chunk", chunk: line, details: err instanceof Error ? err.message : "Unknown error" })}\n`
-            // )
           }
         }
       }
@@ -176,4 +125,24 @@ export async function makeStreamCompletion(
     // Ensure reader is released even if an error occurs
     reader.releaseLock()
   }
+}
+
+function convertToOpenaiTextStream(
+  jsonData: any,
+  model: string,
+  completionId: number
+) {
+  const { data: inputData } = jsonData
+  const { done, delta_content: text } = inputData
+
+  if (inputData.delta_content) {
+    return buildStreamChunk({
+      model,
+      index: completionId,
+      finishReason: done ? "finish" : null,
+      content: text,
+    })
+  }
+
+  return null
 }
