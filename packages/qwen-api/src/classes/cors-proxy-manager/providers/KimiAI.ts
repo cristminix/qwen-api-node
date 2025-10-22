@@ -13,6 +13,10 @@ export const availableModels = [
     id: "kimi-k2",
     alias: "kimi-k2",
   },
+  {
+    id: "kimi-k1.5",
+    alias: "kimi-k1.5",
+  }
 ]
 
 function transformMessages(messages: any[]): any[] {
@@ -190,30 +194,13 @@ class KimiAI extends Client {
     console.log("Generated session ID:", sessionId)
     return sessionId
   }
-  buldRequestBody() {
-    console.log(this.chatSession)
-    // const [maxLen, markerStringIndex] = getValidContentMaxLen(
-    //   this.chatSession?.prompt
-    // )
-    // const markerString = availabelPayloadHeaders[markerStringIndex]
-    // const configValidBytesLen = availableByteLens[markerStringIndex]
-    // let validPayloadBytesLen: any = configValidBytesLen
-    // if (validPayloadBytesLen === -1) {
-    //   // console.log("configValidBytesLen === -1")
-    //   const [validPayloadBytesLenGuess] = calculateValidPayloadBytesLength(
-    //     maxLen,
-    //     markerString
-    //   )
-    //   validPayloadBytesLen = validPayloadBytesLenGuess
-    // }
-    // console.log({  validPayloadBytesLen ,markerString})
-
-    //  return
+  buldRequestBody(model) {
+    
     const p = constructPayload(
       this.chatSession?.prompt ?? "",
       this.chatSession?.chatId ?? "",
       this.chatSession?.lastAssistantMessageId ?? "",
-      this.chatSession?.instruction ?? ""
+      this.chatSession?.instruction ?? "",model
     )
     return p
   }
@@ -240,7 +227,7 @@ class KimiAI extends Client {
           if (this.chatSession) {
             this.chatSession.setMessages(inputMessages)
           }
-          const body = this.buldRequestBody()
+          const body = this.buldRequestBody(model)
           // const body = this.buldRequestBody()
           const chatUrlEndpoint = `${this.baseUrl}/${this.chatEndpoint}`
           // console.log(body.messages)

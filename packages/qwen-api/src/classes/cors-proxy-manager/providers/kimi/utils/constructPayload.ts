@@ -5,10 +5,12 @@ export const templatePayload = (
   chatId = "",
   parentId = "",
   instruction = "",
-  log = false
+  scenario="kimi-k2",
+  enableSearchTool=true
+
 ) => {
   let blocks = [{ message_id: "", parent_id: parentId, text: { content } }]
-  if (chatId === "" && parentId === "") {
+  if (chatId === "" && parentId === "" && instruction.length>0) {
     blocks = [
       {
         message_id: "",
@@ -21,35 +23,31 @@ export const templatePayload = (
       // { message_id:  "", parent_id: parentId, text: { content } },
     ]
   }
-
+const model = scenario === "kimi-k2" ?"SCENARIO_K2":"SCENARIO_CHAT"
   let userMessage = {
     role: "user",
     blocks,
-    scenario: "SCENARIO_K2",
+    scenario:model,
   }
   const message: any = userMessage
-  const p = {
+  const p: {
+    chat_id: string,
+    scenario: string,
+    tools: Array<{ type: string, [key: string]: any }>,
+    message: any,
+    options: { thinking: boolean }
+  } = {
     chat_id: chatId,
-    // parent_id:parentId,
-    scenario: "SCENARIO_K2",
-    // tools: [{ type: "TOOL_TYPE_SEARCH", search: {} }],
-    // tools: [],
+    scenario:model,
+    tools: [],
 
     message,
     options: { thinking: false },
   }
-
-  // if (log) console.log(JSON.stringify(p))
-  /*
-  if (chatId === "" && parentId === "") {
-
-    if (instruction !== "") {
-      p.options.system_prompt = instruction
-    }
-  } else {
+  if(enableSearchTool){
+    p.tools.push({ type: "TOOL_TYPE_SEARCH", search: {} })
   }
-
-    */
+ 
   console.log(p)
   return p
 }
@@ -57,19 +55,23 @@ export function buildPayload(
   content,
   chatId = "",
   parentId = "",
-  instruction = ""
+  instruction = "",
+  scenario="kimi-k2",
+  enableSearchTool=true
 ) {
   const encoder = new TextEncoder()
 
   //@ts-ignore
-  const inputPayload = templatePayload(content, chatId, parentId, instruction)
+  const inputPayload = templatePayload(content, chatId, parentId, instruction,scenario,enableSearchTool)
   return createConnectFrame(JSON.stringify(inputPayload), encoder)
 }
 export function constructPayload(
   content: string,
   chatId,
   parentId,
-  instruction
+  instruction,
+  scenario="kimi-k2",
+
 ) {
-  return buildPayload(content, chatId, parentId, instruction)
+  return buildPayload(content, chatId, parentId, instruction,scenario)
 }
