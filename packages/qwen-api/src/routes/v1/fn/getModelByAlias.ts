@@ -22,7 +22,7 @@ const modelMaps = {
 const defaultModel = process.env.DEFAULT_MODEL
 
 export function getModelByAlias(provider: string, modelAlias: string) {
-  // console.log("getModelByAlias", provider, modelAlias)
+  // console.log("getModelByAlias", provider, modelAlias,modelMaps,modelMaps['kimi'],`'kimi' === ${provider.trim()}`)
   const filtered = modelMaps[provider].data.filter((model) => {
     return model.id === modelAlias
   })

@@ -8,7 +8,7 @@ const modelList = {
     return {
       alias,
       id,
-      provider: "factory",
+      provider: "kimi",
       vision: false,
       audio: false,
     }

@@ -8,15 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@bufbuild/protobuf':
-        specifier: ^2.9.0
-        version: 2.9.0
-      '@connectrpc/connect':
-        specifier: ^2.1.0
-        version: 2.1.0(@bufbuild/protobuf@2.9.0)
-      '@connectrpc/connect-web':
-        specifier: ^2.1.0
-        version: 2.1.0(@bufbuild/protobuf@2.9.0)(@connectrpc/connect@2.1.0(@bufbuild/protobuf@2.9.0))
       '@hono/node-server':
         specifier: ^1.16.0
         version: 1.16.0(hono@4.8.5)
@@ -68,9 +59,6 @@ importers:
       ora:
         specifier: ^9.0.0
         version: 9.0.0
-      protobufjs:
-        specifier: ^7.5.4
-        version: 7.5.4
       proxy-agent:
         specifier: ^6.5.0
         version: 6.5.0
@@ -87,9 +75,6 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
     devDependencies:
-      '@bufbuild/buf':
-        specifier: ^1.58.0
-        version: 1.58.0
       '@types/ali-oss':
         specifier: ^6.16.11
         version: 6.16.11
@@ -135,70 +120,9 @@ packages:
   '@asamuzakjp/nwsapi@2.3.9':
     resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
 
-  '@bufbuild/buf-darwin-arm64@1.58.0':
-    resolution: {integrity: sha512-bMlTG23f7oIrroVM7dijbCxwLy+fd4QOAkmnIkZ922UIuwXkexr8TWzrul4Ivs0Af6aOWNzQSyHrh3UkGNZa2A==}
-    engines: {node: '>=12'}
-    cpu: [arm64]
-    os: [darwin]
-
-  '@bufbuild/buf-darwin-x64@1.58.0':
-    resolution: {integrity: sha512-sNOu4ta7IDaQi4F66BXk76AQVCr0H10Ic7UFfU9ELs1f+FP+JYsQRU5CrWeaDWnLUTu3o4EZqwC6AvhGLOJUnw==}
-    engines: {node: '>=12'}
-    cpu: [x64]
-    os: [darwin]
-
-  '@bufbuild/buf-linux-aarch64@1.58.0':
-    resolution: {integrity: sha512-UE3tmIBpA4tK4Y34602UAbCFJzZVuRrFoXys5qSu9LnqhP9OF+vT6x9SXpAlQigmq3VGwNr8wgxD17ys2oDEmA==}
-    engines: {node: '>=12'}
-    cpu: [arm64]
-    os: [linux]
-
-  '@bufbuild/buf-linux-armv7@1.58.0':
-    resolution: {integrity: sha512-6V0bEseFAcNGP8IyHb1b3dEr/FpeuN6A/gHNotJ8zZbtyWsKEPsiSNomED8bARvW/3hs802khVJAUeD0duIpAw==}
-    engines: {node: '>=12'}
-    cpu: [arm]
-    os: [linux]
-
-  '@bufbuild/buf-linux-x64@1.58.0':
-    resolution: {integrity: sha512-k2xOlOky3IY9Zxeih5vccfp/MDfO0UPZfGYxkYJ7reNuUTtJEOWfzuQxeZY+E8q1W83RtIwGjAVhbKYCGA1MpQ==}
-    engines: {node: '>=12'}
-    cpu: [x64]
-    os: [linux]
-
-  '@bufbuild/buf-win32-arm64@1.58.0':
-    resolution: {integrity: sha512-GXNjYaOyjJ2J4hhCkldsc3r6eS1YqQ+qOHsn/PvtcxUkzV6UN5HoLoh0Bx/NStZOA4QqCEfQphLUqJLvwBuhbw==}
-    engines: {node: '>=12'}
-    cpu: [arm64]
-    os: [win32]
-
-  '@bufbuild/buf-win32-x64@1.58.0':
-    resolution: {integrity: sha512-5o1d/7lEeDXuTyroiro+rRmFAbKIaKjVCFZwF0pPISUmIANFzvI41UpzciMQACXCSnYQdEcNHLtZRGCzGT9GiQ==}
-    engines: {node: '>=12'}
-    cpu: [x64]
-    os: [win32]
-
-  '@bufbuild/buf@1.58.0':
-    resolution: {integrity: sha512-/R+6kyZijftKDFLwY2JlvXqreZrIkz6jvcsmILXC0HwjkJ8dcADSPS93CFTZrtDQfui6K/GCJOsZrNbY5SLRyA==}
-    engines: {node: '>=12'}
-    hasBin: true
-
-  '@bufbuild/protobuf@2.9.0':
-    resolution: {integrity: sha512-rnJenoStJ8nvmt9Gzye8nkYd6V22xUAnu4086ER7h1zJ508vStko4pMvDeQ446ilDTFpV5wnoc5YS7XvMwwMqA==}
-
   '@colors/colors@1.5.0':
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
-
-  '@connectrpc/connect-web@2.1.0':
-    resolution: {integrity: sha512-4IBFeMeXS1RVtmmFE/MwH+vWq/5vDRKys70va+DAaWDh83Rdy0iUQOJbITUDzvonlY5as3vwfs5yy9Yp2miHSw==}
-    peerDependencies:
-      '@bufbuild/protobuf': ^2.7.0
-      '@connectrpc/connect': 2.1.0
-
-  '@connectrpc/connect@2.1.0':
-    resolution: {integrity: sha512-xhiwnYlJNHzmFsRw+iSPIwXR/xweTvTw8x5HiwWp10sbVtd4OpOXbRgE7V58xs1EC17fzusF1f5uOAy24OkBuA==}
-    peerDependencies:
-      '@bufbuild/protobuf': ^2.7.0
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -2174,50 +2098,8 @@ snapshots:
 
   '@asamuzakjp/nwsapi@2.3.9': {}
 
-  '@bufbuild/buf-darwin-arm64@1.58.0':
-    optional: true
-
-  '@bufbuild/buf-darwin-x64@1.58.0':
-    optional: true
-
-  '@bufbuild/buf-linux-aarch64@1.58.0':
-    optional: true
-
-  '@bufbuild/buf-linux-armv7@1.58.0':
-    optional: true
-
-  '@bufbuild/buf-linux-x64@1.58.0':
-    optional: true
-
-  '@bufbuild/buf-win32-arm64@1.58.0':
-    optional: true
-
-  '@bufbuild/buf-win32-x64@1.58.0':
-    optional: true
-
-  '@bufbuild/buf@1.58.0':
-    optionalDependencies:
-      '@bufbuild/buf-darwin-arm64': 1.58.0
-      '@bufbuild/buf-darwin-x64': 1.58.0
-      '@bufbuild/buf-linux-aarch64': 1.58.0
-      '@bufbuild/buf-linux-armv7': 1.58.0
-      '@bufbuild/buf-linux-x64': 1.58.0
-      '@bufbuild/buf-win32-arm64': 1.58.0
-      '@bufbuild/buf-win32-x64': 1.58.0
-
-  '@bufbuild/protobuf@2.9.0': {}
-
   '@colors/colors@1.5.0':
     optional: true
-
-  '@connectrpc/connect-web@2.1.0(@bufbuild/protobuf@2.9.0)(@connectrpc/connect@2.1.0(@bufbuild/protobuf@2.9.0))':
-    dependencies:
-      '@bufbuild/protobuf': 2.9.0
-      '@connectrpc/connect': 2.1.0(@bufbuild/protobuf@2.9.0)
-
-  '@connectrpc/connect@2.1.0(@bufbuild/protobuf@2.9.0)':
-    dependencies:
-      '@bufbuild/protobuf': 2.9.0
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
