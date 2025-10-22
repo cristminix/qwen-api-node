@@ -11,7 +11,7 @@ export function buildRequestHeaders(
   return {
     authorization: `Bearer ${token}`,
     "content-type": "application/json",
-    "x-fe-version": "prod-fe-1.0.95",
+    "x-fe-version": "prod-fe-1.0.103",
     "x-signature": signature,
   }
 }

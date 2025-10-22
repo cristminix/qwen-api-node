@@ -2,6 +2,61 @@
   "object": "list",
   "data": [
     {
+    "id": "glm-4.6:FactoryAI",
+    "object": "model",
+    "created": 0,
+    "owned_by": "",
+    "image": false,
+    "vision": false,
+    "provider": "FactoryAI"
+  },
+  {
+    "id": "gpt-5-2025-08-07:FactoryAI",
+    "object": "model",
+    "created": 0,
+    "owned_by": "",
+    "image": false,
+    "vision": false,
+    "provider": "FactoryAI"
+  },
+  {
+    "id": "gpt-5-codex:FactoryAI",
+    "object": "model",
+    "created": 0,
+    "owned_by": "",
+    "image": false,
+    "vision": false,
+    "provider": "FactoryAI"
+  },
+  {
+    "id": "claude-opus-4-1-20250805:FactoryAI",
+    "object": "model",
+    "created": 0,
+    "owned_by": "",
+    "image": false,
+    "vision": false,
+    "provider": "FactoryAI"
+  },
+  {
+    "id": "claude-sonnet-4-20250514:FactoryAI",
+    "object": "model",
+    "created": 0,
+    "owned_by": "",
+    "image": false,
+    "vision": false,
+    "provider": "FactoryAI"
+  },
+  {
+    "id": "claude-sonnet-4-5-20250929:FactoryAI",
+    "object": "model",
+    "created": 0,
+    "owned_by": "",
+    "image": false,
+    "vision": false,
+    "provider": "FactoryAI"
+  },
+
+    {
       "id": "claude-sonnet-4:ApiAirforce",
       "object": "model",
       "created": 0,
@@ -2061,6 +2116,15 @@
       "image": false,
       "vision": false,
       "provider": "EasyChat"
+    },
+    {
+      "id": "GLM-4.6:GLM",
+      "object": "model",
+      "created": 0,
+      "owned_by": "",
+      "image": false,
+      "vision": false,
+      "provider": "GLM"
     },
     {
       "id": "GLM-4.5:GLM",

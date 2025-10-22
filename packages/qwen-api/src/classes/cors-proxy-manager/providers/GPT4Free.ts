@@ -140,7 +140,7 @@ class GPT4Free extends Client {
             id: Date.now().toString(),
             ...options,
           }
-          console.log(body.messages)
+          // console.log(body.messages)
           const requestOptions = {
             method: "POST",
             headers: this.extraHeaders,

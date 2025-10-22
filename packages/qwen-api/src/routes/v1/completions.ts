@@ -5,6 +5,7 @@ const completions = new Hono()
 
 completions.post("/", async (c: Context) => {
   const chatRequest = await c.req.json()
+  // console.log(c.req.raw)
 
   return await handleCompletions(chatRequest, c)
 })

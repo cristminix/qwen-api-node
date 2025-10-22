@@ -7,6 +7,7 @@ import g4fModelList from "../../providers/G4F/modelList"
 import geminiModelList from "../../providers/Gemini/modelList"
 import factoryModelList from "../../providers/factory/modelList"
 import zaiModelList from "../../providers/zai/modelList"
+import kimiModelList from "../../providers/kimi/modelList"
 const modelMaps = {
   blackbox: blackboxModelList,
   qwenchatai: qwenModelList,
@@ -16,6 +17,7 @@ const modelMaps = {
   geminicli: geminiModelList,
   factory: factoryModelList,
   zai: zaiModelList,
+  kimi: kimiModelList,
 }
 const defaultModel = process.env.DEFAULT_MODEL
 const models = new Hono()

@@ -19,6 +19,7 @@ export function getEndpointSignature(
   const authParams = prepareAuthParams(token, userId)
   const sortedPayload = authParams.sortedPayload
   const urlParams = authParams.urlParams
+  const aTstamp = authParams.timestamp
 
   // debug.log(f"Prompt:{userPrompt}")
   const lastUserPrompt = userPrompt.trim()
@@ -26,7 +27,8 @@ export function getEndpointSignature(
   // Create signature with timestamp
   const signatureData = createSignatureWithTimestamp(
     sortedPayload,
-    lastUserPrompt
+    lastUserPrompt,
+    aTstamp
   )
   const signature = signatureData.signature
   const timestamp = signatureData.timestamp

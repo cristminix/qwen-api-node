@@ -10,6 +10,8 @@ import { getModel } from "./zai/getModel"
 import { buildRequestBody } from "./zai/buildRequestBody"
 import { buildRequestHeaders } from "./zai/buildRequestHeaders"
 import { buildStreamChunk } from "./zai/buildStreamChunk"
+import fs from "fs"
+import path from "path"
 class ZAI extends Client {
   availableModels = availableModels
   constructor(options: any = {}) {
@@ -39,6 +41,27 @@ class ZAI extends Client {
             await getAuthAndModels()
 
           const transformedMessages = transformMessages(options.messages)
+          const debugReqMsgs = false
+          // Save transformedMessages to log file
+          if (debugReqMsgs) {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, "-")
+            const logDir = `logs/zai/requests-messages`
+            const logFilePath = `${logDir}/messages-${timestamp}.json`
+
+            // Create directory if it doesn't exist
+            await this.ensureDir(logDir)
+
+            // Write the transformed messages to the log file using standard Node.js fs
+            // Ensure the directory exists
+            fs.mkdirSync(path.dirname(logFilePath), { recursive: true })
+
+            // Write the file
+            fs.writeFileSync(
+              logFilePath,
+              JSON.stringify(transformedMessages, null, 2)
+            )
+          }
+
           const userPrompt = getLastUserMessageContent(transformedMessages)
           if (userPrompt && apiKey && authUserId) {
             const [endpoint, signature, timestamp] = getEndpointSignature(
@@ -253,6 +276,11 @@ class ZAI extends Client {
     }
 
     return null
+  }
+
+  ensureDir(dirPath: string) {
+    // Create directory if it doesn't exist, with recursive option
+    fs.mkdirSync(dirPath, { recursive: true })
   }
 }
 

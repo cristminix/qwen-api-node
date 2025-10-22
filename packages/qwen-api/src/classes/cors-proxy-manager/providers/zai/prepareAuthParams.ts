@@ -58,5 +58,6 @@ export const prepareAuthParams = (token: string, userId: string) => {
       .sort((a, b) => a[0].localeCompare(b[0]))
       .join(","),
     urlParams: urlParamsString,
+    timestamp: currentTime,
   }
 }

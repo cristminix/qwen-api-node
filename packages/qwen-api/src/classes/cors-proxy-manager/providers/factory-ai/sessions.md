@@ -3,6 +3,7 @@
 request
 
 ```json
+POST
 {
   "id": "a57af53a-8ac3-4502-a509-072d41866366",
   "title": "New Session",

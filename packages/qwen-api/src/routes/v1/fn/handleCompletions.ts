@@ -75,7 +75,8 @@ async function handleCompletions(
     chatRequest.stream = true
   }
   console.log(chatRequest.stream)
-  const response = await createCompletions(chatRequest)
+  // console.log()
+  const response = await createCompletions(chatRequest,c.req.header())
   const streaming = chatRequest.stream
   const promptMode = isPromptMode(chatRequest)
   const modelName = chatRequest.model

@@ -177,3 +177,5 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+.env.kimi
+chat-history*.json

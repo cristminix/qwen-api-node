@@ -17,7 +17,7 @@ export async function getAuthAndModels(
 
   try {
     // Get authentication data
-    let responseJson = getAuthFromCache()
+    let responseJson = null//getAuthFromCache()
     if (responseJson === null) {
       responseJson = await getAuthToken()
       console.log(`GLM auth response: success`)

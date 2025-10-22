@@ -1,4 +1,6 @@
 onlyBuiltDependencies:
+  - '@bufbuild/buf'
   - better-sqlite3
   - esbuild
+  - protobufjs
   - sse4_crc32

@@ -47,8 +47,9 @@ export function transformMessages(messages: Message[]): TransformedMessage[] {
     (msg) => msg.role === "system"
   )
   let finalSystemMessages: TransformedMessage[] = []
+  const combineSystemMessages = false
 
-  if (systemMessages.length > 1) {
+  if (systemMessages.length > 1 && combineSystemMessages) {
     // iterate system_messages and append content
     const combinedSystemMessageContents = systemMessages.map(
       (message) => message.content
