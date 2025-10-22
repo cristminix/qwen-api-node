@@ -21,7 +21,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@bufbuild/buf": "^1.58.0",
     "@types/ali-oss": "^6.16.11",
     "@types/nock": "^11.1.0",
     "@types/node": "^24.0.15",
@@ -35,9 +34,6 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "^2.9.0",
-    "@connectrpc/connect": "^2.1.0",
-    "@connectrpc/connect-web": "^2.1.0",
     "@hono/node-server": "^1.16.0",
     "ali-oss": "^6.23.0",
     "axios": "^1.7.2",
@@ -55,7 +51,6 @@
     "nock": "^14.0.10",
     "openai": "^6.1.0",
     "ora": "^9.0.0",
-    "protobufjs": "^7.5.4",
     "proxy-agent": "^6.5.0",
     "tiktoken": "^1.0.22",
     "turndown": "^7.2.1",
