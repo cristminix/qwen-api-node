@@ -76,12 +76,47 @@ export class ChatSession {
   getLastUserMessage(messages) {
     return messages.findLast((m) => m.role === "user")
   }
-
+  saveToJson(data: any, filename: string): void {
+    // Convert data to JSON string
+    const jsonString = JSON.stringify(data, null, 2);
+    // Write to file using dynamic import
+    import('fs').then((fsModule) => {
+      fsModule.writeFileSync(filename, jsonString, 'utf8');
+    }).catch((error) => {
+      console.error('Error saving to JSON file:', error);
+    });
+  }
   init(messages: ChatMessage[]) {
+    this.saveToJson(messages,`logs/messages-${Date.now()}.json`)
     let systemMessageContent = ""
     const systemMessages = messages.filter((m) => m.role === "system")
-    this.prompt = this.getLastUserMessage(messages).content
-    // console.log({ prompt: this.prompt })
+    // if(this.chatId === ""){
+      // console.log("fist timer")
+      let userMessageHistory = this.history.filter((m) => m.role === "user")
+      let userMessages = messages.filter((m) => m.role === "user")
+      if(userMessageHistory.length>0){
+        userMessages = userMessages.slice(userMessageHistory.length)
+      //   let index =this.history.length-1
+      //   while(index <= this.messages.length){
+      // //     if(this.messages[index].role === "user"){
+      // //       userMessages.push(this.messages[index])
+      // //     }
+      // //     index +=1
+      //   }
+      }
+      this.saveToJson(userMessageHistory,`logs/user-messages-history-${Date.now()}.json`)
+      this.saveToJson(userMessages,`logs/user-messages-${Date.now()}.json`)
+
+      for(const msg of userMessages){
+        this.prompt += `${msg.content}\n`
+      }
+      console.log({ prompt: this.prompt })
+    // }
+    // else{
+
+    // }
+    
+    
 
     if (systemMessages.length > 0) {
       const [sysMsg] = systemMessages
@@ -92,12 +127,13 @@ export class ChatSession {
   }
   updateMessageHistory() {
     const messageHistory = this.messages.filter((m) => m.role !== "system")
-    if (messageHistory.length > 0) {
-      const lastIndex = messageHistory.length - 1
-      if (messageHistory[lastIndex].role === "user") {
-        messageHistory.pop()
-      }
-    }
+
+    // if (messageHistory.length > 0) {
+    //   const lastIndex = messageHistory.length - 1
+    //   if (messageHistory[lastIndex].role === "user") {
+    //     messageHistory.pop()
+    //   }
+    // }
     if (messageHistory.length > 0) {
       this.history = messageHistory
     } else {

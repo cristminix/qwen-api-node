@@ -6,7 +6,7 @@ export const templatePayload = (
   parentId = "",
   instruction = "",
   scenario="kimi-k2",
-  enableSearchTool=true
+  enableSearchTool=false
 
 ) => {
   let blocks = [{ message_id: "", parent_id: parentId, text: { content } }]
@@ -16,7 +16,7 @@ export const templatePayload = (
         message_id: "",
         parent_id: parentId,
         text: {
-          content: `<contextual_request><system_instruction>${instruction}</system_instruction><current_user_query>${content}</current_user_query></contextual_request>`,
+          content: `[System Instruction]\n${instruction}\n\n[Current User Query]\n${content}`,
         },
       },
 
