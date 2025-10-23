@@ -37,42 +37,68 @@ export class ChatSession {
   }
   private async loadRegistry() {
     try {
-      ChatSession.chatRegistries = await ChatSession.loadObjectFromJson('.', ChatSession.chatRegistryJsonPath)
+      ChatSession.chatRegistries = await ChatSession.loadObjectFromJson(
+        ".",
+        ChatSession.chatRegistryJsonPath
+      )
     } catch (error) {
       ChatSession.chatRegistries = []
     }
     const hexChecksum = this.generateChatChecksum()
     console.log("Load registry", { hexChecksum })
-    const existingRegistryIndex = ChatSession.chatRegistries.findIndex(reg => reg.checksum.includes(hexChecksum))
+    let existingRegistryIndex = ChatSession.chatRegistries.findIndex((reg) =>
+      reg.checksum.includes(hexChecksum)
+    )
+    if (existingRegistryIndex == -1) {
+      if (this.chatId) {
+        console.log("try using chatId ", this.chatId)
+        existingRegistryIndex = ChatSession.chatRegistries.findIndex(
+          (reg) => reg.chatId === this.chatId
+        )
+      }
+    }
     if (existingRegistryIndex !== -1) {
       this.chatRegistry = ChatSession.chatRegistries[existingRegistryIndex]
       this.chatId = this.chatRegistry.chatId
       this.lastUserMessageId = this.chatRegistry.lastUserMessageId
       this.lastAssistantMessageId = this.chatRegistry.lastAssistantMessageId
       console.log("Load registry checksum found", this.chatRegistry)
-
     } else {
       console.log("Load registry checksum not found")
-
     }
-
   }
   private generateChatChecksum() {
-    const unifiedChatHistory = this.history.map(m => ({ role: m.role, content: m.content }))
-    console.log("unifiedChatHistory", JSON.stringify(unifiedChatHistory, null, 2))
-    const checksum = crc32.str(JSON.stringify(unifiedChatHistory) + this.instruction)
-    const hexChecksum = (checksum >>> 0).toString(16).padStart(8, '0')
+    const unifiedChatHistory = this.history.map((m) => ({
+      role: m.role,
+      content: m.content,
+    }))
+    console.log(
+      "unifiedChatHistory",
+      JSON.stringify(unifiedChatHistory, null, 2)
+    )
+    const checksum = crc32.str(
+      JSON.stringify(unifiedChatHistory) + this.instruction
+    )
+    const hexChecksum = (checksum >>> 0).toString(16).padStart(8, "0")
     // console.log({ checksum, hexChecksum })
     return hexChecksum
   }
   private async commitRegistry() {
     const hexChecksum = this.generateChatChecksum()
-    const unifiedChatHistory = this.history.map(m => ({ role: m.role, content: m.content }))
+    const unifiedChatHistory = this.history.map((m) => ({
+      role: m.role,
+      content: m.content,
+    }))
     console.log("commitRegistry", { hexChecksum })
     // Update the registry with the hex checksum
-    let existingRegistryIndex = ChatSession.chatRegistries.findIndex(reg => reg.chatId === this.chatId || reg.chatId === this.oldChatId)
+    let existingRegistryIndex = ChatSession.chatRegistries.findIndex(
+      (reg) => reg.chatId === this.chatId || reg.chatId === this.oldChatId
+    )
     if (this.chatRegistry) {
-      console.log("existing chatIds", ChatSession.chatRegistries.map(r => (r.chatId)))
+      console.log(
+        "existing chatIds",
+        ChatSession.chatRegistries.map((r) => r.chatId)
+      )
       console.log("Updating existing chatRegistry", this.chatId, this.oldChatId)
     }
 
@@ -80,10 +106,12 @@ export class ChatSession {
     if (existingRegistryIndex > -1) {
       if (this.chatId !== this.oldChatId) {
         ChatSession.chatRegistries[existingRegistryIndex].chatId = this.chatId
-
       }
-      ChatSession.chatRegistries[existingRegistryIndex].checksum.push(hexChecksum)
-      ChatSession.chatRegistries[existingRegistryIndex].history = unifiedChatHistory
+      ChatSession.chatRegistries[existingRegistryIndex].checksum.push(
+        hexChecksum
+      )
+      ChatSession.chatRegistries[existingRegistryIndex].history =
+        unifiedChatHistory
     } else {
       this.chatRegistry = {
         chatId: this.chatId,
@@ -91,14 +119,18 @@ export class ChatSession {
         lastAssistantMessageId: this.lastAssistantMessageId,
         checksum: [hexChecksum],
         sessionId: this.sessionId,
-        history: unifiedChatHistory
+        history: unifiedChatHistory,
       }
       ChatSession.chatRegistries.push(this.chatRegistry)
     }
     console.log(this.chatRegistry)
     console.log(ChatSession.chatRegistries)
     // }
-    await ChatSession.saveObjectToJson(ChatSession.chatRegistries, '.', ChatSession.chatRegistryJsonPath)
+    await ChatSession.saveObjectToJson(
+      ChatSession.chatRegistries,
+      ".",
+      ChatSession.chatRegistryJsonPath
+    )
   }
   static getInstance(sessionId) {
     if (!ChatSession.instance[sessionId]) {
@@ -138,7 +170,6 @@ export class ChatSession {
     this.messages.push(assistantMessage)
     this.updateMessageHistory()
     this.commitRegistry()
-
   }
   setInstruction(instruction) {
     this.instruction = instruction
@@ -158,7 +189,11 @@ export class ChatSession {
     return messages.findLast((m) => m.role === "user")
   }
   static async logToJson(obj: any, sessionId: string, t = "messages") {
-    await ChatSession.saveObjectToJson(obj, `logs/${sessionId}`, `${t}-${Date.now()}.json`)
+    await ChatSession.saveObjectToJson(
+      obj,
+      `logs/${sessionId}`,
+      `${t}-${Date.now()}.json`
+    )
   }
   static async saveObjectToJson(data: any, outDir: string, filename: string) {
     // Convert data to JSON string
@@ -167,25 +202,27 @@ export class ChatSession {
       await fs.mkdirSync(outDir, { recursive: true })
     }
 
-    const jsonString = JSON.stringify(data, null, 2);
+    const jsonString = JSON.stringify(data, null, 2)
     // Write to file using dynamic import
-    await fs.writeFileSync(path, jsonString, 'utf8');
+    await fs.writeFileSync(path, jsonString, "utf8")
   }
 
   static async loadObjectFromJson(outDir: string, filename: string) {
-    const path = `${outDir}/${filename}`;
+    const path = `${outDir}/${filename}`
     if (!(await fs.existsSync(path))) {
-      throw new Error(`File does not exist: ${path}`);
+      throw new Error(`File does not exist: ${path}`)
     }
 
-    const jsonString = await fs.readFileSync(path, 'utf8');
-    return JSON.parse(jsonString);
+    const jsonString = await fs.readFileSync(path, "utf8")
+    return JSON.parse(jsonString)
   }
+  // filterMessagePatterns = [/^\[ERROR\]/]
+  filterMessages() {}
   async init(messages: ChatMessage[]) {
-    await ChatSession.logToJson(messages, this.sessionId, 'messages')
+    await ChatSession.logToJson(messages, this.sessionId, "messages")
     let systemMessageContent = ""
     const systemMessages = messages.filter((m) => m.role === "system")
-    // construct chatHistory 
+    // construct chatHistory
 
     let msgIndex = messages.length
     while (msgIndex-- > 0) {
@@ -195,17 +232,31 @@ export class ChatSession {
       }
     }
     // let userMessageHistory = this.history.filter((m) => m.role === "user")
-    let userMessages = messages.filter((m) => m.role !== "system").slice(msgIndex + 1, messages.length)
+    let userMessages = messages
+      .filter((m) => m.role !== "system")
+      .slice(msgIndex + 1, messages.length)
     // if (userMessageHistory.length > 0) {
     // userMessages = userMessages.slice(msgIndex)
     // }
-    const messageHistory = messages.filter((m) => m.role !== "system").slice(0, msgIndex + 1)
-    await ChatSession.logToJson(messageHistory, this.sessionId, 'message-history')
-    await ChatSession.logToJson(userMessages, this.sessionId, 'user-messages')
+    const messageHistory = messages
+      .filter((m) => m.role !== "system")
+      .slice(0, msgIndex + 1)
+    await ChatSession.logToJson(
+      messageHistory,
+      this.sessionId,
+      "message-history"
+    )
+    await ChatSession.logToJson(userMessages, this.sessionId, "user-messages")
     this.prompt = ""
+    if (userMessages.length === 0) {
+      userMessages = messageHistory.filter((m) => m.role === "user")
+      userMessages = userMessages.slice(
+        userMessages.length - 2,
+        userMessages.length
+      )
+    }
     for (const msg of userMessages) {
-      if (msg.role === "user")
-        this.prompt += `${msg.content}\n`
+      if (msg.role === "user") this.prompt += `${msg.content}\n`
     }
     // console.log({ prompt: this.prompt })
     if (systemMessages.length > 0) {
@@ -224,7 +275,8 @@ export class ChatSession {
         break
       }
     }
-    this.history = this.messages.filter((m) => m.role !== "system").slice(0, msgIndex + 1)
-
+    this.history = this.messages
+      .filter((m) => m.role !== "system")
+      .slice(0, msgIndex + 1)
   }
 }

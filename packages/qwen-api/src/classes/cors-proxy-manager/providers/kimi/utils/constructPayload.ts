@@ -5,12 +5,11 @@ export const templatePayload = (
   chatId = "",
   parentId = "",
   instruction = "",
-  scenario="kimi-k2",
-  enableSearchTool=false
-
+  scenario = "kimi-k2",
+  enableSearchTool = false
 ) => {
   let blocks = [{ message_id: "", parent_id: parentId, text: { content } }]
-  if (chatId === "" && parentId === "" && instruction.length>0) {
+  if (chatId === "" && parentId === "" && instruction.length > 0) {
     blocks = [
       {
         message_id: "",
@@ -23,31 +22,31 @@ export const templatePayload = (
       // { message_id:  "", parent_id: parentId, text: { content } },
     ]
   }
-const model = scenario === "kimi-k2" ?"SCENARIO_K2":"SCENARIO_CHAT"
+  const model = scenario === "kimi-k2" ? "SCENARIO_K2" : "SCENARIO_CHAT"
   let userMessage = {
     role: "user",
     blocks,
-    scenario:model,
+    scenario: model,
   }
   const message: any = userMessage
   const p: {
-    chat_id: string,
-    scenario: string,
-    tools: Array<{ type: string, [key: string]: any }>,
-    message: any,
+    chat_id: string
+    scenario: string
+    tools: Array<{ type: string; [key: string]: any }>
+    message: any
     options: { thinking: boolean }
   } = {
     chat_id: chatId,
-    scenario:model,
+    scenario: model,
     tools: [],
 
     message,
     options: { thinking: false },
   }
-  if(enableSearchTool){
+  if (enableSearchTool) {
     p.tools.push({ type: "TOOL_TYPE_SEARCH", search: {} })
   }
- 
+
   // console.log(p)
   return p
 }
@@ -56,13 +55,20 @@ export function buildPayload(
   chatId = "",
   parentId = "",
   instruction = "",
-  scenario="kimi-k2",
-  enableSearchTool=true
+  scenario = "kimi-k2",
+  enableSearchTool = false
 ) {
   const encoder = new TextEncoder()
 
   //@ts-ignore
-  const inputPayload = templatePayload(content, chatId, parentId, instruction,scenario,enableSearchTool)
+  const inputPayload = templatePayload(
+    content,
+    chatId,
+    parentId,
+    instruction,
+    scenario,
+    enableSearchTool
+  )
   return createConnectFrame(JSON.stringify(inputPayload), encoder)
 }
 export function constructPayload(
@@ -70,8 +76,7 @@ export function constructPayload(
   chatId,
   parentId,
   instruction,
-  scenario="kimi-k2",
-
+  scenario = "kimi-k2"
 ) {
-  return buildPayload(content, chatId, parentId, instruction,scenario)
+  return buildPayload(content, chatId, parentId, instruction, scenario)
 }
