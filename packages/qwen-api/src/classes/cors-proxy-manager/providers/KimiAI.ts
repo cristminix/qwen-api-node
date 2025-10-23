@@ -16,7 +16,7 @@ export const availableModels = [
   {
     id: "kimi-k1.5",
     alias: "kimi-k1.5",
-  }
+  },
 ]
 
 function transformMessages(messages: any[]): any[] {
@@ -133,7 +133,7 @@ class KimiAI extends Client {
   saveMessage(message) {
     if (message.id && message.role) {
       if (message.role === "user") {
-        this.chatSession?.updateLastUserMessage(message.id, message.parentId)
+        this.chatSession?.updateLastUserMessageId(message.id)
       } else {
         if (message.content.length === 0)
           message.content = this.lastAssistantMessageContent
@@ -203,7 +203,8 @@ class KimiAI extends Client {
       this.chatSession?.prompt ?? "",
       this.chatSession?.chatId ?? "",
       this.chatSession?.lastAssistantMessageId ?? "",
-      this.chatSession?.instruction ?? "", model
+      this.chatSession?.instruction ?? "",
+      model
     )
     return p
   }
@@ -225,7 +226,7 @@ class KimiAI extends Client {
           const inputMessages = transformMessages(options.messages)
           // const xmlPrompt = convertToXmlConversation(inputMessages)
           this.sessionId = this.generateSession(requestOption.inputHeaders)
-          this.chatSession = ChatSession.getInstance(this.sessionId)
+          this.chatSession = await ChatSession.getInstance(this.sessionId)
           this.lastAssistantMessageContent = ""
           if (this.chatSession) {
             await this.chatSession.setMessages(inputMessages)
@@ -271,7 +272,7 @@ class KimiAI extends Client {
       // dataPtr = chunk
       try {
         content += chunk.choices[0].delta.content
-      } catch (error) { }
+      } catch (error) {}
       // console.log({ content })
 
       if (chunk.usage) {
@@ -350,7 +351,7 @@ class KimiAI extends Client {
                   combinedChunk,
                   encoder
                 )
-              } catch (error) { }
+              } catch (error) {}
             }
           }
         }
