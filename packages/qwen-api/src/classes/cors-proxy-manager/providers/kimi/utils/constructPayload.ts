@@ -48,7 +48,7 @@ const model = scenario === "kimi-k2" ?"SCENARIO_K2":"SCENARIO_CHAT"
     p.tools.push({ type: "TOOL_TYPE_SEARCH", search: {} })
   }
  
-  console.log(p)
+  // console.log(p)
   return p
 }
 export function buildPayload(

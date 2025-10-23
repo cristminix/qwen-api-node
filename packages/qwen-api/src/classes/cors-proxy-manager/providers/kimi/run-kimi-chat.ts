@@ -13,7 +13,8 @@ import { marked } from "marked"
 
 import { markedTerminal } from "marked-terminal"
 import { sendChatFinal } from "./utils/sendChatFinal"
-import { ChatSession } from "src/classes/ChatSession"
+import { ChatSession } from "../../../../classes/ChatSession"
+import { getListChats } from "./getListChats"
 
 dotenv.config()
 
@@ -57,8 +58,14 @@ function generateSession() {
 async function main() {
   marked.use(markedTerminal())
   const token = process.env.KIMI_TOKEN || ""
+  if(!token || token ===""){
+    throw new Error("Invalid token")
+  }
   const cookie = process.env.KIMI_COOKIE || ""
   const authInfo = getAuthInfo(token)
+  const chatList = await getListChats(token)
+  // console.log(chatList)
+  // return
   if (authInfo) {
     const chatSession = ChatSession.getInstance(generateSession())
 
