@@ -126,7 +126,7 @@ class KimiAI extends Client {
   }
   saveChat(chat) {
     if (chat.id && chat.createTime) {
-      console.log("saveChat", { chat })
+      // console.log("saveChat", { chat })
       this.chatSession?.setChatId(chat.id)
     }
   }
@@ -139,7 +139,7 @@ class KimiAI extends Client {
           message.content = this.lastAssistantMessageContent
         this.chatSession?.insertAssistantMessage(message.content, message.id)
       }
-      console.log("saveMessage", { message })
+      // console.log("saveMessage", { message })
 
       // this.chatSession?.updateMessage(message,message.id,message.parent_id,)
     }
@@ -195,12 +195,15 @@ class KimiAI extends Client {
     return sessionId
   }
   buldRequestBody(model) {
-    
+    console.log({
+      chatId: this.chatSession?.chatId ?? "",
+      lastAssistantMessageId: this.chatSession?.lastAssistantMessageId ?? "",
+    })
     const p = constructPayload(
       this.chatSession?.prompt ?? "",
       this.chatSession?.chatId ?? "",
       this.chatSession?.lastAssistantMessageId ?? "",
-      this.chatSession?.instruction ?? "",model
+      this.chatSession?.instruction ?? "", model
     )
     return p
   }
@@ -225,7 +228,7 @@ class KimiAI extends Client {
           this.chatSession = ChatSession.getInstance(this.sessionId)
           this.lastAssistantMessageContent = ""
           if (this.chatSession) {
-            this.chatSession.setMessages(inputMessages)
+            await this.chatSession.setMessages(inputMessages)
           }
           const body = this.buldRequestBody(model)
           // const body = this.buldRequestBody()
@@ -268,7 +271,7 @@ class KimiAI extends Client {
       // dataPtr = chunk
       try {
         content += chunk.choices[0].delta.content
-      } catch (error) {}
+      } catch (error) { }
       // console.log({ content })
 
       if (chunk.usage) {
@@ -347,7 +350,7 @@ class KimiAI extends Client {
                   combinedChunk,
                   encoder
                 )
-              } catch (error) {}
+              } catch (error) { }
             }
           }
         }

@@ -1,5 +1,5 @@
-// import crc32 from "crc-32"
-
+import crc32 from "crc-32"
+import fs from "fs"
 interface ChatMessage {
   role: string
   content: string
@@ -9,18 +9,96 @@ interface ChatMessage {
   [key: string]: any
 }
 
+interface ChatRegistry {
+  chatId: string
+  lastUserMessageId: string
+  lastAssistantMessageId: string
+  checksum: string[]
+  sessionId: string
+  history: ChatMessage[]
+}
 export class ChatSession {
   sessionId = ""
   instruction = ""
   history: ChatMessage[] = []
   messages: ChatMessage[] = []
   chatId = ""
+  oldChatId = ""
   prompt = ""
   lastUserMessageId = ""
   lastAssistantMessageId = ""
+  static chatRegistries: ChatRegistry[] = []
+  chatRegistry: ChatRegistry | null = null
+  static chatRegistryJsonPath = "chat-registry.json"
+
   static instance = {}
   private constructor(sessionId) {
     this.sessionId = sessionId
+  }
+  private async loadRegistry() {
+    try {
+      ChatSession.chatRegistries = await ChatSession.loadObjectFromJson('.', ChatSession.chatRegistryJsonPath)
+    } catch (error) {
+      ChatSession.chatRegistries = []
+    }
+    const hexChecksum = this.generateChatChecksum()
+    console.log("Load registry", { hexChecksum })
+    const existingRegistryIndex = ChatSession.chatRegistries.findIndex(reg => reg.checksum.includes(hexChecksum))
+    if (existingRegistryIndex !== -1) {
+      this.chatRegistry = ChatSession.chatRegistries[existingRegistryIndex]
+      this.chatId = this.chatRegistry.chatId
+      this.lastUserMessageId = this.chatRegistry.lastUserMessageId
+      this.lastAssistantMessageId = this.chatRegistry.lastAssistantMessageId
+      console.log("Load registry checksum found", this.chatRegistry)
+
+    } else {
+      console.log("Load registry checksum not found")
+
+    }
+
+  }
+  private generateChatChecksum() {
+    const unifiedChatHistory = this.history.map(m => ({ role: m.role, content: m.content }))
+    console.log("unifiedChatHistory", JSON.stringify(unifiedChatHistory, null, 2))
+    const checksum = crc32.str(JSON.stringify(unifiedChatHistory) + this.instruction)
+    const hexChecksum = (checksum >>> 0).toString(16).padStart(8, '0')
+    // console.log({ checksum, hexChecksum })
+    return hexChecksum
+  }
+  private async commitRegistry() {
+    const hexChecksum = this.generateChatChecksum()
+    const unifiedChatHistory = this.history.map(m => ({ role: m.role, content: m.content }))
+    console.log("commitRegistry", { hexChecksum })
+    // Update the registry with the hex checksum
+    let existingRegistryIndex = ChatSession.chatRegistries.findIndex(reg => reg.chatId === this.chatId || reg.chatId === this.oldChatId)
+    if (this.chatRegistry) {
+      console.log("existing chatIds", ChatSession.chatRegistries.map(r => (r.chatId)))
+      console.log("Updating existing chatRegistry", this.chatId, this.oldChatId)
+    }
+
+    console.log("commitRegistry", { existingRegistryIndex })
+    if (existingRegistryIndex > -1) {
+      if (this.chatId !== this.oldChatId) {
+        ChatSession.chatRegistries[existingRegistryIndex].chatId = this.chatId
+
+      }
+      ChatSession.chatRegistries[existingRegistryIndex].checksum.push(hexChecksum)
+      ChatSession.chatRegistries[existingRegistryIndex].history = unifiedChatHistory
+    } else {
+      this.chatRegistry = {
+        chatId: this.chatId,
+        lastUserMessageId: this.lastUserMessageId,
+        lastAssistantMessageId: this.lastAssistantMessageId,
+        checksum: [hexChecksum],
+        sessionId: this.sessionId,
+        history: unifiedChatHistory
+      }
+      ChatSession.chatRegistries.push(this.chatRegistry)
+    }
+    console.log(this.chatRegistry)
+    console.log(ChatSession.chatRegistries)
+    // }
+    await ChatSession.saveObjectToJson(ChatSession.chatRegistries, '.', ChatSession.chatRegistryJsonPath)
   }
   static getInstance(sessionId) {
     if (!ChatSession.instance[sessionId]) {
@@ -28,17 +106,17 @@ export class ChatSession {
     }
     return ChatSession.instance[sessionId]
   }
-  setMessages(inputMessages) {
+  async setMessages(inputMessages) {
     this.messages = []
-    let counter = 0
+    // let counter = 0
     for (const message of inputMessages) {
       const messageData = {
         ...message,
-        timestamp: Date.now() + counter++,
+        // timestamp: Date.now() + counter++,
       }
       this.messages.push(messageData)
     }
-    this.init(this.messages)
+    await this.init(this.messages)
   }
 
   updateLastUserMessage(id, parentId) {
@@ -59,11 +137,14 @@ export class ChatSession {
     }
     this.messages.push(assistantMessage)
     this.updateMessageHistory()
+    this.commitRegistry()
+
   }
   setInstruction(instruction) {
     this.instruction = instruction
   }
   setChatId(chatId) {
+    this.oldChatId = this.chatId
     this.chatId = chatId
   }
   setLastId(userId, assistantId) {
@@ -76,68 +157,74 @@ export class ChatSession {
   getLastUserMessage(messages) {
     return messages.findLast((m) => m.role === "user")
   }
-  saveToJson(data: any, filename: string): void {
+  static async logToJson(obj: any, sessionId: string, t = "messages") {
+    await ChatSession.saveObjectToJson(obj, `logs/${sessionId}`, `${t}-${Date.now()}.json`)
+  }
+  static async saveObjectToJson(data: any, outDir: string, filename: string) {
     // Convert data to JSON string
+    const path = `${outDir}/${filename}`
+    if (!(await fs.existsSync(outDir))) {
+      await fs.mkdirSync(outDir, { recursive: true })
+    }
+
     const jsonString = JSON.stringify(data, null, 2);
     // Write to file using dynamic import
-    import('fs').then((fsModule) => {
-      fsModule.writeFileSync(filename, jsonString, 'utf8');
-    }).catch((error) => {
-      console.error('Error saving to JSON file:', error);
-    });
+    await fs.writeFileSync(path, jsonString, 'utf8');
   }
-  init(messages: ChatMessage[]) {
-    this.saveToJson(messages,`logs/messages-${Date.now()}.json`)
+
+  static async loadObjectFromJson(outDir: string, filename: string) {
+    const path = `${outDir}/${filename}`;
+    if (!(await fs.existsSync(path))) {
+      throw new Error(`File does not exist: ${path}`);
+    }
+
+    const jsonString = await fs.readFileSync(path, 'utf8');
+    return JSON.parse(jsonString);
+  }
+  async init(messages: ChatMessage[]) {
+    await ChatSession.logToJson(messages, this.sessionId, 'messages')
     let systemMessageContent = ""
     const systemMessages = messages.filter((m) => m.role === "system")
-    // if(this.chatId === ""){
-      // console.log("fist timer")
-      let userMessageHistory = this.history.filter((m) => m.role === "user")
-      let userMessages = messages.filter((m) => m.role === "user")
-      if(userMessageHistory.length>0){
-        userMessages = userMessages.slice(userMessageHistory.length)
-      //   let index =this.history.length-1
-      //   while(index <= this.messages.length){
-      // //     if(this.messages[index].role === "user"){
-      // //       userMessages.push(this.messages[index])
-      // //     }
-      // //     index +=1
-      //   }
-      }
-      this.saveToJson(userMessageHistory,`logs/user-messages-history-${Date.now()}.json`)
-      this.saveToJson(userMessages,`logs/user-messages-${Date.now()}.json`)
+    // construct chatHistory 
 
-      for(const msg of userMessages){
+    let msgIndex = messages.length
+    while (msgIndex-- > 0) {
+      const msg = messages[msgIndex]
+      if (msg.role === "assistant") {
+        break
+      }
+    }
+    // let userMessageHistory = this.history.filter((m) => m.role === "user")
+    let userMessages = messages.filter((m) => m.role !== "system").slice(msgIndex + 1, messages.length)
+    // if (userMessageHistory.length > 0) {
+    // userMessages = userMessages.slice(msgIndex)
+    // }
+    const messageHistory = messages.filter((m) => m.role !== "system").slice(0, msgIndex + 1)
+    await ChatSession.logToJson(messageHistory, this.sessionId, 'message-history')
+    await ChatSession.logToJson(userMessages, this.sessionId, 'user-messages')
+    this.prompt = ""
+    for (const msg of userMessages) {
+      if (msg.role === "user")
         this.prompt += `${msg.content}\n`
-      }
-      console.log({ prompt: this.prompt })
-    // }
-    // else{
-
-    // }
-    
-    
-
+    }
+    // console.log({ prompt: this.prompt })
     if (systemMessages.length > 0) {
       const [sysMsg] = systemMessages
       systemMessageContent = sysMsg.content
       this.setInstruction(systemMessageContent)
     }
     this.updateMessageHistory()
+    await this.loadRegistry()
   }
   updateMessageHistory() {
-    const messageHistory = this.messages.filter((m) => m.role !== "system")
-
-    // if (messageHistory.length > 0) {
-    //   const lastIndex = messageHistory.length - 1
-    //   if (messageHistory[lastIndex].role === "user") {
-    //     messageHistory.pop()
-    //   }
-    // }
-    if (messageHistory.length > 0) {
-      this.history = messageHistory
-    } else {
+    let msgIndex = this.messages.length
+    while (msgIndex-- > 0) {
+      const msg = this.messages[msgIndex]
+      if (msg.role === "assistant") {
+        break
+      }
     }
-    // console.log(this)
+    this.history = this.messages.filter((m) => m.role !== "system").slice(0, msgIndex + 1)
+
   }
 }
