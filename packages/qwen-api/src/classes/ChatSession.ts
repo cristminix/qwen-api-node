@@ -45,13 +45,13 @@ export class ChatSession {
       ChatSession.chatRegistries = []
     }
     const hexChecksum = this.generateChatChecksum()
-    console.log("Load registry", { hexChecksum })
+    //console.log("Load registry", { hexChecksum })
     let existingRegistryIndex = ChatSession.chatRegistries.findIndex((reg) =>
       reg.checksum.includes(hexChecksum)
     )
     if (existingRegistryIndex == -1) {
       if (this.chatId) {
-        console.log("try using chatId ", this.chatId)
+        //console.log("try using chatId ", this.chatId)
         existingRegistryIndex = ChatSession.chatRegistries.findIndex(
           (reg) => reg.chatId === this.chatId
         )
@@ -62,9 +62,9 @@ export class ChatSession {
       this.chatId = this.chatRegistry.chatId
       this.lastUserMessageId = this.chatRegistry.lastUserMessageId
       this.lastAssistantMessageId = this.chatRegistry.lastAssistantMessageId
-      console.log("Load registry checksum found", this.chatRegistry)
+      //console.log("Load registry checksum found", this.chatRegistry)
     } else {
-      console.log("Load registry checksum not found")
+      //console.log("Load registry checksum not found")
     }
   }
   private generateChatChecksum() {
@@ -72,15 +72,15 @@ export class ChatSession {
       role: m.role,
       content: m.content,
     }))
-    console.log(
-      "unifiedChatHistory",
-      JSON.stringify(unifiedChatHistory, null, 2)
-    )
+    //console.log(
+    //   "unifiedChatHistory",
+    //   JSON.stringify(unifiedChatHistory, null, 2)
+    // )
     const checksum = crc32.str(
       JSON.stringify(unifiedChatHistory) + this.instruction
     )
     const hexChecksum = (checksum >>> 0).toString(16).padStart(8, "0")
-    // console.log({ checksum, hexChecksum })
+    // //console.log({ checksum, hexChecksum })
     return hexChecksum
   }
   private async commitRegistry() {
@@ -89,20 +89,20 @@ export class ChatSession {
       role: m.role,
       content: m.content,
     }))
-    console.log("commitRegistry", { hexChecksum })
+    //console.log("commitRegistry", { hexChecksum })
     // Update the registry with the hex checksum
     let existingRegistryIndex = ChatSession.chatRegistries.findIndex(
       (reg) => reg.chatId === this.chatId || reg.chatId === this.oldChatId
     )
     if (this.chatRegistry) {
-      console.log(
-        "existing chatIds",
-        ChatSession.chatRegistries.map((r) => r.chatId)
-      )
-      console.log("Updating existing chatRegistry", this.chatId, this.oldChatId)
+      //console.log(
+      //   "existing chatIds",
+      //   ChatSession.chatRegistries.map((r) => r.chatId)
+      // )
+      //console.log("Updating existing chatRegistry", this.chatId, this.oldChatId)
     }
 
-    console.log("commitRegistry", { existingRegistryIndex })
+    //console.log("commitRegistry", { existingRegistryIndex })
     if (existingRegistryIndex > -1) {
       if (this.chatId !== this.oldChatId) {
         ChatSession.chatRegistries[existingRegistryIndex].chatId = this.chatId
@@ -123,8 +123,8 @@ export class ChatSession {
       }
       ChatSession.chatRegistries.push(this.chatRegistry)
     }
-    console.log(this.chatRegistry)
-    console.log(ChatSession.chatRegistries)
+    //console.log(this.chatRegistry)
+    //console.log(ChatSession.chatRegistries)
     // }
     await ChatSession.saveObjectToJson(
       ChatSession.chatRegistries,
@@ -258,7 +258,7 @@ export class ChatSession {
     for (const msg of userMessages) {
       if (msg.role === "user") this.prompt += `${msg.content}\n`
     }
-    // console.log({ prompt: this.prompt })
+    // //console.log({ prompt: this.prompt })
     if (systemMessages.length > 0) {
       const [sysMsg] = systemMessages
       systemMessageContent = sysMsg.content

@@ -11,5 +11,21 @@ fi
 
 # Start the application
 echo "Starting Kimi service on port $PORT..."
-# node build/index.js
-pnpm dev
+
+# Handle optional argument
+case "${1:-dev}" in
+    "dist")
+        echo "Running production build..."
+        node build/index.js
+        ;;
+    "dev"|"")
+        echo "Running development mode..."
+        pnpm dev
+        ;;
+    *)
+        echo "Usage: $0 [dist|none|dev]"
+        echo "  dist - Run production build (node build/index.js)"
+        echo "  dev  - Run development mode (pnpm dev)"
+        exit 1
+        ;;
+esac
