@@ -213,6 +213,12 @@ export class ChatSession {
       this._chatId = foundRegistry.chatId
       this._lastUserMessageId = foundRegistry.lastUserMessageId
       this._lastAssistantMessageId = foundRegistry.lastAssistantMessageId
+    } else {
+      this._chatRegistry = null
+      this._chatId = ""
+      this._lastUserMessageId = ""
+      this._lastAssistantMessageId = ""
+      console.log("reset")
     }
   }
 
