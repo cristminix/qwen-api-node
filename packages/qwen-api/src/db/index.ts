@@ -9,3 +9,6 @@ const sqlite = new Database("db.sqlite")
 export const db = drizzle(sqlite, { schema })
 
 export type DB = typeof db
+
+// Export model functions
+export * from "./models"

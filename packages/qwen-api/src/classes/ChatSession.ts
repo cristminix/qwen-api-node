@@ -1,6 +1,7 @@
 import crc32 from "crc-32"
 import fs from "fs/promises"
 import path from "path"
+import { getKimiChatByChatId, getKimiChatByChecksum, saveKimiChat, updateKimiChat } from "../db/models"
 
 // Enhanced interfaces with proper typing
 interface ChatMessage {
@@ -70,6 +71,7 @@ export class ChatSession {
   private _lastUserMessageId: string = ""
   private _lastAssistantMessageId: string = ""
   private _chatRegistry: ChatRegistry | null = null
+  private _useDatabase: boolean = true
 
   // Configuration
   private readonly config: Required<ChatSessionConfig>
@@ -79,6 +81,13 @@ export class ChatSession {
   private static _instances: Map<string, ChatSession> = new Map()
   private static _registryLoaded: boolean = false
   private static _loadPromise: Promise<void> | null = null
+
+  private _databaseHandler = {
+    getRecordByChecksum: async (checksum: string) => { return await getKimiChatByChecksum(checksum) },
+    getRecordByChatId: async (chatId: string) => { return await getKimiChatByChatId(chatId) },
+    updateRecord: async (chatId: string, row: any) => { return await updateKimiChat(chatId, row) },
+    createRecord: async (row: any) => { return await saveKimiChat(row) }
+  }
 
   // Default configuration
   private static readonly DEFAULT_CONFIG: Required<ChatSessionConfig> = {
@@ -178,21 +187,26 @@ export class ChatSession {
    */
   private async loadRegistry(): Promise<void> {
     const hexChecksum = this.generateChatChecksum()
+    let foundRegistry: any
+    if (this._useDatabase) {
+      foundRegistry = await this._databaseHandler.getRecordByChecksum(hexChecksum)
+    } else {
+      // Use Map for efficient lookups
+      const registryMap = new Map(
+        ChatSession._chatRegistries.map((reg) => [reg.chatId, reg])
+      )
 
-    // Use Map for efficient lookups
-    const registryMap = new Map(
-      ChatSession._chatRegistries.map((reg) => [reg.chatId, reg])
-    )
+      // Check by checksum first
+      foundRegistry = ChatSession._chatRegistries.find((reg) =>
+        reg.checksum.includes(hexChecksum)
+      )
 
-    // Check by checksum first
-    let foundRegistry = ChatSession._chatRegistries.find((reg) =>
-      reg.checksum.includes(hexChecksum)
-    )
-
-    // Fallback to chatId if no checksum match
-    if (!foundRegistry && this._chatId) {
-      foundRegistry = registryMap.get(this._chatId)
+      // Fallback to chatId if no checksum match
+      if (!foundRegistry && this._chatId) {
+        foundRegistry = registryMap.get(this._chatId)
+      }
     }
+
 
     if (foundRegistry) {
       this._chatRegistry = foundRegistry
@@ -217,7 +231,9 @@ export class ChatSession {
 
     return (checksum >>> 0).toString(16).padStart(8, "0")
   }
-
+  setStorage(t: string) {
+    this._useDatabase = t === 'file' ? false : true
+  }
   /**
    * Enhanced message validation and processing
    */
@@ -305,6 +321,16 @@ export class ChatSession {
 
     this._oldChatId = this._chatId
     this._chatId = chatId
+
+    // if (this._useDatabase) {
+    //   this._databaseHandler.createRecord({
+    //     chatId,
+    //     lastUserMessageId: "",
+    //     lastAssistantMessageId: "",
+    //     history: [],
+    //     checksum: []
+    //   })
+    // }
   }
 
   /**
@@ -321,25 +347,34 @@ export class ChatSession {
       const now = Date.now()
 
       if (this._chatRegistry) {
-        // Update existing registry
-        const registryIndex = ChatSession._chatRegistries.findIndex(
-          (reg) => reg.chatId === this._chatId || reg.chatId === this._oldChatId
-        )
+        if (!this._useDatabase) {
+          // Update existing registry
+          const registryIndex = ChatSession._chatRegistries.findIndex(
+            (reg) => reg.chatId === this._chatId || reg.chatId === this._oldChatId
+          )
 
-        if (registryIndex !== -1) {
-          const registry = ChatSession._chatRegistries[registryIndex]
+          if (registryIndex !== -1) {
+            const registry = ChatSession._chatRegistries[registryIndex]
 
-          if (this._chatId !== this._oldChatId) {
-            registry.chatId = this._chatId
+            if (this._chatId !== this._oldChatId) {
+              registry.chatId = this._chatId
+            }
+
+            // Avoid duplicate checksums
+            if (!registry.checksum.includes(hexChecksum)) {
+              registry.checksum.push(hexChecksum)
+            }
+
+            ; ((registry.history = []), //unifiedChatHistory
+              (registry.updatedAt = now))
           }
-
-          // Avoid duplicate checksums
-          if (!registry.checksum.includes(hexChecksum)) {
-            registry.checksum.push(hexChecksum)
+        } else {
+          const { lastAssistantMessageId, lastUserMessageId, checksum } = this._chatRegistry
+          if (!checksum.includes(hexChecksum)) {
+            checksum.push(hexChecksum)
           }
-
-          ;((registry.history = []), //unifiedChatHistory
-            (registry.updatedAt = now))
+          const update = { lastAssistantMessageId, lastUserMessageId, history: unifiedChatHistory, checksum }
+          this._databaseHandler.updateRecord(this.chatId, update)
         }
       } else {
         // Create new registry
@@ -353,12 +388,18 @@ export class ChatSession {
           createdAt: now,
           updatedAt: now,
         }
+        if (!this._useDatabase) {
+          ChatSession._chatRegistries.push(this._chatRegistry)
+        } else {
 
-        ChatSession._chatRegistries.push(this._chatRegistry)
+          this._databaseHandler.createRecord({ ...this._chatRegistry, history: unifiedChatHistory })
+        }
       }
 
-      // Atomic file write using temporary file
-      await this.saveRegistryAtomically()
+      if (!this._useDatabase) {
+        // Atomic file write using temporary file
+        await this.saveRegistryAtomically()
+      }
     } catch (error) {
       throw new FileOperationError("Failed to commit registry", error)
     }

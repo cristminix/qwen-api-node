@@ -30,6 +30,22 @@ export const usages = sqliteTable("usages", {
     .default(new Date()),
 })
 
+// Tabel untuk menyimpan percakapan Kimi
+export const kimiChat = sqliteTable("kimi_chat", {
+  chatId: text("chat_id").primaryKey().notNull(),
+  lastUserMessageId: text("last_user_message_id"),
+  lastAssistantMessageId: text("last_assistant_message_id"),
+  checksum: text("checksum", { mode: "json" }).$type<string[]>(),
+  sessionId: text("session_id").notNull(),
+  history: text("history", { mode: "json" }).$type<any[]>(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .default(new Date()),
+})
+
 // Tipe untuk hasil upload
 export type UploadedFile = typeof uploadedFiles.$inferSelect
 export type NewUploadedFile = typeof uploadedFiles.$inferInsert
@@ -37,3 +53,7 @@ export type NewUploadedFile = typeof uploadedFiles.$inferInsert
 // Tipe untuk penggunaan API
 export type Usage = typeof usages.$inferSelect
 export type NewUsage = typeof usages.$inferInsert
+
+// Tipe untuk percakapan Kimi
+export type KimiChat = typeof kimiChat.$inferSelect
+export type NewKimiChat = typeof kimiChat.$inferInsert
