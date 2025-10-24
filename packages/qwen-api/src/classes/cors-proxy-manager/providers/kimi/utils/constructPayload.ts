@@ -32,7 +32,7 @@ export const templatePayload = (
   const p: {
     chat_id: string
     scenario: string
-    tools: Array<{ type: string; [key: string]: any }>
+    tools: Array<{ type: string;[key: string]: any }>
     message: any
     options: { thinking: boolean }
   } = {
@@ -76,7 +76,8 @@ export function constructPayload(
   chatId,
   parentId,
   instruction,
-  scenario = "kimi-k2"
+  scenario = "kimi-k2",
+  enableSearchTool = true
 ) {
-  return buildPayload(content, chatId, parentId, instruction, scenario)
+  return buildPayload(content, chatId, parentId, instruction, scenario, enableSearchTool)
 }
