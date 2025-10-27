@@ -15,6 +15,13 @@
       "when": 1757563413687,
       "tag": "0001_short_venus",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1761274131353,
+      "tag": "0002_pink_harpoon",
+      "breakpoints": true
     }
   ]
 }

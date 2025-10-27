@@ -24,5 +24,20 @@
     "history": [],
     "createdAt": 1761223967096,
     "updatedAt": 1761224038157
+  },
+  {
+    "chatId": "d3tdu3l7vds9lhnhn3i0",
+    "lastUserMessageId": "d3tdu3kn9079d9t2695g",
+    "lastAssistantMessageId": "d3tdu3kn9079d9t26960",
+    "checksum": [
+      "a701e058",
+      "da6cb488",
+      "65e96425",
+      "7fed9883"
+    ],
+    "sessionId": "dhlvc",
+    "history": [],
+    "createdAt": 1761271609960,
+    "updatedAt": 1761272487410
   }
 ]
