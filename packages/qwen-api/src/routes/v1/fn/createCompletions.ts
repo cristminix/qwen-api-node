@@ -10,12 +10,25 @@ import Gemini from "src/providers/Gemini/Gemini"
 import Factory from "src/providers/factory/Factory"
 import Zai from "src/providers/zai/Zai"
 import Kimi from "src/providers/kimi/Kimi"
-async function createCompletions(chatRequest: ChatCompletionRequest,inputHeaders:any) {
+async function createCompletions(
+  chatRequest: ChatCompletionRequest,
+  inputHeaders: any
+) {
   const authToken = process.env.QWEN_AUTH_TOKEN as string
   const cookie = process.env.QWEN_COOKIE as string
+  const useAllProviders = process.env.USE_ALL_PROVIDER === "true" ? true : false
   //@ts-ignore
-  const provider = process.env.DEFAULT_PROVIDER
+  let provider = process.env.DEFAULT_PROVIDER
+  let requestModel = chatRequest.model
   let providerApi
+  if (useAllProviders) {
+    const modelSplit = chatRequest.model.split("/")
+    const [providerSet] = modelSplit
+    requestModel = modelSplit.slice(1, modelSplit.length).join("")
+    provider = providerSet
+    chatRequest.model = requestModel
+    // console.log({ requestModel, provider })
+  }
   if (provider === "qwenchatai") providerApi = new ChatQwenAi(authToken, cookie)
   else if (provider === "blackbox") providerApi = new BlackboxAi()
   else if (provider === "pollinations") providerApi = new Pollinations()
@@ -30,11 +43,11 @@ async function createCompletions(chatRequest: ChatCompletionRequest,inputHeaders
   const streaming = chatRequest.stream
   console.log({ streaming })
   //@ts-ignore
-  let realModel = getModelByAlias(provider, chatRequest.model)
+  let realModel = getModelByAlias(provider, requestModel)
   if (!realModel && provider !== "g4f") {
     realModel = process.env.DEFAULT_MODEL
   } else {
-    realModel = chatRequest.model
+    realModel = requestModel
   }
   console.log("realModel", realModel)
   //@ts-ignore
@@ -58,8 +71,8 @@ async function createCompletions(chatRequest: ChatCompletionRequest,inputHeaders
         }
       : chatRequest
   return streaming
-    ? providerApi.stream(qwenRequest,inputHeaders)
-    : providerApi.create(qwenRequest,inputHeaders)
+    ? providerApi.stream(qwenRequest, inputHeaders)
+    : providerApi.create(qwenRequest, inputHeaders)
 }
 
 export default createCompletions

@@ -10,7 +10,7 @@ import { GeminiCli } from "../src/classes/cors-proxy-manager/providers/GeminiCli
 function parseArgs() {
   const args = process.argv.slice(2)
   let prompt = "Ceritakan tempat menarik di prancis"
-  let model = "gemini-2.5-pro"
+  let model = "gemini-2.5-flash"
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "-p" && i + 1 < args.length) {

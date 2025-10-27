@@ -36,17 +36,47 @@ class GeminiCli extends Client {
       ...options,
     })
   }
+  transformMessages(messages: any[]): any[] {
+    const transformedMessages: any[] = []
+
+    for (const message of messages) {
+      if (Array.isArray(message.content)) {
+        // handle array of objects
+        for (const item of message.content) {
+          if (item.type === "text") {
+            transformedMessages.push({
+              role: message.role,
+              content: item.text,
+            })
+          }
+        }
+      } else if (typeof message.content === "string") {
+        // handle plain string
+        transformedMessages.push({
+          role: message.role,
+          content: message.content,
+        })
+      }
+    }
+
+    return transformedMessages
+  }
   transformMessagesContents(messages: any[]) {
-    return messages.map((message) => {
+    const omessages = this.transformMessages(messages).map((message) => {
       return {
-        role: message.role === "assistant" ? "model" : message.role,
+        role: message.role === "assistant" ? "model" : "user",
         parts: [
           {
-            text: message.content,
+            text:
+              message.role === "system"
+                ? `[Instruction]\n${message.content}`
+                : message.content,
           },
         ],
       }
     })
+    console.log(JSON.stringify(omessages))
+    return omessages
   }
   parseRequestBody(model: string, options: any) {
     /*{
@@ -129,7 +159,7 @@ class GeminiCli extends Client {
       while (true) {
         const { done, value } = await reader.read()
         if (done) {
-          if (sso) yield "data: [DONE]\n"
+          if (sso) yield "data: [DONE]\n\n"
 
           break
         }
@@ -167,7 +197,7 @@ class GeminiCli extends Client {
                   completionId += 1
 
                   if (sso) {
-                    yield `data: ${JSON.stringify(data)}\n`
+                    yield `data: ${JSON.stringify(data)}\n\n`
                   } else yield data
                 }
               }

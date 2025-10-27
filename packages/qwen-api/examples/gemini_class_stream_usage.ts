@@ -14,6 +14,10 @@ async function main() {
 
   const messages: ChatMessage[] = [
     {
+      role: "system",
+      content: "use indonesian in casual",
+    },
+    {
       role: "user",
       content:
         "What are the power of chili if compared with crystalmeth as stimulant?",

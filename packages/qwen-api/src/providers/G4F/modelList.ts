@@ -5,7 +5,7 @@ const ignoreProviders = [
   "LegacyLMArena",
   "DeepInfraChat",
   "Cloudflare",
-  // "Copilot",
+  "Copilot",
   "CopilotAccount",
   "Chatai",
   "Cerebras",
@@ -31,6 +31,8 @@ const ignoreProviders = [
   "ThebApi",
   "TeachAnything",
   "MetaAIAccount",
+  "ApiAirforce",
+  "FactoryAI",
 ]
 const modelList = {
   object: "list",
