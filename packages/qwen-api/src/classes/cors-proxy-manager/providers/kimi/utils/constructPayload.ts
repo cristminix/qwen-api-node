@@ -76,8 +76,13 @@ export function constructPayload(
   chatId,
   parentId,
   instruction,
-  scenario = "kimi-k2",
-  enableSearchTool = true
+  scenario = "kimi-k2"
 ) {
+  let scenarioSet = scenario
+  let enableSearchTool = false
+  if (scenario.includes("web-search")) {
+    scenarioSet = scenario.replace("-web-search", "")
+    enableSearchTool = true
+  }
   return buildPayload(content, chatId, parentId, instruction, scenario, enableSearchTool)
 }

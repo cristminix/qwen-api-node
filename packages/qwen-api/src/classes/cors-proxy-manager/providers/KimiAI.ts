@@ -17,6 +17,14 @@ export const availableModels = [
     id: "kimi-k1.5",
     alias: "kimi-k1.5",
   },
+  {
+    id: "kimi-k2-web-search",
+    alias: "kimi-k2-web-search",
+  },
+  {
+    id: "kimi-k1.5-web-search",
+    alias: "kimi-k1.5-web-search",
+  },
 ]
 
 function transformMessages(messages: any[]): any[] {
@@ -272,7 +280,7 @@ class KimiAI extends Client {
       // dataPtr = chunk
       try {
         content += chunk.choices[0].delta.content
-      } catch (error) {}
+      } catch (error) { }
       // console.log({ content })
 
       if (chunk.usage) {
@@ -351,7 +359,7 @@ class KimiAI extends Client {
                   combinedChunk,
                   encoder
                 )
-              } catch (error) {}
+              } catch (error) { }
             }
           }
         }

@@ -71,7 +71,7 @@ export class ChatSession {
   private _lastUserMessageId: string = ""
   private _lastAssistantMessageId: string = ""
   private _chatRegistry: ChatRegistry | null = null
-  private _useDatabase: boolean = true
+  private _useDatabase: boolean = process.env.CHAT_SESSION_USE_DATABASE === "true" ? true : false
 
   // Configuration
   private readonly config: Required<ChatSessionConfig>
