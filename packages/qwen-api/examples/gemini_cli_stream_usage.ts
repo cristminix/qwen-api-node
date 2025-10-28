@@ -49,6 +49,7 @@ async function main() {
     const client = new GeminiCli()
 
     const messages: ChatMessage[] = [
+      { role: "system", content: "jawab dengan bahasa" },
       {
         role: "user",
         content: prompt,

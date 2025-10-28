@@ -39,5 +39,22 @@
     "history": [],
     "createdAt": 1761271609960,
     "updatedAt": 1761272487410
+  },
+  {
+    "chatId": "d406cbun3mk5jv906qig",
+    "lastUserMessageId": "",
+    "lastAssistantMessageId": "d406cbuc8f2el68l3n3g",
+    "checksum": [
+      "04b8982c",
+      "918e80ac",
+      "3be14e9e",
+      "b5f8ba0a",
+      "bb609947",
+      "5bd4305c"
+    ],
+    "sessionId": "uz5k0p",
+    "history": [],
+    "createdAt": 1761633873850,
+    "updatedAt": 1761634175355
   }
 ]

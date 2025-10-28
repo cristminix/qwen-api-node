@@ -8,6 +8,58 @@ export const availableModels = [
     id: "gemini-2.5-flash",
   },
 ]
+/**
+ * Validates an image URL or base64 data URL
+ */
+export function validateImageUrl(imageUrl: string) {
+  if (!imageUrl) {
+    return { isValid: false, error: "Image URL is required" }
+  }
+
+  if (imageUrl.startsWith("data:image/")) {
+    // Validate base64 image
+    const [mimeTypePart, base64Part] = imageUrl.split(",")
+
+    if (!base64Part) {
+      return { isValid: false, error: "Invalid base64 image format" }
+    }
+
+    const mimeType = mimeTypePart.split(":")[1].split(";")[0]
+    const format = mimeType.split("/")[1]
+
+    const supportedFormats = ["jpeg", "jpg", "png", "gif", "webp"]
+    if (!supportedFormats.includes(format.toLowerCase())) {
+      return {
+        isValid: false,
+        error: `Unsupported image format: ${format}. Supported formats: ${supportedFormats.join(", ")}`,
+      }
+    }
+
+    // Basic base64 validation
+    try {
+      atob(base64Part.substring(0, 100)) // Test a small portion
+    } catch {
+      return { isValid: false, error: "Invalid base64 encoding" }
+    }
+
+    return { isValid: true, mimeType, format }
+  }
+
+  if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+    // Basic URL validation
+    try {
+      new URL(imageUrl)
+      return { isValid: true, mimeType: "image/jpeg" } // Default assumption for URLs
+    } catch {
+      return { isValid: false, error: "Invalid URL format" }
+    }
+  }
+
+  return {
+    isValid: false,
+    error: "Image URL must be a base64 data URL or HTTP/HTTPS URL",
+  }
+}
 class GeminiCli extends Client {
   availableModels = availableModels
   constructor(options: any = {}) {
@@ -36,6 +88,118 @@ class GeminiCli extends Client {
       ...options,
     })
   }
+  /**
+   * Converts a message to Gemini format, handling both text and image content.
+   */
+  private messageToGeminiFormat(msg: any) {
+    const role = msg.role === "assistant" ? "model" : "user"
+
+    // Handle tool call results (tool role in OpenAI format)
+    if (msg.role === "tool") {
+      return {
+        role: "user",
+        parts: [
+          {
+            functionResponse: {
+              name: msg.tool_call_id || "unknown_function",
+              response: {
+                result:
+                  typeof msg.content === "string"
+                    ? msg.content
+                    : JSON.stringify(msg.content),
+              },
+            },
+          },
+        ],
+      }
+    }
+
+    // Handle assistant messages with tool calls
+    if (
+      msg.role === "assistant" &&
+      msg.tool_calls &&
+      msg.tool_calls.length > 0
+    ) {
+      const parts: any[] = []
+
+      // Add text content if present
+      if (typeof msg.content === "string" && msg.content.trim()) {
+        parts.push({ text: msg.content })
+      }
+
+      // Add function calls
+      for (const toolCall of msg.tool_calls) {
+        if (toolCall.type === "function") {
+          parts.push({
+            functionCall: {
+              name: toolCall.function.name,
+              args: JSON.parse(toolCall.function.arguments),
+            },
+          })
+        }
+      }
+
+      return { role: "model", parts }
+    }
+
+    if (typeof msg.content === "string") {
+      // Simple text message
+      return {
+        role,
+        parts: [{ text: msg.content }],
+      }
+    }
+
+    if (Array.isArray(msg.content)) {
+      // Multimodal message with text and/or images
+      const parts: any[] = []
+
+      for (const content of msg.content) {
+        if (content.type === "text") {
+          parts.push({ text: content.text })
+        } else if (content.type === "image_url" && content.image_url) {
+          const imageUrl = content.image_url.url
+
+          // Validate image URL
+          const validation = validateImageUrl(imageUrl)
+          if (!validation.isValid) {
+            throw new Error(`Invalid image: ${validation.error}`)
+          }
+
+          if (imageUrl.startsWith("data:")) {
+            // Handle base64 encoded images
+            const [mimeType, base64Data] = imageUrl.split(",")
+            const mediaType = mimeType.split(":")[1].split(";")[0]
+
+            parts.push({
+              inlineData: {
+                mimeType: mediaType,
+                data: base64Data,
+              },
+            })
+          } else {
+            // Handle URL images
+            // Note: For better reliability, you might want to fetch the image
+            // and convert it to base64, as Gemini API might have limitations with external URLs
+            parts.push({
+              fileData: {
+                mimeType: validation.mimeType || "image/jpeg",
+                fileUri: imageUrl,
+              },
+            })
+          }
+        }
+      }
+
+      return { role, parts }
+    }
+
+    // Fallback for unexpected content format
+    return {
+      role,
+      parts: [{ text: String(msg.content) }],
+    }
+  }
   transformMessages(messages: any[]): any[] {
     const transformedMessages: any[] = []
 
@@ -58,37 +222,37 @@ class GeminiCli extends Client {
         })
       }
     }
-
+    // console.log(JSON.stringify(transformedMessages))
     return transformedMessages
   }
-  transformMessagesContents(messages: any[]) {
-    const omessages = this.transformMessages(messages).map((message) => {
-      return {
-        role: message.role === "assistant" ? "model" : "user",
-        parts: [
-          {
-            text:
-              message.role === "system"
-                ? `[Instruction]\n${message.content}`
-                : message.content,
-          },
-        ],
-      }
-    })
-    console.log(JSON.stringify(omessages))
-    return omessages
+  transformMessagesContents(messages: any[]): [string, any[]] {
+    const omessages = messages
+      .filter((m) => m.role === "user")
+      .map((msg) => this.messageToGeminiFormat(msg))
+    // console.log(JSON.stringify(omessages))
+    const systemMsgs = this.transformMessages(
+      messages.filter((m) => m.role === "system")
+    )
+    let systemPrompt = ""
+    for (const msg of systemMsgs) {
+      systemPrompt += `${msg.content}\n`
+    }
+    // console.log({ systemPrompt, omessages: JSON.stringify(omessages) })
+    return [systemPrompt, omessages]
   }
   parseRequestBody(model: string, options: any) {
-    /*{
-              model,
-              ...options,
-            }*/
+    const [systemPrompt, omessages] = this.transformMessagesContents(
+      options.messages
+    )
+    if (systemPrompt.length > 0)
+      omessages.unshift({ role: "user", parts: [{ text: systemPrompt }] })
     return {
       model,
       project: "mythic-berm-djkxm",
       user_prompt_id: v1(),
       request: {
-        contents: this.transformMessagesContents(options.messages),
+        // systemPrompt,
+        contents: omessages,
         generationConfig: {
           temperature: options.temperature || 0,
           topP: options.topP || 1,

@@ -20,6 +20,17 @@ export function buildRequestBody(
     params: {},
     tool_servers: [],
     features: {
+      /*
+{
+  auto_web_search: false,
+  enable_thinking: true,
+  flags: [],
+  image_generation: false,
+  preview_mode: true,
+  web_search: false
+}
+*/
+
       enable_thinking: enableThinking,
     },
   }
