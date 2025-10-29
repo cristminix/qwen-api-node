@@ -48,16 +48,16 @@ class GPT4Free extends Client {
   errorText = ""
   response: Promise<Response> | undefined
   isFinalized: boolean = false
-  apiUrl: string = "/api/backend-api/v2/conversation"
+  apiUrl: string = "/backend-api/v2/conversation"
   apiKey: string = ""
   abortController: AbortController | null = null
 
-  onFinalizeMessageCallback: (text: string) => void = (text: string) => {}
-  onUpdateMessageCallback: (text: string) => void = (text: string) => {}
+  onFinalizeMessageCallback: (text: string) => void = (text: string) => { }
+  onUpdateMessageCallback: (text: string) => void = (text: string) => { }
   onReasoningCallback: (text: string, token: string) => void = (
     text: string
-  ) => {}
-  onPreviewCallback: (text: string) => void = (text: string) => {}
+  ) => { }
+  onPreviewCallback: (text: string) => void = (text: string) => { }
   onErroCallback: (text: string) => void = (text: string) => {
     console.error(text)
   }
@@ -99,7 +99,7 @@ class GPT4Free extends Client {
     options: any = {
       baseUrl:
         process.env.GPT4FREE_BACKEND_URL ??
-        "http://localhost:5173/api/backend-api/v2/conversation",
+        "http://localhost:8080/backend-api/v2/conversation",
     }
   ) {
     super(options)

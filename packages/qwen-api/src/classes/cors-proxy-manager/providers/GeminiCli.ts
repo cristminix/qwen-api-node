@@ -1,5 +1,6 @@
 import { v1 } from "uuid"
 import { Client } from "../Client"
+import { discoverProjectId } from "./gemini-cli/discoverProjectId"
 export const availableModels = [
   {
     id: "gemini-2.5-pro",
@@ -240,15 +241,21 @@ class GeminiCli extends Client {
     // console.log({ systemPrompt, omessages: JSON.stringify(omessages) })
     return [systemPrompt, omessages]
   }
-  parseRequestBody(model: string, options: any) {
+  projectId = null
+  async discoverProjectId() {
+    this.projectId = await discoverProjectId(this.apiKey)
+  }
+  async parseRequestBody(model: string, options: any) {
     const [systemPrompt, omessages] = this.transformMessagesContents(
       options.messages
     )
     if (systemPrompt.length > 0)
       omessages.unshift({ role: "user", parts: [{ text: systemPrompt }] })
+    // console.log({ omessages: JSON.stringify(omessages) })
+    if (!this.projectId) await this.discoverProjectId()
     return {
       model,
-      project: "mythic-berm-djkxm",
+      project: this.projectId,
       user_prompt_id: v1(),
       request: {
         // systemPrompt,
@@ -282,7 +289,7 @@ class GeminiCli extends Client {
           const requestOptions = {
             method: "POST",
             headers: this.extraHeaders,
-            body: JSON.stringify(this.parseRequestBody(model, options)),
+            body: JSON.stringify(await this.parseRequestBody(model, options)),
             ...requestOption,
           }
           // console.log(requestOptions)
