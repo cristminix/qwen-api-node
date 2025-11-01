@@ -24,7 +24,7 @@ async function createCompletions(
   if (useAllProviders) {
     const modelSplit = chatRequest.model.split("/")
     const [providerSet] = modelSplit
-    requestModel = modelSplit.slice(1, modelSplit.length).join("")
+    requestModel = modelSplit.slice(1, modelSplit.length).join("/")
     provider = providerSet
     chatRequest.model = requestModel
     // console.log({ requestModel, provider })
@@ -54,21 +54,21 @@ async function createCompletions(
   const qwenRequest: ChatCompletionRequest =
     provider === "qwenchatai"
       ? {
-          model: realModel,
-          //@ts-ignore
-          messages,
-          temperature: chatRequest.temperature,
-          max_tokens: chatRequest.max_tokens,
-          stream: streaming,
-          frequency_penalty: chatRequest.frequency_penalty,
-          logprobs: chatRequest.logprobs,
+        model: realModel,
+        //@ts-ignore
+        messages,
+        temperature: chatRequest.temperature,
+        max_tokens: chatRequest.max_tokens,
+        stream: streaming,
+        frequency_penalty: chatRequest.frequency_penalty,
+        logprobs: chatRequest.logprobs,
 
-          n: chatRequest.n,
-          presence_penalty: chatRequest.presence_penalty,
-          seed: chatRequest.seed,
+        n: chatRequest.n,
+        presence_penalty: chatRequest.presence_penalty,
+        seed: chatRequest.seed,
 
-          top_p: chatRequest.top_p,
-        }
+        top_p: chatRequest.top_p,
+      }
       : chatRequest
   return streaming
     ? providerApi.stream(qwenRequest, inputHeaders)
