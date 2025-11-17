@@ -12,7 +12,6 @@ import { buildRequestHeaders } from "./zai/buildRequestHeaders"
 import { buildStreamChunk } from "./zai/buildStreamChunk"
 import fs from "fs"
 import path from "path"
-import { error } from "console"
 class ZAI extends Client {
   availableModels = availableModels
   constructor(options: any = {}) {
