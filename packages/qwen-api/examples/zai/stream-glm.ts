@@ -12,7 +12,7 @@ async function main() {
   const messages: ChatMessage[] = [
     {
       role: "user",
-      content: "how many r in strawberry ?.",
+      content: "tell me the beautyful place in france",
     },
     {
       role: "system",
@@ -30,7 +30,7 @@ async function main() {
       model: "GLM-4.6",
       messages: messages,
       stream: true,
-      // thinking: { type: "disabled" },
+      thinking: { type: "enabled" },
     })
 
     // Process the streaming response
@@ -41,9 +41,10 @@ async function main() {
     }
 
     console.log("\n--- End of Stream ---")
+    process.exit(0)
   } catch (error) {
     console.error("\nAn error occurred:", error)
   }
 }
 
-main()
+main().catch((e) => console.error)

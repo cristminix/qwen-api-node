@@ -12,6 +12,7 @@ import { buildRequestHeaders } from "./zai/buildRequestHeaders"
 import { buildStreamChunk } from "./zai/buildStreamChunk"
 import fs from "fs"
 import path from "path"
+import { error } from "console"
 class ZAI extends Client {
   availableModels = availableModels
   constructor(options: any = {}) {
@@ -24,23 +25,50 @@ class ZAI extends Client {
       ...options,
     })
   }
-
+  async fetchWithBrowserProxy(userPrompt, realModel, transformedMessages, thinking) {
+    const prompt = userPrompt
+    // const startTime = performance.now()
+    const response = await fetch(`http://127.0.0.1:4001/api/chat?prompt=${encodeURIComponent(prompt)}`)
+    let data = await response.json()
+    // console.log(data.phase)
+    if (data.phase === "FETCH") {
+      console.log("--Sending request to z.ai")
+      let { url, body, headers } = data
+      // console.log({ url, body, headers })
+      if (body) {
+        const jsonBody = JSON.parse(body)
+        jsonBody.features.enable_thinking = true
+        // jsonBody.features.auto_web_search = true
+        jsonBody.features.web_search = false
+        /**
+       web_search: false,
+    auto_web_search: false,
+       * 
+      */
+        // console.log(jsonBody)
+        jsonBody.messages = transformedMessages //[{ role: "system", content: "Jawab singkat saja" }, ...jsonBody.messages]
+        body = JSON.stringify(jsonBody)
+      }
+      const response = await fetch(`https://chat.z.ai${url}`, {
+        method: "POST",
+        headers: { ...headers },
+        body,
+      })
+      return response
+    }
+  }
   get chat() {
     return {
       completions: {
-        create: async (
-          params: any,
-          requestOption: any = {},
-          direct = false
-        ) => {
+        create: async (params: any, requestOption: any = {}, direct = false) => {
           let { model: requstModel, ...options } = params
 
           const defaultModel = this.defaultModel as string
 
-          const [models, apiKey, authUserId, modelAliases] =
-            await getAuthAndModels()
+          const [models, apiKey, authUserId, modelAliases] = await getAuthAndModels()
 
           const transformedMessages = transformMessages(options.messages)
+          // console.log(transformedMessages)
           const debugReqMsgs = false
           // Save transformedMessages to log file
           if (debugReqMsgs) {
@@ -56,44 +84,33 @@ class ZAI extends Client {
             fs.mkdirSync(path.dirname(logFilePath), { recursive: true })
 
             // Write the file
-            fs.writeFileSync(
-              logFilePath,
-              JSON.stringify(transformedMessages, null, 2)
-            )
+            fs.writeFileSync(logFilePath, JSON.stringify(transformedMessages, null, 2))
           }
 
           const userPrompt = getLastUserMessageContent(transformedMessages)
           if (userPrompt && apiKey && authUserId) {
-            const [endpoint, signature, timestamp] = getEndpointSignature(
-              this.baseUrl,
-              apiKey,
-              authUserId,
-              userPrompt
-            )
+            const [endpoint, signature, timestamp] = getEndpointSignature(this.baseUrl, apiKey, authUserId, userPrompt)
 
             const realModel = getModel(requstModel, modelAliases, defaultModel)
             // console.log({ realModel, endpoint, signature })
             // return
             const thinking = false
-            const body = buildRequestBody(
-              realModel,
-              transformedMessages,
-              thinking
-            )
+            const body = buildRequestBody(userPrompt, realModel, transformedMessages, thinking)
             // console.log({ body })
-            const response = await fetch(endpoint, {
-              headers: buildRequestHeaders(apiKey, signature),
-              body: JSON.stringify(body),
-              method: "POST",
-            })
+            const useBrowserProxy = true
+            const response = useBrowserProxy
+              ? await this.fetchWithBrowserProxy(userPrompt, realModel, transformedMessages, thinking)
+              : await fetch(endpoint, {
+                  headers: buildRequestHeaders(apiKey, signature),
+                  body: JSON.stringify(body),
+                  method: "POST",
+                })
             // await makeStreamCompletion(response, true, realModel, "", [])
 
             if (params.stream) {
               return this.makeStreamCompletion(response, direct, realModel)
             }
-            return this._sendResponseFromStream(
-              this.makeStreamCompletion(response, false, realModel)
-            )
+            return this._sendResponseFromStream(this.makeStreamCompletion(response, false, realModel))
           } else {
             console.error(`Failed to construct request payloads`)
           }
@@ -132,9 +149,7 @@ class ZAI extends Client {
   async *makeStreamCompletion(response: Response, sso = false, model: string) {
     // Validate response with more detailed error message
     if (!response.ok) {
-      throw new Error(
-        `API request failed with status ${response.status} and message: ${await response.text()}`
-      )
+      throw new Error(`API request failed with status ${response.status} and message: ${await response.text()}`)
     }
 
     // Check if response body exists
@@ -154,7 +169,8 @@ class ZAI extends Client {
 
     try {
       // Process the stream until completion
-      while (true) {
+      let streamCompleted = false
+      while (!streamCompleted) {
         const { done, value } = await reader.read()
 
         // Handle stream completion
@@ -178,11 +194,9 @@ class ZAI extends Client {
               usage,
               done: true,
             })
-            yield encoder.encode(
-              `data: ${JSON.stringify(finalChunk)}\n\ndata: [DONE]\n\n`
-            )
+            yield encoder.encode(`data: ${JSON.stringify(finalChunk)}\n\ndata: [DONE]\n\n`)
           }
-          break
+          streamCompleted = true
         }
 
         // Decode the chunk and add to buffer
@@ -204,8 +218,10 @@ class ZAI extends Client {
           try {
             // Process only data lines
             if (line.startsWith("data: ")) {
+              // console.log(line)
               // Extract JSON string after "data: "
               const jsonString = line.slice(6)
+              // console.log(jsonString)
 
               // Validate that we have JSON content
               if (!jsonString) {
@@ -216,16 +232,18 @@ class ZAI extends Client {
 
               if (jsonData.type === "chat:completion") {
                 const { data } = jsonData
-                const { done, delta_content, usage } = data
+                const { done: done2, delta_content, usage, error } = data
+                if (error) {
+                  // console.log(error)
+                }
+                if (done2) {
+                  streamCompleted = true
+                }
                 if (usage) {
                   calculatedUsage = usage
                 }
                 // console.log(jsonData)
-                const result = this.convertToOpenaiTextStream(
-                  jsonData,
-                  model,
-                  completionId
-                )
+                const result = this.convertToOpenaiTextStream(jsonData, model, completionId)
 
                 if (result) {
                   if (sso) {
@@ -236,7 +254,7 @@ class ZAI extends Client {
                   // console.log(`data: ${JSON.stringify(result)}\n\n`)
 
                   // Only increment completion ID if not a completion end event
-                  if (done) {
+                  if (done2) {
                     completionId++
                   }
                 }
@@ -258,20 +276,16 @@ class ZAI extends Client {
     }
   }
 
-  convertToOpenaiTextStream(
-    jsonData: any,
-    model: string,
-    completionId: number
-  ) {
+  convertToOpenaiTextStream(jsonData: any, model: string, completionId: number) {
     const { data: inputData } = jsonData
-    const { done, delta_content: text } = inputData
-
-    if (inputData.delta_content) {
+    const { done, delta_content: text, edit_content: textEdit } = inputData
+    const content = text ? text : textEdit
+    if (content) {
       return buildStreamChunk({
         model,
         index: completionId,
         finishReason: done ? "finish" : null,
-        content: text,
+        content,
       })
     }
 

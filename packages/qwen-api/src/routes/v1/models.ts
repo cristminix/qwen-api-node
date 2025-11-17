@@ -56,20 +56,20 @@ models.get("/", async (c: Context) => {
   */
   console.log("provider", defaultProvider)
   if (useAllProviders) {
-    const finalModelList = {
+    const finalModelList: { type: string; data: any[] } = {
       type: "list",
       data: [],
     }
     const providerKeys = Object.keys(modelMaps)
     for (const providerKey of providerKeys) {
-      const currentProviderModels = modelMaps[providerKey].data.filter(
+      const currentProviderModels = modelMaps[providerKey as keyof typeof modelMaps].data.filter(
         (m) => typeof m.id !== "undefined"
       )
-      for (const availabelModel of currentProviderModels) {
+      for (const availableModel of currentProviderModels) {
         finalModelList.data.push({
-          ...availabelModel,
-          alias: `${providerKey}/${availabelModel.id ?? availabelModel.id}`,
-          id: `${providerKey}/${availabelModel.id}`,
+          ...availableModel,
+          alias: `${providerKey}/${availableModel.id}`,
+          id: `${providerKey}/${availableModel.id}`,
         })
       }
     }

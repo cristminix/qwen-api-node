@@ -1,15 +1,9 @@
 import { buildStreamChunk } from "./buildStreamChunk"
 
-export async function makeStreamCompletion(
-  response: Response,
-  sso = false,
-  model: string
-) {
+export async function makeStreamCompletion(response: Response, sso = false, model: string) {
   // Validate response with more detailed error message
   if (!response.ok) {
-    throw new Error(
-      `API request failed with status ${response.status} and message: ${await response.text()}`
-    )
+    throw new Error(`API request failed with status ${response.status} and message: ${await response.text()}`)
   }
 
   // Check if response body exists
@@ -26,10 +20,10 @@ export async function makeStreamCompletion(
 
   let buffer = ""
   let completionId = 1
-
+  let validStream = true
   try {
     // Process the stream until completion
-    while (true) {
+    while (validStream) {
       const { done, value } = await reader.read()
 
       // Handle stream completion
@@ -56,6 +50,7 @@ export async function makeStreamCompletion(
 
           console.log(`data: ${JSON.stringify(finalChunk)}\n\ndata: [DONE]\n\n`)
         }
+        validStream = false
         break
       }
 
@@ -90,16 +85,17 @@ export async function makeStreamCompletion(
 
             if (jsonData.type === "chat:completion") {
               const { data } = jsonData
-              const { done, delta_content, usage } = data
+              const { done, delta_content, usage, error } = data
               if (usage) {
                 calculatedUsage = usage
               }
+              if (error) {
+                validStream = false
+
+                console.error(error)
+              }
               // console.log(jsonData)
-              const result = convertToOpenaiTextStream(
-                jsonData,
-                model,
-                completionId
-              )
+              const result = convertToOpenaiTextStream(jsonData, model, completionId)
 
               if (result) {
                 console.log(`data: ${JSON.stringify(result)}\n\n`)
@@ -127,20 +123,16 @@ export async function makeStreamCompletion(
   }
 }
 
-function convertToOpenaiTextStream(
-  jsonData: any,
-  model: string,
-  completionId: number
-) {
+function convertToOpenaiTextStream(jsonData: any, model: string, completionId: number) {
   const { data: inputData } = jsonData
-  const { done, delta_content: text } = inputData
-
-  if (inputData.delta_content) {
+  const { done, delta_content: text, edit_content: textEdit } = inputData
+  const content = text ? text : textEdit
+  if (content) {
     return buildStreamChunk({
       model,
       index: completionId,
       finishReason: done ? "finish" : null,
-      content: text,
+      content,
     })
   }
 
