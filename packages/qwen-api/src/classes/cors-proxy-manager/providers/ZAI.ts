@@ -240,11 +240,13 @@ class ZAI extends Client {
                 }
                 if (usage) {
                   calculatedUsage = usage
+                  // console.log(usage)
                 }
                 // console.log(jsonData)
-                const result = this.convertToOpenaiTextStream(jsonData, model, completionId)
-
+                const result = this.convertToOpenaiTextStream(jsonData, model, completionId, calculatedUsage)
                 if (result) {
+                  console.log(result)
+
                   if (sso) {
                     yield encoder.encode(`data: ${JSON.stringify(result)}\n\n`)
                   } else {
@@ -275,7 +277,7 @@ class ZAI extends Client {
     }
   }
 
-  convertToOpenaiTextStream(jsonData: any, model: string, completionId: number) {
+  convertToOpenaiTextStream(jsonData: any, model: string, completionId: number, usage: any = null) {
     const { data: inputData } = jsonData
     const { done, delta_content: text, edit_content: textEdit } = inputData
     const content = text ? text : textEdit
@@ -285,6 +287,7 @@ class ZAI extends Client {
         index: completionId,
         finishReason: done ? "finish" : null,
         content,
+        usage,
       })
     }
 
