@@ -245,7 +245,7 @@ class ZAI extends Client {
                 // console.log(jsonData)
                 const result = this.convertToOpenaiTextStream(jsonData, model, completionId, calculatedUsage)
                 if (result) {
-                  console.log(result)
+                  // console.log(result)
 
                   if (sso) {
                     yield encoder.encode(`data: ${JSON.stringify(result)}\n\n`)

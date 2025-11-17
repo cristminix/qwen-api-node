@@ -43,17 +43,13 @@ export function transformMessages(messages: Message[]): TransformedMessage[] {
   }
 
   // Variabel untuk menampung pesan system yang digabungkan
-  const systemMessages = transformedMessages.filter(
-    (msg) => msg.role === "system"
-  )
+  const systemMessages = transformedMessages.filter((msg) => msg.role === "system")
   let finalSystemMessages: TransformedMessage[] = []
   const combineSystemMessages = false
 
   if (systemMessages.length > 1 && combineSystemMessages) {
     // iterate system_messages and append content
-    const combinedSystemMessageContents = systemMessages.map(
-      (message) => message.content
-    )
+    const combinedSystemMessageContents = systemMessages.map((message) => message.content)
     finalSystemMessages = [
       {
         role: "user",
@@ -61,12 +57,12 @@ export function transformMessages(messages: Message[]): TransformedMessage[] {
       },
     ]
   } else {
-    finalSystemMessages = systemMessages.map(m=>({
-      role:"user",
-      content:m.content
+    finalSystemMessages = systemMessages.map((m) => ({
+      role: "user",
+      content: m.content,
     }))
   }
-console.log({finalSystemMessages})
+  // console.log({finalSystemMessages})
   const userMessages = transformedMessages.filter((msg) => msg.role === "user")
   const finalMessages = finalSystemMessages.concat(userMessages)
 
